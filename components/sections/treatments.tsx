@@ -1,0 +1,8 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { services } from "@/lib/content";
+
+export function Treatments() {
+  return <section className="bg-white py-24 sm:py-32"><div className="container-site"><div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"><div><p className="eyebrow">Most popular</p><h2 className="section-title">Loved treatments</h2></div><Link href="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.16em] text-pink">View all treatments <ArrowRight size={16} /></Link></div><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{services.map(service => <Link href={`/services/${service.slug}`} key={service.slug} className="group"><div className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-pink-light"><Image src={service.image} alt={service.title} fill className="object-cover transition duration-700 group-hover:scale-105" sizes="(min-width: 1024px) 25vw, 50vw" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /><p className="absolute bottom-5 left-5 text-[10px] font-bold uppercase tracking-[.2em] text-white">{service.category}</p></div><div className="flex items-start justify-between gap-4 px-1 pt-5"><div><h3 className="font-display text-2xl tracking-tight">{service.title}</h3><p className="mt-2 text-xs text-black/45">{service.price}</p></div><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-black/10 transition group-hover:border-pink group-hover:bg-pink group-hover:text-white"><ArrowRight size={15} /></span></div></Link>)}</div></div></section>;
+}

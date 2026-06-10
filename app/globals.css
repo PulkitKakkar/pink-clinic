@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pink: #e4017f;
+  --pink-dark: #a8005d;
+  --pink-light: #fce4f1;
+  --ink: #1a1a1a;
+  --cream: #fff9fc;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); background: var(--cream); }
+::selection { background: var(--pink); color: white; }
+
+@layer components {
+  .container-site { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12 xl:px-16; }
+  .eyebrow { @apply mb-4 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.3em] text-pink; }
+  .eyebrow::before { content: ""; @apply h-px w-7 bg-pink; }
+  .section-title { @apply font-display text-4xl leading-[1.02] tracking-[-0.04em] text-ink sm:text-5xl lg:text-6xl; }
+  .button-primary { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pink px-7 py-3 text-sm font-bold text-white shadow-[0_14px_32px_rgba(228,1,127,.24)] transition hover:-translate-y-0.5 hover:bg-pink-dark; }
+  .button-light { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-ink transition hover:-translate-y-0.5 hover:text-pink; }
+  .button-outline { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/50 px-7 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-ink; }
+}
+
+.noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+}
