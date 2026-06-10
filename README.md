@@ -32,6 +32,19 @@ Branch-specific offers and staff are modeled as branch references in Sanity. Ava
 
 Sanity Studio is available at `/studio` after adding the Sanity project ID and dataset.
 
+## Admin consultation prototype
+
+The staff-only consultation workspace is available at `/admin`. For local testing:
+
+```text
+Email: admin@pinkbeauty.test
+Password: PinkTest2026!
+```
+
+Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and a long random `ADMIN_SESSION_TOKEN` before deployment. Admin submissions currently use git-ignored local JSON storage in `data/admin/` and are strictly for test data. Do not enter real customer or health information until this is replaced with an encrypted database, production identity provider, role-based access, audit logging, retention controls, backups, and completed clinical/legal review.
+
+Original supplied consultation PDFs are stored in `private/admin-forms/` and served only through authenticated admin API routes.
+
 ## Deployment
 
 Deploy to Vercel and add all `.env.example` variables in project settings. Images use Next Image, pages are statically generated, and treatment/location routes include structured data and generated metadata.
