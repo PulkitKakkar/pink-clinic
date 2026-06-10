@@ -6,7 +6,7 @@ import { useState } from "react";
 import { BookingLink } from "@/components/ui/booking-link";
 import { BranchSwitcher } from "@/components/branch-switcher";
 
-const links = [["Treatments", "/treatments/select-branch"], ["Academy", "/courses"], ["Results", "/#results"], ["About", "/#why"], ["Locations", "/locations/west-street-reading"]];
+const links = [["Treatments", "/treatments/select-branch"], ["Academy", "/courses"], ["Results", "/#results"], ["About", "/#why"], ["Locations", "/locations"]];
 
 export function Header() {
   const [open, setOpen] = useState(false);
