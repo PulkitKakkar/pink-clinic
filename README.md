@@ -8,6 +8,8 @@ Production Next.js 15 website for Pink Beauty Salon, Clinic and Academy.
 - `components/sections/` — reusable homepage and landing-page sections
 - `components/ui/` — provider-agnostic booking UI
 - `lib/booking/` — booking provider interface and configurable adapter
+- `lib/branches.ts` — canonical branch model used by URLs, context and integrations
+- `lib/pricing/` — provider-agnostic branch treatment pricing
 - `lib/sanity/` — CMS client
 - `sanity/schemas/` — Services, courses, team, testimonials, offers, gallery and blog schemas
 - `lib/content.ts` — typed fallback content used before Sanity is populated
@@ -21,6 +23,12 @@ npm run dev
 ```
 
 Set `NEXT_PUBLIC_BOOKING_URL` to Fresha now, or replace the adapter in `lib/booking/index.ts` with a Stripe/custom API implementation later. Set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler before enabling the contact form in production.
+
+## Branch-aware treatment flow
+
+Treatment journeys begin at `/treatments/select-branch`. The selected branch is represented in the URL, synchronized into `BranchProvider`, and persisted in local storage. All treatment prices are resolved through `PricingProvider`; booking links pass stable branch and service identifiers through `BookingProvider`.
+
+Branch-specific offers and staff are modeled as branch references in Sanity. Availability and external booking IDs can be added behind the same branch/provider boundary without changing treatment UI components. Courses remain global and route directly to `/courses`.
 
 Sanity Studio is available at `/studio` after adding the Sanity project ID and dataset.
 

@@ -1,6 +1,6 @@
-import type { BookingIntent, BookingService } from "./types";
+import type { BookingIntent, BookingProvider } from "./types";
 
-class ConfigurableBookingService implements BookingService {
+class ConfigurableBookingProvider implements BookingProvider {
   getBookingUrl(intent: BookingIntent = {}) {
     const base = process.env.NEXT_PUBLIC_BOOKING_URL || "/contact";
     const url = new URL(base, process.env.NEXT_PUBLIC_SITE_URL || "https://pinkbeauty.co.uk");
@@ -10,5 +10,5 @@ class ConfigurableBookingService implements BookingService {
   }
 }
 
-// Swap this instance for a Fresha, Stripe or custom API adapter without changing UI code.
-export const bookingService: BookingService = new ConfigurableBookingService();
+// Swap this instance for a Fresha or custom booking adapter without changing UI code.
+export const bookingProvider: BookingProvider = new ConfigurableBookingProvider();

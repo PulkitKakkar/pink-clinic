@@ -1,9 +1,10 @@
 export type BookingIntent = {
+  branchId?: string;
+  branchSlug?: string;
   serviceSlug?: string;
-  locationSlug?: string;
   source?: string;
 };
 
-export interface BookingService {
+export interface BookingProvider {
   getBookingUrl(intent?: BookingIntent): string;
 }

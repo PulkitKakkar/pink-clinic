@@ -16,11 +16,28 @@ const contentType = (name: string, title: string, fields: ReturnType<typeof defi
 });
 
 export const schemaTypes = [
+  contentType("branch", "Branches", [
+    defineField({ name: "address", title: "Address", type: "string", validation: rule => rule.required() }),
+    defineField({ name: "phone", title: "Phone", type: "string" }),
+    defineField({ name: "image", title: "Branch image", type: "image", options: { hotspot: true } }),
+    defineField({ name: "bookingProviderId", title: "Booking provider branch ID", type: "string" }),
+  ]),
+  defineType({
+    name: "treatmentPrice",
+    title: "Treatment Prices",
+    type: "document",
+    fields: [
+      defineField({ name: "service", title: "Service", type: "reference", to: [{ type: "service" }], validation: rule => rule.required() }),
+      defineField({ name: "branch", title: "Branch", type: "reference", to: [{ type: "branch" }], validation: rule => rule.required() }),
+      defineField({ name: "price", title: "Price", type: "number" }),
+      defineField({ name: "label", title: "Price label", type: "string", description: "For example: From or Consultation required" }),
+    ],
+    preview: { select: { service: "service.title", branch: "branch.title", price: "price" }, prepare: ({ service, branch, price }) => ({ title: `${service} · ${branch}`, subtitle: price ? `£${price}` : "Consultation required" }) },
+  }),
   contentType("service", "Services", [
     defineField({ name: "category", title: "Category", type: "string" }),
     defineField({ name: "excerpt", title: "Short description", type: "text", rows: 3 }),
     defineField({ name: "body", title: "Page content", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "priceFrom", title: "Price from", type: "number" }),
     defineField({ name: "duration", title: "Duration", type: "string" }),
     defineField({ name: "image", title: "Hero image", type: "image", options: { hotspot: true } }),
     defineField({ name: "featured", title: "Featured treatment", type: "boolean", initialValue: false }),
@@ -36,6 +53,7 @@ export const schemaTypes = [
     defineField({ name: "role", title: "Role", type: "string" }),
     defineField({ name: "bio", title: "Biography", type: "text" }),
     defineField({ name: "portrait", title: "Portrait", type: "image", options: { hotspot: true } }),
+    defineField({ name: "branches", title: "Branches", type: "array", of: [{ type: "reference", to: [{ type: "branch" }] }] }),
   ]),
   contentType("testimonial", "Testimonials", [
     defineField({ name: "quote", title: "Review", type: "text", validation: rule => rule.required() }),
@@ -46,6 +64,7 @@ export const schemaTypes = [
     defineField({ name: "description", title: "Description", type: "text" }),
     defineField({ name: "validUntil", title: "Valid until", type: "date" }),
     defineField({ name: "cta", title: "Call to action", type: "string" }),
+    defineField({ name: "branches", title: "Available at branches", type: "array", of: [{ type: "reference", to: [{ type: "branch" }] }] }),
   ]),
   contentType("galleryItem", "Gallery", [
     defineField({ name: "beforeImage", title: "Before image", type: "image", options: { hotspot: true } }),

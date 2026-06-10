@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BranchProvider } from "@/components/providers/branch-provider";
 import "./globals.css";
 
 const display = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-display", weight: ["500", "600", "700"], display: "swap" });
@@ -15,5 +16,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${display.variable} ${sans.variable} font-sans antialiased`}><Header />{children}<Footer /></body></html>;
+  return <html lang="en"><body className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><Header />{children}<Footer /></BranchProvider></body></html>;
 }

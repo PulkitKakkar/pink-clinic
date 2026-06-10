@@ -17,12 +17,15 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
 
 @layer components {
   .container-site { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12 xl:px-16; }
+  .section-shell { @apply py-10 sm:py-20 lg:py-24; }
+  .section-header { @apply mb-6 sm:mb-10; }
+  .surface-card { @apply overflow-hidden rounded-2xl border border-black/5 bg-white shadow-soft sm:rounded-[2rem]; }
   .eyebrow { @apply mb-4 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.3em] text-pink; }
   .eyebrow::before { content: ""; @apply h-px w-7 bg-pink; }
   .section-title { @apply font-display text-4xl leading-[1.02] tracking-[-0.04em] text-ink sm:text-5xl lg:text-6xl; }
-  .button-primary { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pink px-7 py-3 text-sm font-bold text-white shadow-[0_14px_32px_rgba(228,1,127,.24)] transition hover:-translate-y-0.5 hover:bg-pink-dark; }
-  .button-light { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-ink transition hover:-translate-y-0.5 hover:text-pink; }
-  .button-outline { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/50 px-7 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-ink; }
+  .button-primary { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-pink px-6 py-2.5 text-xs font-bold text-white shadow-[0_14px_32px_rgba(228,1,127,.24)] transition hover:-translate-y-0.5 hover:bg-pink-dark sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm; }
+  .button-light { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-6 py-2.5 text-xs font-bold text-ink transition hover:-translate-y-0.5 hover:text-pink sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm; }
+  .button-outline { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/50 px-6 py-2.5 text-xs font-bold text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-ink sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm; }
 }
 
 .noise {
