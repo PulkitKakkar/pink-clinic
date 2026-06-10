@@ -1,0 +1,67 @@
+:root {
+  --bg: #ffffff;
+  --bg-strong: #ffffff;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-strong: #ffffff;
+  --surface-soft: #fff6fb;
+  --ink: #2a1d27;
+  --muted: #6a5863;
+  --line: rgba(42, 29, 39, 0.12);
+  --shadow: 0 18px 45px rgba(42, 29, 39, 0.08);
+  --shadow-soft: 0 10px 24px rgba(42, 29, 39, 0.06);
+  --rose: #e4017f;
+  --rose-deep: #b30063;
+  --rose-pale: #fff0f7;
+  --gold: #d8a86b;
+  --mint: #d6efe5;
+  --cream: #fff8ea;
+  --heading: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--ink);
+  background: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
