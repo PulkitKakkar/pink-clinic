@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { BookingLink } from "@/components/ui/booking-link";
@@ -14,7 +15,7 @@ export function Header() {
     <header className="absolute inset-x-0 top-0 z-50 border-b border-white/15 text-white">
       <div className="container-site flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-3" aria-label="Pink Beauty home">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-lg font-black text-pink">p</span>
+          <Image src="/images/pink-logo.jpeg" alt="" width={80} height={40} className="h-10 w-20 rounded-md object-cover" priority />
           <span className="leading-none"><strong className="block text-lg tracking-tight">pink beauty</strong><small className="text-[9px] uppercase tracking-[.2em] text-white/70">Salon · Clinic · Academy</small></span>
         </Link>
         <nav className="hidden items-center gap-8 lg:flex">{links.map(([label, href]) => <Link key={label} href={href} className="text-xs font-bold uppercase tracking-[.16em] text-white/80 transition hover:text-white">{label}</Link>)}</nav>

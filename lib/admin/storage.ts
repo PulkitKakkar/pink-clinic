@@ -8,7 +8,7 @@ export type ConsultationRecord = {
   templateSlug: string;
   templateTitle: string;
   createdAt: string;
-  answers: Record<string, string | boolean>;
+  answers: Record<string, string | boolean | string[]>;
 };
 
 const dataDirectory = path.join(process.cwd(), "data", "admin");
