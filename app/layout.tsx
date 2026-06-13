@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><PublicChrome>{children}</PublicChrome></BranchProvider></body></html>;
+  return <html lang="en"><body suppressHydrationWarning className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><PublicChrome>{children}</PublicChrome></BranchProvider></body></html>;
 }

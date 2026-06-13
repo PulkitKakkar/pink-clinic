@@ -10,6 +10,52 @@ export type Service = {
   benefits: string[];
 };
 
+export type Offer = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: string;
+  price?: string;
+  action: "book" | "buy";
+  href?: string;
+  serviceSlug?: string;
+};
+
+// Local fallback offers. These can be replaced by published Sanity offer documents.
+export const offers: Offer[] = [
+  {
+    id: "hydrafacial-glow",
+    eyebrow: "Limited-time skin offer",
+    title: "The signature glow.",
+    description: "Reveal deeply cleansed, hydrated and luminous skin with our signature Hydrafacial.",
+    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=2000&q=90",
+    price: "From £99",
+    action: "book",
+    serviceSlug: "hydrafacial",
+  },
+  {
+    id: "laser-course",
+    eyebrow: "Course package",
+    title: "Smooth skin starts here.",
+    description: "Begin your tailored laser hair removal course with our advanced clinic team.",
+    image: "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=2000&q=90",
+    price: "Course offers available",
+    action: "buy",
+    href: "/contact?type=offer&offer=laser-course",
+  },
+  {
+    id: "skin-rejuvenation",
+    eyebrow: "Clinic exclusive",
+    title: "Restore your radiance.",
+    description: "A personalised skin rejuvenation plan designed around your complexion and goals.",
+    image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=2000&q=90",
+    price: "Consultation-led",
+    action: "book",
+    serviceSlug: "skin-rejuvenation",
+  },
+];
+
 export const services: Service[] = [
   {
     id: "hydrafacial",
@@ -58,8 +104,8 @@ export const services: Service[] = [
 ];
 
 export const locations = [
-  { id: "reading-west-street", treatmentSlug: "reading-west-st", slug: "west-street-reading", name: "West Street", address: "4–5 West Street, Reading RG1 1TT", phone: "0118 962 7111", image: "/images/west-street.jpg", note: "Central Reading salon" },
-  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 962 7111", image: "/images/watlington.jpg", note: "Advanced clinic & academy" },
+  { id: "reading-west-street", treatmentSlug: "reading-west-st", slug: "west-street-reading", name: "West Street", address: "4–5 West Street, Reading RG1 1TT", phone: "0118 962 7111", image: "/images/west-street.jpg", note: "Central Reading salon", instagramHandle: "@pinkbeautysalonreading", instagramUrl: "https://www.instagram.com/pinkbeautysalonreading/" },
+  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 962 7111", image: "/images/watlington.jpg", note: "Advanced clinic & academy", instagramHandle: "@pink_aesthetics_clinic_reading", instagramUrl: "https://www.instagram.com/pink_aesthetics_clinic_reading/" },
 ];
 
 export const reviews = [

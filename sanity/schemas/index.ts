@@ -19,6 +19,7 @@ export const schemaTypes = [
   contentType("branch", "Branches", [
     defineField({ name: "address", title: "Address", type: "string", validation: rule => rule.required() }),
     defineField({ name: "phone", title: "Phone", type: "string" }),
+    defineField({ name: "instagramUrl", title: "Instagram URL", type: "url" }),
     defineField({ name: "image", title: "Branch image", type: "image", options: { hotspot: true } }),
     defineField({ name: "bookingProviderId", title: "Booking provider branch ID", type: "string" }),
   ]),
@@ -53,6 +54,8 @@ export const schemaTypes = [
     defineField({ name: "role", title: "Role", type: "string" }),
     defineField({ name: "bio", title: "Biography", type: "text" }),
     defineField({ name: "portrait", title: "Portrait", type: "image", options: { hotspot: true } }),
+    defineField({ name: "featured", title: "Show on homepage", type: "boolean", initialValue: false }),
+    defineField({ name: "order", title: "Display order", type: "number" }),
     defineField({ name: "branches", title: "Branches", type: "array", of: [{ type: "reference", to: [{ type: "branch" }] }] }),
   ]),
   contentType("testimonial", "Testimonials", [
@@ -62,8 +65,15 @@ export const schemaTypes = [
   ]),
   contentType("offer", "Offers", [
     defineField({ name: "description", title: "Description", type: "text" }),
+    defineField({ name: "eyebrow", title: "Promotional label", type: "string", description: "For example: Limited-time skin offer" }),
+    defineField({ name: "image", title: "Carousel image", type: "image", options: { hotspot: true }, validation: rule => rule.required() }),
+    defineField({ name: "priceLabel", title: "Price label", type: "string", description: "For example: From £99" }),
     defineField({ name: "validUntil", title: "Valid until", type: "date" }),
-    defineField({ name: "cta", title: "Call to action", type: "string" }),
+    defineField({ name: "action", title: "Action", type: "string", options: { list: [{ title: "Book", value: "book" }, { title: "Buy", value: "buy" }], layout: "radio" }, validation: rule => rule.required() }),
+    defineField({ name: "ctaUrl", title: "Buy URL", type: "url", description: "Required for Buy offers. Book offers use the booking provider." }),
+    defineField({ name: "service", title: "Booking service", type: "reference", to: [{ type: "service" }], description: "Optional service to preselect for Book offers." }),
+    defineField({ name: "featured", title: "Show on homepage", type: "boolean", initialValue: true }),
+    defineField({ name: "order", title: "Display order", type: "number" }),
     defineField({ name: "branches", title: "Available at branches", type: "array", of: [{ type: "reference", to: [{ type: "branch" }] }] }),
   ]),
   contentType("galleryItem", "Gallery", [
