@@ -13,7 +13,11 @@ export function middleware(request: NextRequest) {
   if (authenticated) return NextResponse.next();
   if (isAdminApi) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
-  const loginUrl = new URL("/admin/login", request.url);
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const publicOrigin = process.env.NEXT_PUBLIC_SITE_URL
+    || (forwardedHost && (forwardedProtocol === "http" || forwardedProtocol === "https") ? `${forwardedProtocol}://${forwardedHost}` : request.nextUrl.origin);
+  const loginUrl = new URL("/admin/login", publicOrigin);
   loginUrl.searchParams.set("next", pathname);
   return NextResponse.redirect(loginUrl);
 }
