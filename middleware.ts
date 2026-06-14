@@ -8,8 +8,8 @@ export function middleware(request: NextRequest) {
   const isAdminApi = pathname.startsWith("/api/admin") && pathname !== "/api/admin/login";
   if (!isAdminPage && !isAdminApi) return NextResponse.next();
 
-  const expected = process.env.ADMIN_SESSION_TOKEN || "pink-local-admin-test-session";
-  const authenticated = request.cookies.get(ADMIN_COOKIE)?.value === expected;
+  const expected = process.env.ADMIN_SESSION_TOKEN || (process.env.NODE_ENV === "production" ? "" : "pink-local-admin-test-session");
+  const authenticated = Boolean(expected && request.cookies.get(ADMIN_COOKIE)?.value === expected);
   if (authenticated) return NextResponse.next();
   if (isAdminApi) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
