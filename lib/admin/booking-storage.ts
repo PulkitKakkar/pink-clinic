@@ -20,7 +20,8 @@ export const bookingStorageMode = databaseUrl ? "postgres" : "local";
 type BookingRow = {
   id: string; branch_id: string; staff_id: string; practitioner_name: string; service_id: string;
   treatment_name: string; duration_minutes: number; customer_name: string; customer_email: string;
-  customer_phone: string; starts_at: Date; ends_at: Date; status: Booking["status"]; notes: string; created_at: Date;
+  customer_phone: string; marketing_consent?: boolean; marketing_consent_updated_at?: Date | null;
+  starts_at: Date; ends_at: Date; status: Booking["status"]; notes: string; created_at: Date;
 };
 
 const globalDatabase = globalThis as unknown as { bookingSql?: ReturnType<typeof postgres> };
@@ -38,6 +39,8 @@ function fromRow(row: BookingRow): Booking {
     id: row.id, branchId: row.branch_id, staffId: row.staff_id, practitionerName: row.practitioner_name,
     serviceId: row.service_id, treatmentName: row.treatment_name, durationMinutes: row.duration_minutes,
     customerName: row.customer_name, customerEmail: row.customer_email, customerPhone: row.customer_phone,
+    marketingConsent: Boolean(row.marketing_consent),
+    marketingConsentUpdatedAt: row.marketing_consent_updated_at?.toISOString() || null,
     startsAt: row.starts_at.toISOString(), endsAt: row.ends_at.toISOString(), status: row.status,
     notes: row.notes, createdAt: row.created_at.toISOString(),
   };
@@ -49,7 +52,12 @@ function isConflict(error: unknown) {
 
 async function getLocalBookings(): Promise<Booking[]> {
   try {
-    return JSON.parse(await readFile(dataFile, "utf8")) as Booking[];
+    const bookings = JSON.parse(await readFile(dataFile, "utf8")) as Booking[];
+    return bookings.map((booking) => ({
+      ...booking,
+      marketingConsent: Boolean(booking.marketingConsent),
+      marketingConsentUpdatedAt: booking.marketingConsentUpdatedAt || null,
+    }));
   } catch {
     return [];
   }
@@ -81,8 +89,8 @@ export async function createBooking(input: CreateBookingInput) {
   if (sql) {
     try {
       const rows = await sql<BookingRow[]>`
-        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_email, customer_phone, starts_at, ends_at, status, notes)
-        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes})
+        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_email, customer_phone, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes)
+        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes})
         RETURNING *`;
       return fromRow(rows[0]);
     } catch (error) {
@@ -113,6 +121,7 @@ export async function updateBooking(input: UpdateBookingInput) {
         UPDATE bookings SET branch_id=${candidate.branchId}, staff_id=${candidate.staffId}, practitioner_name=${candidate.practitionerName},
           service_id=${candidate.serviceId}, treatment_name=${candidate.treatmentName}, duration_minutes=${candidate.durationMinutes},
           customer_name=${candidate.customerName}, customer_email=${candidate.customerEmail}, customer_phone=${candidate.customerPhone},
+          marketing_consent=${candidate.marketingConsent}, marketing_consent_updated_at=${candidate.marketingConsentUpdatedAt},
           starts_at=${candidate.startsAt}, ends_at=${candidate.endsAt}, status=${candidate.status}, notes=${candidate.notes}, updated_at=now()
         WHERE id=${input.id} RETURNING *`;
       return fromRow(rows[0]);

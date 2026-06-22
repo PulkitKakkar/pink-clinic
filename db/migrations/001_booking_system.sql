@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   customer_name text NOT NULL,
   customer_email text NOT NULL DEFAULT '',
   customer_phone text NOT NULL,
+  marketing_consent boolean NOT NULL DEFAULT false,
+  marketing_consent_updated_at timestamptz,
   starts_at timestamptz NOT NULL,
   ends_at timestamptz NOT NULL,
   status text NOT NULL CHECK (status IN ('confirmed', 'completed', 'cancelled', 'no-show')),
@@ -19,6 +21,9 @@ CREATE TABLE IF NOT EXISTS bookings (
   updated_at timestamptz NOT NULL DEFAULT now(),
   CHECK (ends_at > starts_at)
 );
+
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent boolean NOT NULL DEFAULT false;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent_updated_at timestamptz;
 
 CREATE INDEX IF NOT EXISTS bookings_starts_at_idx ON bookings (starts_at);
 CREATE INDEX IF NOT EXISTS bookings_branch_starts_at_idx ON bookings (branch_id, starts_at);

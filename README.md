@@ -50,7 +50,7 @@ The booking calendar supports both branches, manual treatments and practitioners
 npm run db:migrate
 ```
 
-The PostgreSQL exclusion constraint prevents the same configured or manually entered practitioner being booked for overlapping confirmed appointments, including concurrent requests across multiple Vercel instances. A production deployment without `DATABASE_URL` will refuse to use the booking system.
+The PostgreSQL exclusion constraint prevents the same configured or manually entered practitioner being booked for overlapping confirmed appointments, including concurrent requests across multiple production instances. A production deployment without `DATABASE_URL` will refuse to use the booking system.
 
 ## Booking notifications
 
@@ -58,8 +58,8 @@ Customers receive a confirmation when a booking is created and reminders approxi
 
 - Set `NOTIFICATION_WEBHOOK_URL` to an SMS/email automation endpoint.
 - Optionally set `NOTIFICATION_WEBHOOK_SECRET`; it is sent as a Bearer token.
-- Set a long random `CRON_SECRET` in Vercel. Vercel Cron calls `/api/cron/booking-reminders` hourly.
-- Hourly reminders require Vercel Pro or Enterprise. Vercel Hobby only permits daily cron jobs; use an external hourly scheduler if remaining on Hobby.
+- Set a long random `CRON_SECRET` in Amplify environment variables.
+- Configure an external hourly scheduler, such as Amazon EventBridge Scheduler, to call `/api/cron/booking-reminders` with the cron secret.
 - Re-run `npm run db:migrate` after pulling notification changes to create the idempotent notification delivery ledger.
 
 The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. Delivery records prevent duplicate reminders across concurrent Vercel instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
@@ -68,6 +68,16 @@ Consultation submissions still use local JSON and are strictly for test data. Do
 
 Original supplied consultation PDFs are stored in `private/admin-forms/` and served only through authenticated admin API routes.
 
-## Deployment
+## Amplify deployment
 
-Deploy to Vercel and add all `.env.example` variables in project settings. Images use Next Image, pages are statically generated, and treatment/location routes include structured data and generated metadata.
+Deploy with AWS Amplify Hosting using the included `amplify.yml`. Add all required `.env.example` variables in Amplify environment variables. The build copies server-side and `NEXT_PUBLIC_` variables into `.env.production` before `npm run build`.
+
+Amplify Hosting does not create the PostgreSQL database for bookings. Create a production PostgreSQL database separately, for example Amazon RDS PostgreSQL, Aurora PostgreSQL, Neon, Supabase, or another managed Postgres provider, then set its connection string as `DATABASE_URL` in Amplify. Run `npm run db:migrate` against that database before using admin bookings.
+
+Booking reminders are not scheduled by Amplify automatically. Use Amazon EventBridge Scheduler, a Lambda cron, or another scheduler to request:
+
+```text
+https://your-domain.com/api/cron/booking-reminders
+```
+
+Include the configured `CRON_SECRET` according to the API route requirements. Images use Next Image, pages are statically generated where possible, and treatment/location routes include structured data and generated metadata.

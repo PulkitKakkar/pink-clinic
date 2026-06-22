@@ -5,6 +5,10 @@ import { services } from "@/lib/content";
 
 export class BookingValidationError extends Error {}
 
+function normalizeBoolean(value: unknown) {
+  return value === true || value === "true" || value === "on" || value === "yes";
+}
+
 export function normalizeBookingInput(input: CreateBookingInput) {
   const branch = branches.find((item) => item.id === input.branchId);
   const startsAt = new Date(input.startsAt);
@@ -38,6 +42,8 @@ export function normalizeBookingInput(input: CreateBookingInput) {
     customerName: input.customerName.trim(),
     customerEmail: input.customerEmail?.trim() || "",
     customerPhone: input.customerPhone.trim(),
+    marketingConsent: normalizeBoolean(input.marketingConsent),
+    marketingConsentUpdatedAt: input.marketingConsentUpdatedAt || new Date().toISOString(),
     notes: input.notes?.trim() || "",
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),
