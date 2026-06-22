@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { ADMIN_COOKIE } from "@/lib/admin/auth";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function POST(request: Request) {
-  const response = NextResponse.redirect(new URL("/admin/login", request.url), 303);
+  const response = NextResponse.redirect(new URL("/admin/login", getPublicOrigin(request)), 303);
   response.cookies.set(ADMIN_COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
   return response;
 }
