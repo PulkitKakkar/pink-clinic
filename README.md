@@ -64,7 +64,7 @@ Customers receive a confirmation when a booking is created and reminders approxi
 
 The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. Delivery records prevent duplicate reminders across concurrent Vercel instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
 
-Consultation submissions still use local JSON and are strictly for test data. Do not enter real customer or health information until consultation storage is moved to an encrypted database and production identity, role-based access, audit logging, retention controls, backups, and clinical/legal review are complete.
+Consultation submissions use local JSON in development and PostgreSQL in production when `DATABASE_URL` is configured. Run `npm run db:migrate` after pulling consultation changes so the `consultations` table exists before staff use the digital forms.
 
 Original supplied consultation PDFs are stored in `private/admin-forms/` and served only through authenticated admin API routes.
 

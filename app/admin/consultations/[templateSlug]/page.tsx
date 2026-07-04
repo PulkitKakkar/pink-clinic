@@ -4,11 +4,9 @@ import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ConsultationForm } from "@/components/admin/consultation-form";
 import { consultationStorageMode } from "@/lib/admin/storage";
-import { consultationTemplates, getConsultationTemplate } from "@/lib/admin/templates";
+import { getConsultationTemplate } from "@/lib/admin/templates";
 
-export function generateStaticParams() {
-  return consultationTemplates.map((template) => ({ templateSlug: template.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function ConsultationPage({ params }: { params: Promise<{ templateSlug: string }> }) {
   const template = getConsultationTemplate((await params).templateSlug);

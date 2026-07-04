@@ -49,3 +49,15 @@ CREATE TABLE IF NOT EXISTS booking_notification_deliveries (
   updated_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (booking_id, notification_type, appointment_starts_at)
 );
+
+CREATE TABLE IF NOT EXISTS consultations (
+  id uuid PRIMARY KEY,
+  template_slug text NOT NULL,
+  template_title text NOT NULL,
+  answers jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (created_at DESC);
+CREATE INDEX IF NOT EXISTS consultations_template_slug_idx ON consultations (template_slug);
