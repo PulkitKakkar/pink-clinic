@@ -21,11 +21,19 @@ class WebhookNotificationProvider implements NotificationProvider {
 }
 
 class TwilioSmsNotificationProvider implements NotificationProvider {
+  private readonly accountSid: string;
+  private readonly authToken: string;
+  private readonly fromNumber: string;
+
   constructor(
-    private readonly accountSid: string,
-    private readonly authToken: string,
-    private readonly fromNumber: string,
-  ) {}
+    accountSid: string,
+    authToken: string,
+    fromNumber: string,
+  ) {
+    this.accountSid = accountSid.trim();
+    this.authToken = authToken.trim();
+    this.fromNumber = formatPhoneNumber(fromNumber);
+  }
 
   async send(notification: Parameters<NotificationProvider["send"]>[0]) {
     if (!notification.channels.includes("sms")) throw new Error("Twilio SMS provider cannot send this notification because no customer phone number is available.");
@@ -46,6 +54,7 @@ class TwilioSmsNotificationProvider implements NotificationProvider {
 
     if (!response.ok) {
       const error = await response.text();
+      if (response.status === 401) throw new Error("Twilio rejected the Account SID/Auth Token. Check TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in Amplify, then redeploy.");
       throw new Error(`Twilio returned ${response.status}: ${error.slice(0, 300)}`);
     }
   }
@@ -68,10 +77,13 @@ function formatPhoneNumber(phone: string) {
 }
 
 export function getNotificationProvider(): NotificationProvider {
-  const webhook = process.env.NOTIFICATION_WEBHOOK_URL;
+  const webhook = process.env.NOTIFICATION_WEBHOOK_URL?.trim();
   if (webhook) return new WebhookNotificationProvider(webhook);
-  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
-    return new TwilioSmsNotificationProvider(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN, process.env.TWILIO_PHONE_NUMBER);
+  const accountSid = process.env.TWILIO_ACCOUNT_SID?.trim();
+  const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
+  const phoneNumber = process.env.TWILIO_PHONE_NUMBER?.trim();
+  if (accountSid && authToken && phoneNumber) {
+    return new TwilioSmsNotificationProvider(accountSid, authToken, phoneNumber);
   }
   if (process.env.NODE_ENV !== "production") return new LocalNotificationProvider();
   throw new NotificationConfigurationError("Set NOTIFICATION_WEBHOOK_URL or TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER to send production booking notifications.");
