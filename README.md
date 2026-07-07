@@ -97,7 +97,9 @@ Create tagged release versions before deploying:
 npm run release:patch  # 1.0.0 -> 1.0.1
 npm run release:minor  # 1.0.0 -> 1.1.0
 npm run release:major  # 1.0.0 -> 2.0.0
-git push origin main --follow-tags
+npm run release:push
 ```
+
+Pushing the version tag starts the GitHub release workflow. It runs linting, typechecking, and a production build, then creates a GitHub Release with generated notes and a `release-info.json` attachment.
 
 Use patch releases for small fixes, minor releases for new features, and major releases for breaking changes or major rebuilds.

@@ -144,3 +144,24 @@ export async function updateBooking(input: UpdateBookingInput) {
   writeQueue = operation.then(() => undefined, () => undefined);
   return operation;
 }
+
+export async function deleteBooking(id: string) {
+  if (!id?.trim()) throw new BookingValidationError("Booking id is required.");
+  assertProductionStorage();
+
+  if (sql) {
+    const rows = await sql<{ id: string }[]>`DELETE FROM bookings WHERE id=${id} RETURNING id`;
+    if (!rows.length) throw new BookingValidationError("Booking not found.");
+    return { id };
+  }
+
+  const operation = writeQueue.then(async () => {
+    const bookings = await getLocalBookings();
+    const next = bookings.filter((booking) => booking.id !== id);
+    if (next.length === bookings.length) throw new BookingValidationError("Booking not found.");
+    await writeLocalBookings(next);
+    return { id };
+  });
+  writeQueue = operation.then(() => undefined, () => undefined);
+  return operation;
+}

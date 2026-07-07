@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { BookingConfigurationError, BookingConflictError, BookingValidationError, createBooking, getBookings, updateBooking } from "@/lib/admin/booking-storage";
+import { BookingConfigurationError, BookingConflictError, BookingValidationError, createBooking, deleteBooking, getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import type { BookingStatus, CreateBookingInput, UpdateBookingInput } from "@/lib/admin/booking-types";
 import { sendBookingNotification } from "@/lib/notifications/booking-notifications";
 
@@ -40,5 +40,17 @@ export async function PATCH(request: Request) {
     if (error instanceof BookingValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
     if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });
     return NextResponse.json({ error: "Could not update booking." }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json() as { id?: string };
+    if (!body.id) return NextResponse.json({ error: "Booking id is required." }, { status: 400 });
+    return NextResponse.json({ deleted: await deleteBooking(body.id) });
+  } catch (error) {
+    if (error instanceof BookingValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });
+    return NextResponse.json({ error: "Could not delete booking." }, { status: 500 });
   }
 }

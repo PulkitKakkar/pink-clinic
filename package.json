@@ -12,6 +12,7 @@
     "release:patch": "npm version patch -m \"release: %s\"",
     "release:minor": "npm version minor -m \"release: %s\"",
     "release:major": "npm version major -m \"release: %s\"",
+    "release:push": "git push origin main --follow-tags",
     "db:migrate": "psql \"$DATABASE_URL\" -f db/migrations/001_booking_system.sql"
   },
   "dependencies": {
