@@ -58,11 +58,12 @@ Customers receive a confirmation when a booking is created and reminders approxi
 
 - Set `NOTIFICATION_WEBHOOK_URL` to an SMS/email automation endpoint.
 - Optionally set `NOTIFICATION_WEBHOOK_SECRET`; it is sent as a Bearer token.
+- Or, for direct SMS confirmations and reminders, set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER`.
 - Set a long random `CRON_SECRET` in Amplify environment variables.
 - Configure an external hourly scheduler, such as Amazon EventBridge Scheduler, to call `/api/cron/booking-reminders` with the cron secret.
 - Re-run `npm run db:migrate` after pulling notification changes to create the idempotent notification delivery ledger.
 
-The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. Delivery records prevent duplicate reminders across concurrent Vercel instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
+The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. When the Twilio environment variables are used without a webhook, the app sends SMS directly and does not send email notifications. Delivery records prevent duplicate reminders across concurrent production instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
 
 Consultation submissions use local JSON in development and PostgreSQL in production when `DATABASE_URL` is configured. Run `npm run db:migrate` after pulling consultation changes so the `consultations` table exists before staff use the digital forms.
 
@@ -81,3 +82,22 @@ https://your-domain.com/api/cron/booking-reminders
 ```
 
 Include the configured `CRON_SECRET` according to the API route requirements. Images use Next Image, pages are statically generated where possible, and treatment/location routes include structured data and generated metadata.
+
+## Releases
+
+The live version is taken from `package.json` and exposed in the site footer and at:
+
+```text
+https://your-domain.com/api/version
+```
+
+Create tagged release versions before deploying:
+
+```bash
+npm run release:patch  # 1.0.0 -> 1.0.1
+npm run release:minor  # 1.0.0 -> 1.1.0
+npm run release:major  # 1.0.0 -> 2.0.0
+git push origin main --follow-tags
+```
+
+Use patch releases for small fixes, minor releases for new features, and major releases for breaking changes or major rebuilds.

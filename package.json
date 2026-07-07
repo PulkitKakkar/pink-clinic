@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "version:show": "node -p \"require('./package.json').version\"",
+    "release:patch": "npm version patch -m \"release: %s\"",
+    "release:minor": "npm version minor -m \"release: %s\"",
+    "release:major": "npm version major -m \"release: %s\"",
     "db:migrate": "psql \"$DATABASE_URL\" -f db/migrations/001_booking_system.sql"
   },
   "dependencies": {
