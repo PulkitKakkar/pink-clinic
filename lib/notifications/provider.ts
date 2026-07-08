@@ -55,6 +55,7 @@ class TwilioSmsNotificationProvider implements NotificationProvider {
     if (!response.ok) {
       const error = await response.text();
       if (response.status === 401) throw new Error("Twilio rejected the Account SID/Auth Token. Check TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in Amplify, then redeploy.");
+      if (response.status === 400 && error.includes("\"code\":21211")) throw new Error(`Twilio rejected the customer's phone number (${toNumber}). Enter UK mobiles as 07..., 7..., or +44...`);
       throw new Error(`Twilio returned ${response.status}: ${error.slice(0, 300)}`);
     }
   }
@@ -72,6 +73,7 @@ function formatPhoneNumber(phone: string) {
   const digits = trimmed.replace(/\D/g, "");
   if (digits.startsWith("00")) return `+${digits.slice(2)}`;
   if (digits.startsWith("0")) return `+44${digits.slice(1)}`;
+  if (digits.startsWith("7") && digits.length === 10) return `+44${digits}`;
   if (digits.startsWith("44")) return `+${digits}`;
   return `+${digits}`;
 }
