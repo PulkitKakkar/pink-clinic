@@ -48,10 +48,7 @@ export async function DELETE(request: Request) {
   try {
     const body = await request.json() as { id?: string };
     if (!body.id) return NextResponse.json({ error: "Booking id is required." }, { status: 400 });
-    const booking = (await getBookings()).find((item) => item.id === body.id);
-    if (!booking) return NextResponse.json({ error: "Booking not found." }, { status: 400 });
-    const notification = await notifySafely(booking, "booking-deleted");
-    return NextResponse.json({ deleted: await deleteBooking(body.id), notification });
+    return NextResponse.json({ deleted: await deleteBooking(body.id) });
   } catch (error) {
     if (error instanceof BookingValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
     if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });

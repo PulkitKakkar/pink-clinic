@@ -44,7 +44,6 @@ function notificationCopy(booking: Booking, type: BookingNotificationType) {
   if (type === "booking-confirmation") return { subject: "Your Pink Beauty booking is confirmed", message: `Hi ${booking.customerName}, your booking is confirmed. ${details} ${footer}` };
   if (type === "booking-updated") return { subject: "Your Pink Beauty booking has been updated", message: `Hi ${booking.customerName}, your booking has been updated. ${details} ${footer}` };
   if (type === "booking-cancelled") return { subject: "Your Pink Beauty booking has been cancelled", message: `Hi ${booking.customerName}, your booking for ${booking.treatmentName} at ${notificationLocation(booking)} on ${appointment} has been cancelled. Please contact us if you need help. ${footer}` };
-  if (type === "booking-deleted") return { subject: "Your Pink Beauty booking has been deleted", message: `Hi ${booking.customerName}, your booking for ${booking.treatmentName} at ${notificationLocation(booking)} on ${appointment} has been deleted. Please contact us if you need help. ${footer}` };
   const timing = type === "reminder-48-hours" ? "in two days" : "tomorrow";
   return { subject: `Reminder: your Pink Beauty booking is ${timing}`, message: `Hi ${booking.customerName}, this is a reminder that your booking is ${timing}. ${details} ${footer}` };
 }

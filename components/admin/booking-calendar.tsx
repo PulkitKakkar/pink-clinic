@@ -21,7 +21,7 @@ type Props = { initialBookings: Booking[]; branches: Branch[]; services: Service
 type CalendarView = "month" | "week" | "day";
 type Message = { type: "idle" | "saving" | "success" | "warning" | "error"; message?: string };
 type BookingResponse = { booking?: Booking; notification?: { sent: boolean; reason?: string }; error?: string };
-type DeleteBookingResponse = { deleted?: { id: string }; notification?: { sent: boolean; reason?: string }; error?: string };
+type DeleteBookingResponse = { deleted?: { id: string }; error?: string };
 
 export function BookingCalendar({ initialBookings, branches, services, staff }: Props) {
   const [bookings, setBookings] = useState(initialBookings);
@@ -119,10 +119,8 @@ export function BookingCalendar({ initialBookings, branches, services, staff }: 
     const result = await response.json() as DeleteBookingResponse;
     if (!response.ok || !result.deleted) { setEditMessage({ type: "error", message: result.error || "Could not delete booking." }); return; }
     setBookings((current) => current.filter((booking) => booking.id !== result.deleted!.id));
-    setEditMessage(result.notification && !result.notification.sent
-      ? { type: "warning", message: `Booking deleted, but customer notification was not sent: ${result.notification.reason || "provider unavailable"}` }
-      : { type: "success", message: "Booking deleted and customer notification sent." });
-    window.setTimeout(() => setEditing(null), result.notification && !result.notification.sent ? 1200 : 350);
+    setEditMessage({ type: "success", message: "Booking deleted." });
+    window.setTimeout(() => setEditing(null), 350);
   }
 
   return <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
