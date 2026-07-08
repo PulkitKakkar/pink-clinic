@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { BookingConfigurationError, BookingConflictError, BookingValidationError, createBooking, deleteBooking, getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import type { BookingStatus, CreateBookingInput, UpdateBookingInput } from "@/lib/admin/booking-types";
+import type { BookingNotificationType } from "@/lib/notifications/types";
 import { sendBookingNotification } from "@/lib/notifications/booking-notifications";
 
-async function notifySafely(booking: Awaited<ReturnType<typeof createBooking>>, type: "booking-confirmation" | "booking-updated" | "booking-cancelled") {
+async function notifySafely(booking: Awaited<ReturnType<typeof createBooking>>, type: BookingNotificationType) {
   try { return await sendBookingNotification(booking, type); }
   catch (error) { return { sent: false, reason: error instanceof Error ? error.message : "Notification could not be sent." }; }
 }
@@ -47,7 +48,10 @@ export async function DELETE(request: Request) {
   try {
     const body = await request.json() as { id?: string };
     if (!body.id) return NextResponse.json({ error: "Booking id is required." }, { status: 400 });
-    return NextResponse.json({ deleted: await deleteBooking(body.id) });
+    const booking = (await getBookings()).find((item) => item.id === body.id);
+    if (!booking) return NextResponse.json({ error: "Booking not found." }, { status: 400 });
+    const notification = await notifySafely(booking, "booking-deleted");
+    return NextResponse.json({ deleted: await deleteBooking(body.id), notification });
   } catch (error) {
     if (error instanceof BookingValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
     if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });

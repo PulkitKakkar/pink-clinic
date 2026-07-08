@@ -17,18 +17,36 @@ if (sql && process.env.NODE_ENV !== "production") globalDatabase.notificationSql
 
 type LocalDelivery = { key: string; status: "sent" | "failed"; error?: string; updatedAt: string };
 type DeliveryClaim = { id: string; claimed: boolean };
+const branchContactNumbers: Record<string, string> = {
+  "reading-watlington-street": "0118 402 8505",
+  "reading-west-street": "0118 996 2711",
+};
+const branchNotificationNames: Record<string, string> = {
+  "reading-watlington-street": "Watlington Street Reading",
+  "reading-west-street": "West Street Reading",
+};
+
+function notificationLocation(booking: Booking) {
+  const branchName = branchNotificationNames[booking.branchId] || branches.find((item) => item.id === booking.branchId)?.name;
+  return branchName ? `Pink, ${branchName}` : "Pink Beauty Salon";
+}
+
+function noReplyCopy(booking: Booking) {
+  return `Please do not reply to this message. If you need to contact us, call ${branchContactNumbers[booking.branchId] || "0118 402 8505"}.`;
+}
 
 function notificationCopy(booking: Booking, type: BookingNotificationType) {
-  const branch = branches.find((item) => item.id === booking.branchId);
   const appointment = new Date(booking.startsAt).toLocaleString("en-GB", {
     timeZone: "Europe/London", weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
   });
-  const details = `${booking.treatmentName} with ${booking.practitionerName} at ${branch?.name || "Pink Beauty Salon"} on ${appointment}.`;
-  if (type === "booking-confirmation") return { subject: "Your Pink Beauty booking is confirmed", message: `Hi ${booking.customerName}, your booking is confirmed. ${details}` };
-  if (type === "booking-updated") return { subject: "Your Pink Beauty booking has been updated", message: `Hi ${booking.customerName}, your booking has been updated. ${details}` };
-  if (type === "booking-cancelled") return { subject: "Your Pink Beauty booking has been cancelled", message: `Hi ${booking.customerName}, your booking for ${booking.treatmentName} on ${appointment} has been cancelled. Please contact us if you need help.` };
+  const details = `${booking.treatmentName} with ${booking.practitionerName} at ${notificationLocation(booking)} on ${appointment}.`;
+  const footer = noReplyCopy(booking);
+  if (type === "booking-confirmation") return { subject: "Your Pink Beauty booking is confirmed", message: `Hi ${booking.customerName}, your booking is confirmed. ${details} ${footer}` };
+  if (type === "booking-updated") return { subject: "Your Pink Beauty booking has been updated", message: `Hi ${booking.customerName}, your booking has been updated. ${details} ${footer}` };
+  if (type === "booking-cancelled") return { subject: "Your Pink Beauty booking has been cancelled", message: `Hi ${booking.customerName}, your booking for ${booking.treatmentName} at ${notificationLocation(booking)} on ${appointment} has been cancelled. Please contact us if you need help. ${footer}` };
+  if (type === "booking-deleted") return { subject: "Your Pink Beauty booking has been deleted", message: `Hi ${booking.customerName}, your booking for ${booking.treatmentName} at ${notificationLocation(booking)} on ${appointment} has been deleted. Please contact us if you need help. ${footer}` };
   const timing = type === "reminder-48-hours" ? "in two days" : "tomorrow";
-  return { subject: `Reminder: your Pink Beauty booking is ${timing}`, message: `Hi ${booking.customerName}, this is a reminder that your booking is ${timing}. ${details}` };
+  return { subject: `Reminder: your Pink Beauty booking is ${timing}`, message: `Hi ${booking.customerName}, this is a reminder that your booking is ${timing}. ${details} ${footer}` };
 }
 
 function buildNotification(booking: Booking, type: BookingNotificationType): BookingNotification {

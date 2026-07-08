@@ -1,6 +1,6 @@
 import type { Booking } from "@/lib/admin/booking-types";
 
-export type BookingNotificationType = "booking-confirmation" | "booking-updated" | "booking-cancelled" | "reminder-48-hours" | "reminder-24-hours";
+export type BookingNotificationType = "booking-confirmation" | "booking-updated" | "booking-cancelled" | "booking-deleted" | "reminder-48-hours" | "reminder-24-hours";
 
 export type BookingNotification = {
   id: string;
