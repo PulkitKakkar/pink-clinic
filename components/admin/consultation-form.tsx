@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CheckCircle2, LoaderCircle, Save } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
+import { SignaturePad } from "@/components/admin/signature-pad";
 
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-pink";
@@ -80,6 +81,7 @@ export function ConsultationForm({
               : String(form.get(field.id) || "");
       });
     answers.termsAgreement = form.get("termsAgreement") === "on";
+    answers.signatureData = String(form.get("signatureData") || "");
     const response = await fetch("/api/admin/consultations", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -216,6 +218,9 @@ export function ConsultationForm({
           </div>
         </section>
       ))}
+      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+        <SignaturePad />
+      </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <h2 className="font-display text-2xl">Customer agreement</h2>
         <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">

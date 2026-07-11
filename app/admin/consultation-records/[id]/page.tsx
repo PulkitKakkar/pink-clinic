@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { getConsultations } from "@/lib/admin/storage";
@@ -37,9 +38,20 @@ export default async function Page({
               <p className="text-[9px] font-bold uppercase tracking-[.14em] text-pink">
                 {key.replace(/([A-Z])/g, " $1")}
               </p>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-black/65">
-                {Array.isArray(value) ? value.join(", ") : String(value)}
-              </p>
+              {key === "signatureData" && typeof value === "string" ? (
+                <Image
+                  src={value}
+                  alt="Customer signature"
+                  width={800}
+                  height={240}
+                  unoptimized
+                  className="mt-3 max-h-48 rounded-xl border border-black/10 bg-white"
+                />
+              ) : (
+                <p className="mt-2 whitespace-pre-wrap text-sm text-black/65">
+                  {Array.isArray(value) ? value.join(", ") : String(value)}
+                </p>
+              )}
             </div>
           ))}
         </div>
