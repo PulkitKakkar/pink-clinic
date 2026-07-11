@@ -6,6 +6,7 @@ import { buildCustomerHistories } from "@/lib/admin/customer-history";
 import { getBookings } from "@/lib/admin/booking-storage";
 import { branches } from "@/lib/branches";
 import { AddCustomerHistory } from "@/components/admin/add-customer-history";
+import { EditCustomerRecord } from "@/components/admin/edit-customer-record";
 
 export const dynamic = "force-dynamic";
 
@@ -101,25 +102,28 @@ export default async function AdminCustomersPage() {
                         )}
                       </div>
                     </div>
-                    <div
-                      className={`rounded-xl px-4 py-3 text-xs font-bold ${customer.marketingConsent ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
-                    >
-                      {customer.marketingConsent ? (
-                        <span className="flex items-center gap-2">
-                          <MailCheck size={15} />
-                          Promotions allowed
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          <MailX size={15} />
-                          Do not send promotions
-                        </span>
-                      )}
-                      <p className="mt-1 text-[10px] font-medium opacity-70">
-                        {customer.marketingConsentUpdatedAt
-                          ? `Recorded ${new Date(customer.marketingConsentUpdatedAt).toLocaleString("en-GB")}`
-                          : "No consent record date"}
-                      </p>
+                    <div className="flex flex-col items-end gap-3">
+                      <EditCustomerRecord customer={customer} />
+                      <div
+                        className={`rounded-xl px-4 py-3 text-xs font-bold ${customer.marketingConsent ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
+                      >
+                        {customer.marketingConsent ? (
+                          <span className="flex items-center gap-2">
+                            <MailCheck size={15} />
+                            Promotions allowed
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2">
+                            <MailX size={15} />
+                            Do not send promotions
+                          </span>
+                        )}
+                        <p className="mt-1 text-[10px] font-medium opacity-70">
+                          {customer.marketingConsentUpdatedAt
+                            ? `Recorded ${new Date(customer.marketingConsentUpdatedAt).toLocaleString("en-GB")}`
+                            : "No consent record date"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="mt-5 overflow-hidden rounded-xl border border-black/5">
