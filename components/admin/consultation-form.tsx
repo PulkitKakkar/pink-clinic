@@ -7,6 +7,37 @@ import { AddressLookup } from "@/components/admin/address-lookup";
 
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-pink";
+const calculatedFields = new Set([
+  "geneticDispositionScore",
+  "sunExposureReactionScore",
+  "tanningHabitsScore",
+  "skinTypeTotalScore",
+  "fitzpatrickType",
+  "testPatchFitzpatrick",
+]);
+const scoreGroups: Record<string, string[]> = {
+  geneticDispositionScore: [
+    "eyeColourScore",
+    "naturalHairColourScore",
+    "unexposedSkinColourScore",
+    "frecklesScore",
+  ],
+  sunExposureReactionScore: [
+    "sunReactionScore",
+    "tanDegreeScore",
+    "brownWithinHoursScore",
+    "faceSunReactionScore",
+  ],
+  tanningHabitsScore: ["lastTanScore", "sunExposureFrequencyScore"],
+};
+function fitzpatrick(total: number) {
+  if (total <= 7) return "I";
+  if (total <= 16) return "II";
+  if (total <= 24) return "III";
+  if (total <= 30) return "IV";
+  if (total <= 35) return "V";
+  return "VI";
+}
 
 export function ConsultationForm({
   template,
@@ -58,8 +89,37 @@ export function ConsultationForm({
     if (response.ok) event.currentTarget.reset();
   }
 
+  function calculateLaserScores(form: HTMLFormElement) {
+    if (template.slug !== "laser-device") return;
+    const values = new FormData(form);
+    const setValue = (name: string, value: string) => {
+      const field = form.elements.namedItem(name) as HTMLInputElement | null;
+      if (field) field.value = value;
+    };
+    const totals = Object.entries(scoreGroups).map(([target, names]) => {
+      const complete = names.every((name) => values.get(name) !== "");
+      const total = names.reduce(
+        (sum, name) => sum + Number(values.get(name) || 0),
+        0,
+      );
+      setValue(target, complete ? String(total) : "");
+      return { complete, total };
+    });
+    const complete = totals.every((item) => item.complete);
+    const total = totals.reduce((sum, item) => sum + item.total, 0);
+    const type = complete ? fitzpatrick(total) : "";
+    setValue("skinTypeTotalScore", complete ? String(total) : "");
+    setValue("fitzpatrickType", type);
+    setValue("testPatchFitzpatrick", type);
+  }
+
   return (
-    <form noValidate onSubmit={submit} className="grid gap-5">
+    <form
+      noValidate
+      onSubmit={submit}
+      onChange={(event) => calculateLaserScores(event.currentTarget)}
+      className="grid gap-5"
+    >
       {template.sections.map((section) => (
         <section
           key={section.title}
@@ -84,6 +144,14 @@ export function ConsultationForm({
                     required={field.required}
                     rows={3}
                     className={inputClass}
+                  />
+                ) : calculatedFields.has(field.id) ? (
+                  <input
+                    name={field.id}
+                    required={field.required}
+                    readOnly
+                    aria-readonly="true"
+                    className={`${inputClass} bg-pink-light/35 font-bold`}
                   />
                 ) : field.type === "yes-no" ? (
                   <select

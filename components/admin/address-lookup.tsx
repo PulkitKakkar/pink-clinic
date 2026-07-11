@@ -10,6 +10,9 @@ export function AddressLookup({
 }) {
   const [postcode, setPostcode] = useState("");
   const [addresses, setAddresses] = useState<string[]>([]);
+  const [house, setHouse] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [address, setAddress] = useState(defaultValue);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   async function lookup() {
@@ -28,6 +31,11 @@ export function AddressLookup({
       return;
     }
     setAddresses(data.addresses || []);
+  }
+  function combine(nextHouse: string, nextAddress: string) {
+    setAddress(
+      [nextHouse.trim(), nextAddress.trim()].filter(Boolean).join(", "),
+    );
   }
   const cls =
     "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-pink";
@@ -55,11 +63,21 @@ export function AddressLookup({
         </button>
       </span>
       {addresses.length > 0 && (
+        <input
+          value={house}
+          onChange={(event) => {
+            setHouse(event.target.value);
+            combine(event.target.value, selectedAddress);
+          }}
+          placeholder="House number or name (for example, 6 or Rose Cottage)"
+          className={cls}
+        />
+      )}
+      {addresses.length > 0 && (
         <select
           onChange={(e) => {
-            const textarea =
-              e.currentTarget.parentElement?.querySelector("textarea");
-            if (textarea) textarea.value = e.target.value;
+            setSelectedAddress(e.target.value);
+            combine(house, e.target.value);
           }}
           className={cls}
         >
@@ -73,7 +91,8 @@ export function AddressLookup({
       <textarea
         name={name}
         rows={3}
-        defaultValue={defaultValue}
+        value={address}
+        onChange={(event) => setAddress(event.target.value)}
         placeholder="Full address"
         className={cls}
       />
