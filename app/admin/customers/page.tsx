@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { CalendarDays, MailCheck, MailX, Phone, UserRound } from "lucide-react";
+import {
+  CalendarDays,
+  MailCheck,
+  MailX,
+  Phone,
+  Search,
+  UserRound,
+} from "lucide-react";
 import { AdminDatabaseError } from "@/components/admin/admin-database-error";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { buildCustomerHistories } from "@/lib/admin/customer-history";
@@ -7,18 +14,63 @@ import { getBookings } from "@/lib/admin/booking-storage";
 import { branches } from "@/lib/branches";
 import { AddCustomerHistory } from "@/components/admin/add-customer-history";
 import { EditCustomerRecord } from "@/components/admin/edit-customer-record";
+import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminCustomersPage() {
+function sessionProgress(notes: string) {
+  const match = notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i);
+  return match
+    ? { current: Number(match[1]), total: Number(match[2]) }
+    : undefined;
+}
+function treatmentSummary(
+  bookings: import("@/lib/admin/booking-types").Booking[],
+) {
+  const groups = new Map<
+    string,
+    { name: string; visits: number; current: number; total: number }
+  >();
+  for (const booking of bookings) {
+    const key = booking.treatmentName.trim().toLowerCase();
+    const previous = groups.get(key) || {
+      name: booking.treatmentName,
+      visits: 0,
+      current: 0,
+      total: 0,
+    };
+    const progress = sessionProgress(booking.notes);
+    groups.set(key, {
+      ...previous,
+      visits: previous.visits + 1,
+      current: Math.max(previous.current, progress?.current || 0),
+      total: Math.max(previous.total, progress?.total || 0),
+    });
+  }
+  return [...groups.values()];
+}
+
+export default async function AdminCustomersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const query = ((await searchParams).q || "").trim().toLowerCase();
   const result = await getBookings()
     .then((bookings) => ({
       customers: buildCustomerHistories(bookings),
       error: undefined,
     }))
     .catch((error) => ({ customers: [], error }));
-  const customers = result.customers;
-  const optedIn = customers.filter((customer) => customer.marketingConsent);
+  const allCustomers = result.customers;
+  const customers = query
+    ? allCustomers.filter(
+        (customer) =>
+          customer.name.toLowerCase().includes(query) ||
+          customer.phone.replace(/\s/g, "").includes(query.replace(/\s/g, "")),
+      )
+    : allCustomers;
+  const optedIn = allCustomers.filter((customer) => customer.marketingConsent);
 
   return (
     <>
@@ -27,6 +79,31 @@ export default async function AdminCustomersPage() {
         <div className="mb-5 flex justify-end">
           <AddCustomerHistory customers={customers} />
         </div>
+        <form className="mt-6 flex max-w-xl gap-2" action="/admin/customers">
+          <label className="relative flex-1">
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-black/35"
+              size={16}
+            />
+            <input
+              name="q"
+              defaultValue={query}
+              placeholder="Search by customer name or phone number"
+              className="w-full rounded-xl border border-black/10 bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-pink"
+            />
+          </label>
+          <button className="button-primary" type="submit">
+            Search
+          </button>
+          {query && (
+            <Link
+              href="/admin/customers"
+              className="inline-flex items-center rounded-xl border border-black/10 px-4 text-xs font-bold"
+            >
+              Clear
+            </Link>
+          )}
+        </form>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[.2em] text-pink">
@@ -126,54 +203,78 @@ export default async function AdminCustomersPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-5 overflow-hidden rounded-xl border border-black/5">
-                    {customer.bookings.map((booking) => {
-                      const branch = branches.find(
-                        (item) => item.id === booking.branchId,
-                      );
-                      return (
-                        <div
-                          key={booking.id}
-                          className="grid gap-3 border-b border-black/5 p-4 last:border-0 md:grid-cols-[180px_minmax(0,1fr)]"
+                  <div className="mt-5 rounded-xl bg-cream p-4">
+                    <p className="text-[9px] font-bold uppercase tracking-[.16em] text-pink">
+                      Treatment overview
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {treatmentSummary(customer.bookings).map((item) => (
+                        <span
+                          key={item.name}
+                          className="rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm"
                         >
-                          <div className="text-xs">
-                            <p className="font-bold">
-                              {new Date(booking.startsAt).toLocaleString(
-                                "en-GB",
-                                {
-                                  weekday: "short",
-                                  day: "numeric",
-                                  month: "short",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                },
+                          {item.name}:{" "}
+                          {item.total
+                            ? `${item.current} of ${item.total} sessions`
+                            : `${item.visits} ${item.visits === 1 ? "visit" : "visits"}`}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <p className="mb-2 text-[9px] font-bold uppercase tracking-[.16em] text-black/40">
+                      Treatment timeline · newest first
+                    </p>
+                    <div className="overflow-hidden rounded-xl border border-black/5">
+                      {customer.bookings.map((booking) => {
+                        const branch = branches.find(
+                          (item) => item.id === booking.branchId,
+                        );
+                        return (
+                          <div
+                            key={booking.id}
+                            className="grid gap-3 border-b border-black/5 p-4 last:border-0 md:grid-cols-[180px_minmax(0,1fr)]"
+                          >
+                            <div className="text-xs">
+                              <p className="font-bold">
+                                {new Date(booking.startsAt).toLocaleString(
+                                  "en-GB",
+                                  {
+                                    weekday: "short",
+                                    day: "numeric",
+                                    month: "short",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  },
+                                )}
+                              </p>
+                              <p className="mt-1 text-black/40">
+                                {branch?.name || "Unknown branch"} ·{" "}
+                                {booking.status}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold">
+                                {booking.treatmentName}
+                              </p>
+                              <p className="mt-1 text-xs text-black/45">
+                                Practitioner: {booking.practitionerName}
+                              </p>
+                              {booking.notes ? (
+                                <p className="mt-3 rounded-lg bg-cream p-3 text-xs leading-5 text-black/60">
+                                  {booking.notes}
+                                </p>
+                              ) : (
+                                <p className="mt-3 text-xs text-black/30">
+                                  No appointment notes recorded.
+                                </p>
                               )}
-                            </p>
-                            <p className="mt-1 text-black/40">
-                              {branch?.name || "Unknown branch"} ·{" "}
-                              {booking.status}
-                            </p>
+                              <EditTreatmentRecord booking={booking} />
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm font-bold">
-                              {booking.treatmentName}
-                            </p>
-                            <p className="mt-1 text-xs text-black/45">
-                              Practitioner: {booking.practitionerName}
-                            </p>
-                            {booking.notes ? (
-                              <p className="mt-3 rounded-lg bg-cream p-3 text-xs leading-5 text-black/60">
-                                {booking.notes}
-                              </p>
-                            ) : (
-                              <p className="mt-3 text-xs text-black/30">
-                                No appointment notes recorded.
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </article>
               ))

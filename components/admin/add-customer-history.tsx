@@ -39,7 +39,7 @@ export function AddCustomerHistory({
         customerAddress: f.get("customerAddress"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
-        notes: `Consultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
+        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
         historicalRecord: true,
         suppressNotification: true,
       }),
@@ -145,6 +145,24 @@ export function AddCustomerHistory({
               </Field>
               <Field label="Treatment" wide>
                 <input required name="treatmentName" className={cls} />
+              </Field>
+              <Field label="Session number">
+                <input
+                  name="sessionNumber"
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 3"
+                  className={cls}
+                />
+              </Field>
+              <Field label="Total sessions booked">
+                <input
+                  name="totalSessions"
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 6"
+                  className={cls}
+                />
               </Field>
               <Field label="Consultation sheet / consultation details" wide>
                 <textarea

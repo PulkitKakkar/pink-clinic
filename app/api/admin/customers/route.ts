@@ -4,6 +4,13 @@ import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
 export async function PATCH(request: Request) {
   try {
     const body = (await request.json()) as {
+      action?: "treatment";
+      bookingId?: string;
+      treatmentName?: string;
+      consultation?: string;
+      outcome?: string;
+      sessionNumber?: string;
+      totalSessions?: string;
       bookingIds?: string[];
       name?: string;
       phone?: string;
@@ -11,6 +18,26 @@ export async function PATCH(request: Request) {
       address?: string;
       marketingConsent?: boolean;
     };
+    if (body.action === "treatment") {
+      if (
+        !body.bookingId ||
+        !body.treatmentName?.trim() ||
+        !body.consultation?.trim() ||
+        !body.outcome?.trim()
+      )
+        return NextResponse.json(
+          {
+            error: "Treatment, consultation details and outcome are required.",
+          },
+          { status: 400 },
+        );
+      const booking = await updateBooking({
+        id: body.bookingId,
+        treatmentName: body.treatmentName,
+        notes: `Session: ${body.sessionNumber || ""} of ${body.totalSessions || ""}\n\nConsultation:\n${body.consultation.trim()}\n\nOutcome:\n${body.outcome.trim()}`,
+      });
+      return NextResponse.json({ booking });
+    }
     if (!body.bookingIds?.length || !body.name?.trim() || !body.phone?.trim())
       return NextResponse.json(
         { error: "Customer name, phone and record ids are required." },
