@@ -16,6 +16,7 @@ import { AddCustomerHistory } from "@/components/admin/add-customer-history";
 import { EditCustomerRecord } from "@/components/admin/edit-customer-record";
 import { CustomerTreatmentHistory } from "@/components/admin/customer-treatment-history";
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
+import { CustomerSearch } from "@/components/admin/customer-search";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +60,8 @@ export default async function AdminCustomersPage({
         <div className="mb-5 flex justify-end">
           <AddCustomerHistory customers={customers} />
         </div>
-        <form className="mt-6 flex max-w-xl gap-2" action="/admin/customers">
+        <CustomerSearch customers={allCustomers} initialQuery={query} />
+        <form className="hidden" action="/admin/customers">
           <label className="relative flex-1">
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 text-black/35"
@@ -161,6 +163,11 @@ export default async function AdminCustomersPage({
                     </div>
                     <div className="flex flex-col items-end gap-3">
                       <EditCustomerRecord customer={customer} />
+                      <AddCustomerHistory
+                        customers={allCustomers}
+                        initialCustomerId={customer.id}
+                        label="Add treatment record"
+                      />
                       <div
                         className={`rounded-xl px-4 py-3 text-xs font-bold ${customer.marketingConsent ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
                       >

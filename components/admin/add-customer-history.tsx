@@ -7,14 +7,18 @@ const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 export function AddCustomerHistory({
   customers,
+  initialCustomerId = "",
+  label = "Add customer record",
 }: {
   customers: CustomerHistory[];
+  initialCustomerId?: string;
+  label?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(initialCustomerId);
   const customer = customers.find((c) => c.id === selected);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -58,10 +62,13 @@ export function AddCustomerHistory({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setSelected(initialCustomerId);
+          setOpen(true);
+        }}
         className="button-primary"
       >
-        <Plus size={14} /> Add customer record
+        <Plus size={14} /> {label}
       </button>
       {open && (
         <div
