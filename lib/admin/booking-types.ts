@@ -19,6 +19,7 @@ export type Booking = {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
+  customerAddress: string;
   marketingConsent: boolean;
   marketingConsentUpdatedAt: string | null;
   startsAt: string;
@@ -28,5 +29,8 @@ export type Booking = {
   createdAt: string;
 };
 
-export type CreateBookingInput = Omit<Booking, "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt"> & { marketingConsentUpdatedAt?: string | null };
+export type CreateBookingInput = Omit<
+  Booking,
+  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt"
+> & { marketingConsentUpdatedAt?: string | null };
 export type UpdateBookingInput = Partial<CreateBookingInput> & { id: string };

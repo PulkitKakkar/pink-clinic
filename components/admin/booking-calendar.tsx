@@ -254,6 +254,7 @@ export function BookingCalendar({
         customerName: form.get("customerName"),
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
+        customerAddress: form.get("customerAddress"),
         marketingConsent: form.get("marketingConsent") === "on",
         startsAt: new Date(String(form.get("startsAt"))).toISOString(),
         notes: form.get("notes"),
@@ -305,6 +306,7 @@ export function BookingCalendar({
         customerName: form.get("customerName"),
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
+        customerAddress: form.get("customerAddress"),
         marketingConsent: form.get("marketingConsent") === "true",
         marketingConsentUpdatedAt:
           form.get("marketingConsent") === String(editing.marketingConsent)
@@ -515,6 +517,16 @@ export function BookingCalendar({
               name="customerEmail"
               type="email"
               defaultValue={customer?.email || ""}
+              className={inputClass}
+            />
+          </label>
+          <label className="grid gap-2 text-xs font-bold">
+            Customer address
+            <textarea
+              key={`address-${selectedCustomer}`}
+              name="customerAddress"
+              rows={2}
+              defaultValue={customer?.address || ""}
               className={inputClass}
             />
           </label>
@@ -853,6 +865,15 @@ export function BookingCalendar({
                   name="customerEmail"
                   type="email"
                   defaultValue={editing.customerEmail}
+                  className={inputClass}
+                />
+              </label>
+              <label className="grid gap-2 text-xs font-bold sm:col-span-2">
+                Customer address
+                <textarea
+                  name="customerAddress"
+                  rows={2}
+                  defaultValue={editing.customerAddress}
                   className={inputClass}
                 />
               </label>

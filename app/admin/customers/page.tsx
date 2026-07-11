@@ -24,7 +24,7 @@ export default async function AdminCustomersPage() {
       <AdminHeader />
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="mb-5 flex justify-end">
-          <AddCustomerHistory branches={branches} />
+          <AddCustomerHistory customers={customers} />
         </div>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -92,6 +92,11 @@ export default async function AdminCustomersPage() {
                         {customer.email && (
                           <span className="inline-flex items-center gap-1.5">
                             {customer.email}
+                          </span>
+                        )}
+                        {customer.address && (
+                          <span className="basis-full text-black/45">
+                            {customer.address}
                           </span>
                         )}
                       </div>

@@ -5,6 +5,7 @@ export type CustomerHistory = {
   name: string;
   email: string;
   phone: string;
+  address: string;
   marketingConsent: boolean;
   marketingConsentUpdatedAt: string | null;
   bookings: Booking[];
@@ -18,12 +19,19 @@ function customerKey(booking: Booking) {
 }
 
 function latestConsent(bookings: Booking[]) {
-  return bookings.reduce((latest, booking) => {
-    if (!latest) return booking;
-    const latestTime = latest.marketingConsentUpdatedAt ? new Date(latest.marketingConsentUpdatedAt).getTime() : 0;
-    const bookingTime = booking.marketingConsentUpdatedAt ? new Date(booking.marketingConsentUpdatedAt).getTime() : 0;
-    return bookingTime >= latestTime ? booking : latest;
-  }, undefined as Booking | undefined);
+  return bookings.reduce(
+    (latest, booking) => {
+      if (!latest) return booking;
+      const latestTime = latest.marketingConsentUpdatedAt
+        ? new Date(latest.marketingConsentUpdatedAt).getTime()
+        : 0;
+      const bookingTime = booking.marketingConsentUpdatedAt
+        ? new Date(booking.marketingConsentUpdatedAt).getTime()
+        : 0;
+      return bookingTime >= latestTime ? booking : latest;
+    },
+    undefined as Booking | undefined,
+  );
 }
 
 export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
@@ -33,19 +41,24 @@ export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
     groups.set(key, [...(groups.get(key) || []), booking]);
   }
 
-  return Array.from(groups.entries()).map(([id, customerBookings]) => {
-    const sorted = [...customerBookings].sort((a, b) => b.startsAt.localeCompare(a.startsAt));
-    const latestBooking = sorted[0];
-    const consentBooking = latestConsent(sorted) || latestBooking;
-    return {
-      id,
-      name: latestBooking.customerName,
-      email: latestBooking.customerEmail,
-      phone: latestBooking.customerPhone,
-      marketingConsent: consentBooking.marketingConsent,
-      marketingConsentUpdatedAt: consentBooking.marketingConsentUpdatedAt,
-      bookings: sorted,
-      lastVisitAt: latestBooking.startsAt,
-    };
-  }).sort((a, b) => b.lastVisitAt.localeCompare(a.lastVisitAt));
+  return Array.from(groups.entries())
+    .map(([id, customerBookings]) => {
+      const sorted = [...customerBookings].sort((a, b) =>
+        b.startsAt.localeCompare(a.startsAt),
+      );
+      const latestBooking = sorted[0];
+      const consentBooking = latestConsent(sorted) || latestBooking;
+      return {
+        id,
+        name: latestBooking.customerName,
+        email: latestBooking.customerEmail,
+        phone: latestBooking.customerPhone,
+        address: latestBooking.customerAddress || "",
+        marketingConsent: consentBooking.marketingConsent,
+        marketingConsentUpdatedAt: consentBooking.marketingConsentUpdatedAt,
+        bookings: sorted,
+        lastVisitAt: latestBooking.startsAt,
+      };
+    })
+    .sort((a, b) => b.lastVisitAt.localeCompare(a.lastVisitAt));
 }
