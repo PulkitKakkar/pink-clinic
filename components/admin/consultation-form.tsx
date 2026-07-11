@@ -15,6 +15,7 @@ const calculatedFields = new Set([
   "skinTypeTotalScore",
   "fitzpatrickType",
   "testPatchFitzpatrick",
+  "bloodPressureClassification",
 ]);
 const scoreGroups: Record<string, string[]> = {
   geneticDispositionScore: [
@@ -91,13 +92,30 @@ export function ConsultationForm({
     if (response.ok) event.currentTarget.reset();
   }
 
-  function calculateLaserScores(form: HTMLFormElement) {
-    if (template.slug !== "laser-device") return;
+  function calculateDerivedFields(form: HTMLFormElement) {
     const values = new FormData(form);
     const setValue = (name: string, value: string) => {
       const field = form.elements.namedItem(name) as HTMLInputElement | null;
       if (field) field.value = value;
     };
+    if (template.slug === "iv-therapy") {
+      const systolic = Number(values.get("systolic"));
+      const diastolic = Number(values.get("diastolic"));
+      let classification = "";
+      if (systolic > 0 && diastolic > 0) {
+        classification =
+          systolic < 90 || diastolic < 60
+            ? "Low"
+            : systolic >= 130 || diastolic >= 85
+              ? "High"
+              : systolic >= 121 || diastolic >= 81
+                ? "Elevated"
+                : "Normal";
+      }
+      setValue("bloodPressureClassification", classification);
+      return;
+    }
+    if (template.slug !== "laser-device") return;
     const totals = Object.entries(scoreGroups).map(([target, names]) => {
       const complete = names.every((name) => values.get(name) !== "");
       const total = names.reduce(
@@ -119,7 +137,7 @@ export function ConsultationForm({
     <form
       noValidate
       onSubmit={submit}
-      onChange={(event) => calculateLaserScores(event.currentTarget)}
+      onChange={(event) => calculateDerivedFields(event.currentTarget)}
       className="grid gap-5"
     >
       {template.sections.map((section) => (
