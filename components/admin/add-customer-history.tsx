@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LoaderCircle, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
+import { AddressLookup } from "@/components/admin/address-lookup";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 export function AddCustomerHistory({
@@ -142,12 +143,10 @@ export function AddCustomerHistory({
                 />
               </Field>
               <Field label="Customer address" wide>
-                <textarea
+                <AddressLookup
                   key={`address-${selected}`}
                   name="customerAddress"
-                  rows={3}
                   defaultValue={customer?.address || ""}
-                  className={cls}
                 />
               </Field>
               <Field label="Treatment" wide>

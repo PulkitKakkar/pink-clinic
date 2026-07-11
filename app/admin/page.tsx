@@ -10,7 +10,122 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
   const records = await getConsultations();
-  const customers = await getBookings().then(buildCustomerHistories).catch(() => []);
-  const optedIn = customers.filter((customer) => customer.marketingConsent).length;
-  return <><AdminHeader /><main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12"><div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-pink">Staff workspace</p><h1 className="mt-2 font-display text-5xl">Admin dashboard</h1><p className="mt-3 max-w-xl text-sm leading-6 text-black/45">Manage staff-created bookings, customer histories and consent records from one protected workspace.</p></div></div><div className="mt-8 grid gap-3 sm:grid-cols-4"><Link href="/admin/bookings" className="rounded-2xl bg-pink p-5 text-white shadow-soft transition hover:-translate-y-1"><CalendarDays size={20} /><strong className="mt-5 block text-3xl">Calendar</strong><span className="text-xs text-white/70">Create and view bookings</span></Link><Link href="/admin/customers" className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1"><Users className="text-pink" size={20} /><strong className="mt-5 block text-3xl">{customers.length}</strong><span className="text-xs text-black/40">Customer histories</span><span className="mt-2 block text-[10px] font-bold text-green-700">{optedIn} promotional opt-ins</span></Link><article className="rounded-2xl bg-white p-5 shadow-soft"><FileText className="text-pink" size={20} /><strong className="mt-5 block text-3xl">{consultationTemplates.length}</strong><span className="text-xs text-black/40">Form templates</span></article><article className="rounded-2xl bg-white p-5 shadow-soft"><Users className="text-pink" size={20} /><strong className="mt-5 block text-3xl">{records.length}</strong><span className="text-xs text-black/40">Consultation records</span></article></div><section className="mt-10"><h2 className="font-display text-3xl">Start a consultation</h2><div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{consultationTemplates.map((template) => <Link key={template.slug} href={`/admin/consultations/${template.slug}`} className="group rounded-2xl border border-black/5 bg-white p-5 shadow-soft transition hover:-translate-y-1"><p className="text-[9px] font-bold uppercase tracking-[.18em] text-pink">Client consultation</p><h3 className="mt-3 font-display text-2xl leading-none">{template.title}</h3><p className="mt-3 text-xs leading-5 text-black/45">{template.description}</p><span className="mt-5 flex items-center gap-2 text-xs font-bold text-pink">Open form <ArrowRight size={14} /></span></Link>)}</div></section><section className="mt-10"><h2 className="font-display text-3xl">Recent consultation records</h2><div className="mt-5 overflow-hidden rounded-2xl border border-black/5 bg-white">{records.length ? records.slice(0, 10).map((record) => <div key={record.id} className="flex items-center justify-between gap-4 border-b border-black/5 p-4 last:border-0"><div><p className="text-sm font-bold">{String(record.answers.fullName || "Unnamed client")}</p><p className="mt-1 text-xs text-black/40">{record.templateTitle}</p></div><time className="text-[10px] uppercase tracking-[.12em] text-black/35">{new Date(record.createdAt).toLocaleString("en-GB")}</time></div>) : <p className="p-5 text-sm text-black/40">No consultation records saved yet.</p>}</div></section></main></>;
+  const customers = await getBookings()
+    .then(buildCustomerHistories)
+    .catch(() => []);
+  const optedIn = customers.filter(
+    (customer) => customer.marketingConsent,
+  ).length;
+  return (
+    <>
+      <AdminHeader />
+      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[.2em] text-pink">
+              Staff workspace
+            </p>
+            <h1 className="mt-2 font-display text-5xl">Admin dashboard</h1>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-black/45">
+              Manage staff-created bookings, customer histories and consent
+              records from one protected workspace.
+            </p>
+          </div>
+        </div>
+        <div className="mt-8 grid gap-3 sm:grid-cols-4">
+          <Link
+            href="/admin/bookings"
+            className="rounded-2xl bg-pink p-5 text-white shadow-soft transition hover:-translate-y-1"
+          >
+            <CalendarDays size={20} />
+            <strong className="mt-5 block text-3xl">Calendar</strong>
+            <span className="text-xs text-white/70">
+              Create and view bookings
+            </span>
+          </Link>
+          <Link
+            href="/admin/customers"
+            className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1"
+          >
+            <Users className="text-pink" size={20} />
+            <strong className="mt-5 block text-3xl">{customers.length}</strong>
+            <span className="text-xs text-black/40">Customer histories</span>
+            <span className="mt-2 block text-[10px] font-bold text-green-700">
+              {optedIn} promotional opt-ins
+            </span>
+          </Link>
+          <article className="rounded-2xl bg-white p-5 shadow-soft">
+            <FileText className="text-pink" size={20} />
+            <strong className="mt-5 block text-3xl">
+              {consultationTemplates.length}
+            </strong>
+            <span className="text-xs text-black/40">Form templates</span>
+          </article>
+          <Link
+            href="/admin/consultation-records"
+            className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1"
+          >
+            <Users className="text-pink" size={20} />
+            <strong className="mt-5 block text-3xl">{records.length}</strong>
+            <span className="text-xs text-black/40">Consultation records</span>
+          </Link>
+        </div>
+        <section className="mt-10">
+          <h2 className="font-display text-3xl">Start a consultation</h2>
+          <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {consultationTemplates.map((template) => (
+              <Link
+                key={template.slug}
+                href={`/admin/consultations/${template.slug}`}
+                className="group rounded-2xl border border-black/5 bg-white p-5 shadow-soft transition hover:-translate-y-1"
+              >
+                <p className="text-[9px] font-bold uppercase tracking-[.18em] text-pink">
+                  Client consultation
+                </p>
+                <h3 className="mt-3 font-display text-2xl leading-none">
+                  {template.title}
+                </h3>
+                <p className="mt-3 text-xs leading-5 text-black/45">
+                  {template.description}
+                </p>
+                <span className="mt-5 flex items-center gap-2 text-xs font-bold text-pink">
+                  Open form <ArrowRight size={14} />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+        <section className="mt-10">
+          <h2 className="font-display text-3xl">Recent consultation records</h2>
+          <div className="mt-5 overflow-hidden rounded-2xl border border-black/5 bg-white">
+            {records.length ? (
+              records.slice(0, 10).map((record) => (
+                <Link
+                  href={`/admin/consultation-records/${record.id}`}
+                  key={record.id}
+                  className="flex items-center justify-between gap-4 border-b border-black/5 p-4 last:border-0"
+                >
+                  <div>
+                    <p className="text-sm font-bold">
+                      {String(record.answers.fullName || "Unnamed client")}
+                    </p>
+                    <p className="mt-1 text-xs text-black/40">
+                      {record.templateTitle}
+                    </p>
+                  </div>
+                  <time className="text-[10px] uppercase tracking-[.12em] text-black/35">
+                    {new Date(record.createdAt).toLocaleString("en-GB")}
+                  </time>
+                </Link>
+              ))
+            ) : (
+              <p className="p-5 text-sm text-black/40">
+                No consultation records saved yet.
+              </p>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
+  );
 }
