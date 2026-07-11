@@ -2,35 +2,44 @@
 import { useState } from "react";
 import { LoaderCircle, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { Branch } from "@/lib/branches";
+import type { CustomerHistory } from "@/lib/admin/customer-history";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
-export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
+export function AddCustomerHistory({
+  customers,
+}: {
+  customers: CustomerHistory[];
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [selected, setSelected] = useState("");
+  const customer = customers.find((c) => c.id === selected);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
     setError("");
     const f = new FormData(e.currentTarget);
+    const consultation = String(f.get("consultation") || "").trim();
+    const outcome = String(f.get("outcome") || "").trim();
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        branchId: f.get("branchId"),
+        branchId: "reading-west-street",
         serviceId: "manual",
         treatmentName: f.get("treatmentName"),
-        durationMinutes: Number(f.get("durationMinutes")),
+        durationMinutes: 5,
         staffId: "manual",
-        practitionerName: f.get("practitionerName"),
+        practitionerName: "Historical record",
         customerName: f.get("customerName"),
         customerPhone: f.get("customerPhone"),
         customerEmail: f.get("customerEmail"),
+        customerAddress: f.get("customerAddress"),
         marketingConsent: f.get("marketingConsent") === "on",
-        startsAt: new Date(String(f.get("startsAt"))).toISOString(),
-        notes: f.get("notes"),
+        startsAt: new Date().toISOString(),
+        notes: `Consultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
         historicalRecord: true,
         suppressNotification: true,
       }),
@@ -38,10 +47,11 @@ export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
     const result = (await response.json()) as { error?: string };
     setSaving(false);
     if (!response.ok) {
-      setError(result.error || "Could not save customer history.");
+      setError(result.error || "Could not save customer record.");
       return;
     }
     setOpen(false);
+    setSelected("");
     router.refresh();
   }
   return (
@@ -51,7 +61,7 @@ export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
         onClick={() => setOpen(true)}
         className="button-primary"
       >
-        <Plus size={14} /> Add existing record
+        <Plus size={14} /> Add customer record
       </button>
       {open && (
         <div
@@ -67,14 +77,14 @@ export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
             <div className="flex justify-between">
               <div>
                 <p className="text-[9px] font-bold uppercase tracking-[.18em] text-pink">
-                  Paper records
+                  Customer records
                 </p>
                 <h2 className="font-display text-3xl">
-                  Add existing customer history
+                  Add customer treatment record
                 </h2>
                 <p className="mt-2 text-xs text-black/45">
-                  Saved as a completed historical visit. No notification or
-                  reminder will be sent.
+                  Create a customer or add another treatment to an existing
+                  customer.
                 </p>
               </div>
               <button type="button" onClick={() => setOpen(false)}>
@@ -82,69 +92,84 @@ export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
               </button>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label="Customer name">
-                <input required name="customerName" className={cls} />
-              </Field>
-              <Field label="Customer phone">
-                <input
-                  required
-                  name="customerPhone"
-                  type="tel"
+              <Field label="Existing customer" wide>
+                <select
+                  value={selected}
+                  onChange={(e) => setSelected(e.target.value)}
                   className={cls}
-                />
-              </Field>
-              <Field label="Customer email" wide>
-                <input name="customerEmail" type="email" className={cls} />
-              </Field>
-              <Field label="Branch">
-                <select name="branchId" className={cls}>
-                  {branches.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
+                >
+                  <option value="">New customer</option>
+                  {customers.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} · {c.phone}
                     </option>
                   ))}
                 </select>
               </Field>
-              <Field label="Visit date and time">
+              <Field label="Customer name">
                 <input
+                  key={`name-${selected}`}
                   required
-                  name="startsAt"
-                  type="datetime-local"
+                  name="customerName"
+                  defaultValue={customer?.name || ""}
                   className={cls}
                 />
               </Field>
-              <Field label="Treatment">
+              <Field label="Customer phone">
+                <input
+                  key={`phone-${selected}`}
+                  required
+                  name="customerPhone"
+                  type="tel"
+                  defaultValue={customer?.phone || ""}
+                  className={cls}
+                />
+              </Field>
+              <Field label="Customer email" wide>
+                <input
+                  key={`email-${selected}`}
+                  name="customerEmail"
+                  type="email"
+                  defaultValue={customer?.email || ""}
+                  className={cls}
+                />
+              </Field>
+              <Field label="Customer address" wide>
+                <textarea
+                  key={`address-${selected}`}
+                  name="customerAddress"
+                  rows={3}
+                  defaultValue={customer?.address || ""}
+                  className={cls}
+                />
+              </Field>
+              <Field label="Treatment" wide>
                 <input required name="treatmentName" className={cls} />
               </Field>
-              <Field label="Duration (minutes)">
-                <input
+              <Field label="Consultation sheet / consultation details" wide>
+                <textarea
                   required
-                  name="durationMinutes"
-                  type="number"
-                  min="5"
-                  max="480"
-                  step="5"
-                  defaultValue="60"
+                  name="consultation"
+                  rows={5}
                   className={cls}
                 />
               </Field>
-              <Field label="Practitioner" wide>
-                <input required name="practitionerName" className={cls} />
-              </Field>
-              <Field label="Historical notes" wide>
-                <textarea name="notes" rows={5} className={cls} />
+              <Field label="Outcome" wide>
+                <textarea required name="outcome" rows={4} className={cls} />
               </Field>
               <label className="flex gap-3 rounded-xl bg-pink-light/35 p-4 text-xs sm:col-span-2">
                 <input
+                  key={`consent-${selected}`}
                   name="marketingConsent"
                   type="checkbox"
+                  defaultChecked={customer?.marketingConsent || false}
                   className="accent-pink"
                 />
                 <span>
                   <strong className="block">
                     Recorded promotional consent
                   </strong>
-                  Only tick when the paper record contains valid consent.
+                  Only tick when valid consent has been recorded.
                 </span>
               </label>
             </div>
@@ -159,7 +184,7 @@ export function AddCustomerHistory({ branches }: { branches: Branch[] }) {
               type="submit"
             >
               {saving && <LoaderCircle className="animate-spin" size={14} />}{" "}
-              {saving ? "Saving record..." : "Save historical record"}
+              {saving ? "Saving record..." : "Save customer record"}
             </button>
           </form>
         </div>

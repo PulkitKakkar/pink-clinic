@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   customer_name text NOT NULL,
   customer_email text NOT NULL DEFAULT '',
   customer_phone text NOT NULL,
+  customer_address text NOT NULL DEFAULT '',
   marketing_consent boolean NOT NULL DEFAULT false,
   marketing_consent_updated_at timestamptz,
   starts_at timestamptz NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent boolean NOT NULL DEFAULT false;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent_updated_at timestamptz;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_address text NOT NULL DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS bookings_starts_at_idx ON bookings (starts_at);
 CREATE INDEX IF NOT EXISTS bookings_branch_starts_at_idx ON bookings (branch_id, starts_at);
