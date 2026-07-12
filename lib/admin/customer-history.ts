@@ -12,6 +12,21 @@ export type CustomerHistory = {
   lastVisitAt: string;
 };
 
+/**
+ * Customer records currently share booking storage with appointments. These
+ * entries provide treatment/consultation history, but do not reserve calendar
+ * time and must not be rendered as appointments.
+ */
+export function isRecordOnlyBooking(booking: Booking) {
+  return (
+    booking.status === "completed" &&
+    booking.serviceId === "manual" &&
+    (booking.practitionerName === "Historical record" ||
+      booking.practitionerName === "Consultation record" ||
+      booking.notes.startsWith("Digital consultation saved:"))
+  );
+}
+
 function customerKey(booking: Booking) {
   const email = booking.customerEmail.trim().toLowerCase();
   if (email) return `email:${email}`;

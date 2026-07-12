@@ -15,9 +15,16 @@ dist-ssr
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
 *.tsbuildinfo
 .vercel
 data/admin/*.json
+products_export_*.csv
 
 # Editor directories and files
 .vscode/*

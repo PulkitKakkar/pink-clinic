@@ -3,7 +3,10 @@ import { AdminDatabaseError } from "@/components/admin/admin-database-error";
 import { BookingCalendar } from "@/components/admin/booking-calendar";
 import { staffMembers } from "@/lib/admin/booking-config";
 import { getBookings } from "@/lib/admin/booking-storage";
-import { buildCustomerHistories } from "@/lib/admin/customer-history";
+import {
+  buildCustomerHistories,
+  isRecordOnlyBooking,
+} from "@/lib/admin/customer-history";
 import { branches } from "@/lib/branches";
 import { services } from "@/lib/content";
 
@@ -31,7 +34,9 @@ export default async function AdminBookingsPage() {
           <AdminDatabaseError error={result.error} />
         ) : (
           <BookingCalendar
-            initialBookings={result.bookings}
+            initialBookings={result.bookings.filter(
+              (booking) => !isRecordOnlyBooking(booking),
+            )}
             customers={buildCustomerHistories(result.bookings)}
             branches={branches}
             services={services}

@@ -32,16 +32,16 @@ Branch-specific offers and staff are modeled as branch references in Sanity. Ava
 
 Sanity Studio is available at `/studio` after adding the Sanity project ID and dataset.
 
-## Admin consultation prototype
+## Staff administration
 
-The staff-only consultation workspace is available at `/admin`. For local testing:
-
-```text
-Email: admin@pinkbeauty.test
-Password: PinkTest2026!
-```
+The authenticated staff workspace is available at `/admin`. Development-only
+fallback credentials are shown on the local login page and are disabled in
+production.
 
 Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and a long random `ADMIN_SESSION_TOKEN` before deployment. Production deliberately has no fallback admin credentials.
+
+Never commit `.env.local`, production exports, database dumps, customer data, or
+credentials. See `SECURITY.md` for the production checklist and reporting policy.
 
 The booking calendar supports both branches, manual treatments and practitioners, editing, notes, and conflict protection. Local development uses git-ignored JSON data. Production requires PostgreSQL:
 
