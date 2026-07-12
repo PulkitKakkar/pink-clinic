@@ -11,7 +11,9 @@ export async function POST(request: Request) {
     const body = await request.json() as { contentType?: string };
     if (!body.contentType || !allowed.has(body.contentType)) return NextResponse.json({ error: "Unsupported image type." }, { status: 400 });
     const key = `treatment-images/${new Date().toISOString().slice(0, 10)}/${randomUUID()}`;
-    const command = new PutObjectCommand({ Bucket: requireImageBucket(), Key: key, ContentType: body.contentType, ServerSideEncryption: "AES256" });
+    // The bucket enforces default encryption. Keeping encryption out of the
+    // signed headers means browser PUT requests only need their content type.
+    const command = new PutObjectCommand({ Bucket: requireImageBucket(), Key: key, ContentType: body.contentType });
     const uploadUrl = await getSignedUrl(treatmentImageS3, command, { expiresIn: 300 });
     return NextResponse.json({ key, uploadUrl });
   } catch (error) {
