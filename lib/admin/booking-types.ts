@@ -1,5 +1,15 @@
 export type BookingStatus = "confirmed" | "completed" | "cancelled" | "no-show";
 
+export type TreatmentImage = {
+  id: string;
+  /** S3 object key. Older records may instead contain dataUrl. */
+  key?: string;
+  dataUrl?: string;
+  phase: "before" | "after";
+  name: string;
+  contentType?: string;
+};
+
 export type StaffMember = {
   id: string;
   name: string;
@@ -26,11 +36,12 @@ export type Booking = {
   endsAt: string;
   status: BookingStatus;
   notes: string;
+  images: TreatmentImage[];
   createdAt: string;
 };
 
 export type CreateBookingInput = Omit<
   Booking,
-  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt"
-> & { marketingConsentUpdatedAt?: string | null };
+  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt" | "images"
+> & { marketingConsentUpdatedAt?: string | null; images?: TreatmentImage[] };
 export type UpdateBookingInput = Partial<CreateBookingInput> & { id: string };

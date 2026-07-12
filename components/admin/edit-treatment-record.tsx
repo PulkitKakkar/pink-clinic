@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LoaderCircle, Pencil, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Booking } from "@/lib/admin/booking-types";
+import { TreatmentImages } from "@/components/admin/treatment-images";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 function details(notes: string) {
@@ -22,6 +23,7 @@ export function EditTreatmentRecord({ booking }: { booking: Booking }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [images, setImages] = useState(booking.images || []);
   const record = details(booking.notes);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,6 +41,7 @@ export function EditTreatmentRecord({ booking }: { booking: Booking }) {
         outcome: f.get("outcome"),
         sessionNumber: f.get("sessionNumber"),
         totalSessions: f.get("totalSessions"),
+        images,
       }),
     });
     const result = (await response.json()) as { error?: string };
@@ -91,6 +94,7 @@ export function EditTreatmentRecord({ booking }: { booking: Booking }) {
                   className={cls}
                 />
               </label>
+              <TreatmentImages images={images} onChange={setImages} />
               <div className="grid grid-cols-2 gap-4">
                 <label className="grid gap-2 text-xs font-bold">
                   Session number

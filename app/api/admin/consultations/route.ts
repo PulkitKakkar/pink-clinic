@@ -4,7 +4,9 @@ import { getConsultationTemplate } from "@/lib/admin/templates";
 import {
   ConsultationStorageConfigurationError,
   saveConsultation,
+  updateConsultationImages,
 } from "@/lib/admin/storage";
+import type { TreatmentImage } from "@/lib/admin/booking-types";
 import { createBooking } from "@/lib/admin/booking-storage";
 
 export async function POST(request: Request) {
@@ -12,6 +14,7 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       templateSlug?: string;
       answers?: Record<string, string | boolean | string[]>;
+      images?: TreatmentImage[];
     };
     const template = body.templateSlug
       ? getConsultationTemplate(body.templateSlug)
@@ -27,6 +30,7 @@ export async function POST(request: Request) {
       templateTitle: template.title,
       createdAt: new Date().toISOString(),
       answers: body.answers,
+      images: body.images || [],
     });
     const fullName = String(body.answers.fullName || "").trim();
     const phone = String(body.answers.contactNumber || "").trim();
@@ -48,6 +52,7 @@ export async function POST(request: Request) {
         startsAt: new Date().toISOString(),
         status: "completed",
         notes: `Digital consultation saved: ${template.title}`,
+        images: body.images || [],
       });
     return NextResponse.json({ saved: true });
   } catch (error) {
@@ -57,5 +62,16 @@ export async function POST(request: Request) {
       { error: "Could not save consultation." },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const body = (await request.json()) as { id?: string; images?: TreatmentImage[] };
+    if (!body.id || !Array.isArray(body.images)) return NextResponse.json({ error: "Invalid image update." }, { status: 400 });
+    const record = await updateConsultationImages(body.id, body.images);
+    return record ? NextResponse.json({ record }) : NextResponse.json({ error: "Consultation not found." }, { status: 404 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not update images." }, { status: 500 });
   }
 }

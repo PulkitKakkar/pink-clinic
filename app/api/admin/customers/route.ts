@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
+import type { TreatmentImage } from "@/lib/admin/booking-types";
 
 export async function PATCH(request: Request) {
   try {
@@ -17,6 +18,7 @@ export async function PATCH(request: Request) {
       email?: string;
       address?: string;
       marketingConsent?: boolean;
+      images?: TreatmentImage[];
     };
     if (body.action === "treatment") {
       if (
@@ -35,6 +37,7 @@ export async function PATCH(request: Request) {
         id: body.bookingId,
         treatmentName: body.treatmentName,
         notes: `Session: ${body.sessionNumber || ""} of ${body.totalSessions || ""}\n\nConsultation:\n${body.consultation.trim()}\n\nOutcome:\n${body.outcome.trim()}`,
+        images: body.images || [],
       });
       return NextResponse.json({ booking });
     }

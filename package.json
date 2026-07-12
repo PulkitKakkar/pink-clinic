@@ -16,6 +16,8 @@
     "db:migrate": "psql \"$DATABASE_URL\" -f db/migrations/001_booking_system.sql"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1085.0",
+    "@aws-sdk/s3-request-presigner": "^3.1085.0",
     "@sanity/client": "^7.11.1",
     "@sanity/image-url": "^2.0.3",
     "framer-motion": "^12.23.24",

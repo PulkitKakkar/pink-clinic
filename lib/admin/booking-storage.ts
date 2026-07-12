@@ -42,6 +42,7 @@ type BookingRow = {
   ends_at: Date;
   status: Booking["status"];
   notes: string;
+  images?: Booking["images"];
   created_at: Date;
 };
 
@@ -87,6 +88,7 @@ function fromRow(row: BookingRow): Booking {
     endsAt: row.ends_at.toISOString(),
     status: row.status,
     notes: row.notes,
+    images: row.images || [],
     createdAt: row.created_at.toISOString(),
   };
 }
@@ -108,6 +110,7 @@ async function getLocalBookings(): Promise<Booking[]> {
       marketingConsent: Boolean(booking.marketingConsent),
       marketingConsentUpdatedAt: booking.marketingConsentUpdatedAt || null,
       customerAddress: booking.customerAddress || "",
+      images: booking.images || [],
     }));
   } catch {
     return [];
@@ -151,8 +154,8 @@ export async function createBooking(input: CreateBookingInput) {
   if (sql) {
     try {
       const rows = await sql<BookingRow[]>`
-        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_email, customer_phone, customer_address, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes)
-        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes})
+        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_email, customer_phone, customer_address, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes, images)
+        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes}, ${sql.json(candidate.images)})
         RETURNING *`;
       return fromRow(rows[0]);
     } catch (error) {
@@ -203,7 +206,7 @@ export async function updateBooking(input: UpdateBookingInput) {
           service_id=${candidate.serviceId}, treatment_name=${candidate.treatmentName}, duration_minutes=${candidate.durationMinutes},
           customer_name=${candidate.customerName}, customer_email=${candidate.customerEmail}, customer_phone=${candidate.customerPhone}, customer_address=${candidate.customerAddress},
           marketing_consent=${candidate.marketingConsent}, marketing_consent_updated_at=${candidate.marketingConsentUpdatedAt},
-          starts_at=${candidate.startsAt}, ends_at=${candidate.endsAt}, status=${candidate.status}, notes=${candidate.notes}, updated_at=now()
+          starts_at=${candidate.startsAt}, ends_at=${candidate.endsAt}, status=${candidate.status}, notes=${candidate.notes}, images=${sql.json(candidate.images)}, updated_at=now()
         WHERE id=${input.id} RETURNING *`;
       return fromRow(rows[0]);
     } catch (error) {

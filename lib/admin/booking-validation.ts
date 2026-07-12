@@ -93,6 +93,7 @@ export function normalizeBookingInput(input: CreateBookingInput) {
     marketingConsentUpdatedAt:
       input.marketingConsentUpdatedAt || new Date().toISOString(),
     notes: input.notes?.trim() || "",
+    images: Array.isArray(input.images) ? input.images : [],
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),
   };

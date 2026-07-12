@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   ends_at timestamptz NOT NULL,
   status text NOT NULL CHECK (status IN ('confirmed', 'completed', 'cancelled', 'no-show')),
   notes text NOT NULL DEFAULT '',
+  images jsonb NOT NULL DEFAULT '[]'::jsonb,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   CHECK (ends_at > starts_at)
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent boolean NOT NULL DEFAULT false;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent_updated_at timestamptz;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_address text NOT NULL DEFAULT '';
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS images jsonb NOT NULL DEFAULT '[]'::jsonb;
 
 CREATE INDEX IF NOT EXISTS bookings_starts_at_idx ON bookings (starts_at);
 CREATE INDEX IF NOT EXISTS bookings_branch_starts_at_idx ON bookings (branch_id, starts_at);
@@ -57,9 +59,11 @@ CREATE TABLE IF NOT EXISTS consultations (
   template_slug text NOT NULL,
   template_title text NOT NULL,
   answers jsonb NOT NULL DEFAULT '{}'::jsonb,
+  images jsonb NOT NULL DEFAULT '[]'::jsonb,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (created_at DESC);
 CREATE INDEX IF NOT EXISTS consultations_template_slug_idx ON consultations (template_slug);
+ALTER TABLE consultations ADD COLUMN IF NOT EXISTS images jsonb NOT NULL DEFAULT '[]'::jsonb;

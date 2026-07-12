@@ -5,6 +5,8 @@ import { CheckCircle2, LoaderCircle, Save } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
+import { TreatmentImages } from "@/components/admin/treatment-images";
+import type { TreatmentImage } from "@/lib/admin/booking-types";
 
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-pink";
@@ -49,6 +51,7 @@ export function ConsultationForm({
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
     "idle",
   );
+  const [images, setImages] = useState<TreatmentImage[]>([]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,10 +89,10 @@ export function ConsultationForm({
     const response = await fetch("/api/admin/consultations", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ templateSlug: template.slug, answers }),
+      body: JSON.stringify({ templateSlug: template.slug, answers, images }),
     });
     setStatus(response.ok ? "saved" : "error");
-    if (response.ok) event.currentTarget.reset();
+    if (response.ok) { event.currentTarget.reset(); setImages([]); }
   }
 
   function calculateDerivedFields(form: HTMLFormElement) {
@@ -238,6 +241,9 @@ export function ConsultationForm({
       ))}
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <SignaturePad />
+      </section>
+      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+        <TreatmentImages images={images} onChange={setImages} />
       </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <h2 className="font-display text-2xl">Customer agreement</h2>

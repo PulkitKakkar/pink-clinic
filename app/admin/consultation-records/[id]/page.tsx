@@ -3,6 +3,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { getConsultations } from "@/lib/admin/storage";
+import { EditConsultationImages } from "@/components/admin/edit-consultation-images";
+import { treatmentImageUrl } from "@/components/admin/treatment-images";
 export const dynamic = "force-dynamic";
 export default async function Page({
   params,
@@ -29,6 +31,10 @@ export default async function Page({
           {record.templateTitle} ·{" "}
           {new Date(record.createdAt).toLocaleString("en-GB")}
         </p>
+        <EditConsultationImages id={record.id} initialImages={record.images || []} />
+        {(record.images || []).length > 0 && <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {record.images.map((item) => <div key={item.id} className="relative overflow-hidden rounded-xl border border-black/10 bg-white"><Image src={treatmentImageUrl(item)} alt={`${item.phase} treatment image`} width={500} height={500} unoptimized className="aspect-square w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[9px] font-bold uppercase text-white">{item.phase}</span></div>)}
+        </div>}
         <div className="mt-7 grid gap-3 sm:grid-cols-2">
           {Object.entries(record.answers).map(([key, value]) => (
             <div

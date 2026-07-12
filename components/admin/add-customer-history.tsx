@@ -4,6 +4,8 @@ import { LoaderCircle, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
 import { AddressLookup } from "@/components/admin/address-lookup";
+import { TreatmentImages } from "@/components/admin/treatment-images";
+import type { TreatmentImage } from "@/lib/admin/booking-types";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 export function AddCustomerHistory({
@@ -20,6 +22,7 @@ export function AddCustomerHistory({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(initialCustomerId);
+  const [images, setImages] = useState<TreatmentImage[]>([]);
   const customer = customers.find((c) => c.id === selected);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,6 +50,7 @@ export function AddCustomerHistory({
         notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
         historicalRecord: true,
         suppressNotification: true,
+        images,
       }),
     });
     const result = (await response.json()) as { error?: string };
@@ -57,6 +61,7 @@ export function AddCustomerHistory({
     }
     setOpen(false);
     setSelected("");
+    setImages([]);
     router.refresh();
   }
   return (
@@ -181,6 +186,7 @@ export function AddCustomerHistory({
               <Field label="Outcome" wide>
                 <textarea required name="outcome" rows={4} className={cls} />
               </Field>
+              <TreatmentImages images={images} onChange={setImages} />
               <label className="flex gap-3 rounded-xl bg-pink-light/35 p-4 text-xs sm:col-span-2">
                 <input
                   key={`consent-${selected}`}

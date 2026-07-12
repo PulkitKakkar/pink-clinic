@@ -1,8 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import type { Booking } from "@/lib/admin/booking-types";
 import type { Branch } from "@/lib/branches";
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
+import { treatmentImageUrl } from "@/components/admin/treatment-images";
 function progress(notes: string) {
   const match = notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i);
   return match
@@ -126,6 +128,9 @@ export function CustomerTreatmentHistory({
                       No appointment notes recorded.
                     </p>
                   )}
+                  {booking.images?.length > 0 && <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                    {booking.images.map((item) => <div key={item.id} className="relative overflow-hidden rounded-lg border border-black/10"><Image src={treatmentImageUrl(item)} alt={`${item.phase} treatment image`} width={240} height={240} unoptimized className="aspect-square w-full object-cover" /><span className="absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-bold uppercase text-white">{item.phase}</span></div>)}
+                  </div>}
                   <EditTreatmentRecord booking={booking} />
                 </div>
               </div>
