@@ -57,7 +57,7 @@ export const schemaTypes = [
           defineField({ name: "compareAtPrice", title: "Original price", type: "number", description: "Optional crossed-out price.", validation: rule => rule.min(0) }),
         ] }] }),
         defineField({ name: "available", title: "Available", type: "boolean", initialValue: true }),
-      ] }] }),
+      ], preview: { select: { branch: "branch.title", price: "price", variantCount: "variants.length", available: "available" }, prepare: ({ branch, price, variantCount, available }) => ({ title: branch || "Select a branch", subtitle: `${variantCount ? `${variantCount} priced option${variantCount === 1 ? "" : "s"}` : price != null ? `£${price}` : "Price not set"}${available === false ? " · Hidden" : ""}` }) } }] }),
       defineField({ name: "variants", title: "Default options / variants", type: "array", description: "Fallback options used when a branch does not have branch-specific variants.", of: [{ type: "object", fields: [
         defineField({ name: "name", title: "Option name", type: "string", validation: rule => rule.required() }),
         defineField({ name: "price", title: "Price", type: "number", validation: rule => rule.min(0).required() }),
