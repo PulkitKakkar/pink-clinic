@@ -1,15 +1,16 @@
 import type { StructureResolver } from "sanity/structure";
 
 export const structure: StructureResolver = (S) => {
-  const catalogueTypes = new Set(["catalogItem", "catalogCollection"]);
+  const primaryTypes = new Set(["catalogItem", "catalogCollection", "branch"]);
   return S.list().title("Pink Beauty Content").items([
-    S.listItem().title("Catalogue").child(
-      S.list().title("Catalogue").items([
-        S.documentTypeListItem("catalogItem").title("Products & Services"),
-        S.documentTypeListItem("catalogCollection").title("Collections"),
-      ]),
-    ),
+    S.documentTypeListItem("catalogItem").title("Products & Services"),
+    S.documentTypeListItem("catalogCollection").title("Collections"),
+    S.documentTypeListItem("branch").title("Branches"),
     S.divider(),
-    ...S.documentTypeListItems().filter((item) => !catalogueTypes.has(item.getId() || "")),
+    S.listItem().title("Other website content").child(
+      S.list().title("Other website content").items(
+        S.documentTypeListItems().filter((item) => !primaryTypes.has(item.getId() || "")),
+      ),
+    ),
   ]);
 };
