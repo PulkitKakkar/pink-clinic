@@ -42,6 +42,8 @@ npm run catalog:seed:sanity
 
 The seed converts the Shopify tags into Studio collections and creates missing editor records without overwriting later staff changes. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader.
 
+Studio uses a separate administrator login from the staff `/admin` area. Configure `STUDIO_ADMIN_EMAIL`, `STUDIO_ADMIN_PASSWORD` and `STUDIO_ADMIN_SESSION_TOKEN` in the hosting environment. The Studio session lasts four hours and is followed by Sanity's own project authentication. Do not reuse the staff password or either session token.
+
 ## Branch-aware treatment flow
 
 Treatment journeys begin at `/treatments/select-branch`. The selected branch is represented in the URL, synchronized into `BranchProvider`, and persisted in local storage. All treatment prices are resolved through `PricingProvider`; booking links pass stable branch and service identifiers through `BookingProvider`.

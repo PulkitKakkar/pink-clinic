@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const password = String(form.get("password") || "");
   const next = String(form.get("next") || "/admin");
   const origin = getPublicOrigin(request);
-  const safeNext = next === "/studio" || next.startsWith("/studio/") || next === "/admin" || next.startsWith("/admin/") ? next : "/admin";
+  const safeNext = next === "/admin" || next.startsWith("/admin/") ? next : "/admin";
 
   if (email !== testAdmin.email || password !== testAdmin.password) {
     return NextResponse.redirect(new URL(`/admin/login?error=1&next=${encodeURIComponent(safeNext)}`, origin), 303);
