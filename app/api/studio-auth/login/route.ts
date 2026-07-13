@@ -13,6 +13,9 @@ export async function POST(request: Request) {
   }
 
   const response = NextResponse.redirect(new URL("/studio", origin), 303);
-  response.cookies.set(STUDIO_ADMIN_COOKIE, studioAdmin.sessionToken, { httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 4 });
+  // Sanity authentication returns to /studio from an external origin. Lax
+  // allows that top-level GET redirect to carry this cookie; Strict causes a
+  // loop between our Studio gate and Sanity's login provider screen.
+  response.cookies.set(STUDIO_ADMIN_COOKIE, studioAdmin.sessionToken, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 4 });
   return response;
 }
