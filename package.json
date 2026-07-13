@@ -9,6 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "version:show": "node -p \"require('./package.json').version\"",
+    "catalog:import:west-street": "node scripts/import-west-street-catalog.mjs",
+    "catalog:seed:sanity": "node --env-file=.env.local scripts/seed-west-street-catalog-to-sanity.mjs",
     "release:patch": "npm version patch -m \"release: %s\"",
     "release:minor": "npm version minor -m \"release: %s\"",
     "release:major": "npm version major -m \"release: %s\"",

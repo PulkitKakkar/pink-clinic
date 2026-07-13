@@ -16,6 +16,33 @@ const contentType = (name: string, title: string, fields: ReturnType<typeof defi
 });
 
 export const schemaTypes = [
+  defineType({
+    name: "catalogItem",
+    title: "Products & Services",
+    type: "document",
+    fields: [
+      defineField({ name: "title", title: "Name", type: "string", validation: rule => rule.required() }),
+      defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: rule => rule.required() }),
+      defineField({ name: "kind", title: "Type", type: "string", options: { list: [{ title: "Service", value: "service" }, { title: "Product", value: "product" }, { title: "Course", value: "course" }], layout: "radio" }, validation: rule => rule.required() }),
+      defineField({ name: "category", title: "Category", type: "string", description: "For example: Facials, Waxing or Hair Services" }),
+      defineField({ name: "description", title: "Description", type: "text", rows: 5 }),
+      defineField({ name: "images", title: "Images", type: "array", of: [{ type: "image", options: { hotspot: true }, fields: [{ name: "alt", title: "Alternative text", type: "string" }] }], validation: rule => rule.min(1) }),
+      defineField({ name: "branches", title: "Available at", type: "array", of: [{ type: "object", name: "branchListing", fields: [
+        defineField({ name: "branch", title: "Branch", type: "reference", to: [{ type: "branch" }], validation: rule => rule.required() }),
+        defineField({ name: "price", title: "Price", type: "number", validation: rule => rule.min(0) }),
+        defineField({ name: "priceLabel", title: "Price label", type: "string", description: "Optional, for example: From or Consultation required" }),
+        defineField({ name: "available", title: "Available", type: "boolean", initialValue: true }),
+      ] }] }),
+      defineField({ name: "variants", title: "Options / variants", type: "array", of: [{ type: "object", fields: [
+        defineField({ name: "name", title: "Option name", type: "string", validation: rule => rule.required() }),
+        defineField({ name: "price", title: "Price", type: "number", validation: rule => rule.min(0).required() }),
+      ] }] }),
+      defineField({ name: "featured", title: "Featured", type: "boolean", initialValue: false }),
+      defineField({ name: "active", title: "Show on website", type: "boolean", initialValue: true }),
+      ...seoFields,
+    ],
+    preview: { select: { title: "title", media: "images.0", kind: "kind", active: "active" }, prepare: ({ title, media, kind, active }) => ({ title, media, subtitle: `${kind || "Item"}${active === false ? " · Hidden" : ""}` }) },
+  }),
   contentType("branch", "Branches", [
     defineField({ name: "address", title: "Address", type: "string", validation: rule => rule.required() }),
     defineField({ name: "phone", title: "Phone", type: "string" }),

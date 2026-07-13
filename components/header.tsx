@@ -8,7 +8,7 @@ import { BookingLink } from "@/components/ui/booking-link";
 import { BranchSwitcher } from "@/components/branch-switcher";
 import { SiteSearch } from "@/components/site-search";
 
-const links = [["Treatments", "/treatments/select-branch"], ["Academy", "/courses"], ["Reviews", "/#reviews"], ["Our Team", "/#team"], ["Locations", "/locations"], ["Admin login", "/admin/login"]];
+const links = [["Treatments", "/treatments/select-branch"], ["Products & Services", "/products-services/reading-west-st"], ["Academy", "/courses"], ["Reviews", "/#reviews"], ["Our Team", "/#team"], ["Locations", "/locations"], ["Admin login", "/admin/login"]];
 
 export function Header() {
   const [open, setOpen] = useState(false);

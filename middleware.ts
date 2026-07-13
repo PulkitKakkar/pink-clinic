@@ -6,7 +6,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAdminPage = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isAdminApi = pathname.startsWith("/api/admin") && pathname !== "/api/admin/login";
-  if (!isAdminPage && !isAdminApi) return NextResponse.next();
+  const isStudioPage = pathname === "/studio" || pathname.startsWith("/studio/");
+  if (!isAdminPage && !isAdminApi && !isStudioPage) return NextResponse.next();
 
   const expected = process.env.ADMIN_SESSION_TOKEN || (process.env.NODE_ENV === "production" ? "" : "pink-local-admin-test-session");
   const authenticated = Boolean(expected && request.cookies.get(ADMIN_COOKIE)?.value === expected);
@@ -22,4 +23,4 @@ export function middleware(request: NextRequest) {
   return NextResponse.redirect(loginUrl);
 }
 
-export const config = { matcher: ["/admin/:path*", "/api/admin/:path*"] };
+export const config = { matcher: ["/admin/:path*", "/api/admin/:path*", "/studio/:path*"] };

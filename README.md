@@ -24,6 +24,24 @@ npm run dev
 
 Booking buttons route to the website's own contact form and preserve the selected branch and treatment. Set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler before enabling the contact form in production.
 
+## Products, services and images
+
+The West Street fallback catalogue is generated from the Shopify CSV export:
+
+```bash
+npm run catalog:import:west-street -- "/path/to/West street products.csv" data/west-street-catalog.json
+```
+
+Day-to-day changes should be made by staff at `/studio` under **Products & Services**. Staff can upload or replace images, edit descriptions and prices, assign branches, add variants, feature entries, or hide them from the website. A published Studio entry with the same slug overrides the imported CSV entry; this keeps the original import as a safe fallback. Watlington items and prices can be added by assigning that branch when they are ready.
+
+After creating the West Street branch document in Studio, a developer can perform the one-time catalogue seed with a Sanity editor token in `SANITY_WRITE_TOKEN`:
+
+```bash
+npm run catalog:seed:sanity
+```
+
+The seed creates missing editor records without overwriting later staff changes. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader.
+
 ## Branch-aware treatment flow
 
 Treatment journeys begin at `/treatments/select-branch`. The selected branch is represented in the URL, synchronized into `BranchProvider`, and persisted in local storage. All treatment prices are resolved through `PricingProvider`; booking links pass stable branch and service identifiers through `BookingProvider`.
