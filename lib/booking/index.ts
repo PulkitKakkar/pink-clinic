@@ -2,13 +2,13 @@ import type { BookingIntent, BookingProvider } from "./types";
 
 class ConfigurableBookingProvider implements BookingProvider {
   getBookingUrl(intent: BookingIntent = {}) {
-    const base = process.env.NEXT_PUBLIC_BOOKING_URL || "/contact";
-    const url = new URL(base, process.env.NEXT_PUBLIC_SITE_URL || "https://pinkbeauty.co.uk");
+    const url = new URL("/contact", process.env.NEXT_PUBLIC_SITE_URL || "https://pinkbeauty.co.uk");
 
     Object.entries(intent).forEach(([key, value]) => value && url.searchParams.set(key, value));
-    return base.startsWith("/") ? `${url.pathname}${url.search}` : url.toString();
+    return `${url.pathname}${url.search}`;
   }
 }
 
-// Swap this instance for a Fresha or custom booking adapter without changing UI code.
+// Booking calls to action stay on the Pink Beauty website and carry the
+// customer's selected branch and treatment into the enquiry form.
 export const bookingProvider: BookingProvider = new ConfigurableBookingProvider();

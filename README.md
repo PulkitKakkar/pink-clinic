@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-Set `NEXT_PUBLIC_BOOKING_URL` to Fresha now, or replace the adapter in `lib/booking/index.ts` with a Stripe/custom API implementation later. Set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler before enabling the contact form in production.
+Booking buttons route to the website's own contact form and preserve the selected branch and treatment. Set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler before enabling the contact form in production.
 
 ## Branch-aware treatment flow
 
