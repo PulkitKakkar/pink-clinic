@@ -32,7 +32,7 @@ The West Street fallback catalogue is generated from the Shopify CSV export:
 npm run catalog:import:west-street -- "/path/to/West street products.csv" data/west-street-catalog.json
 ```
 
-Day-to-day changes should be made by staff at `/studio` under **Products & Services**. Staff can upload or replace images, edit descriptions and prices, assign branches, add variants, feature entries, or hide them from the website. A published Studio entry with the same slug overrides the imported CSV entry; this keeps the original import as a safe fallback. Watlington items and prices can be added by assigning that branch when they are ready.
+Day-to-day changes should be made by staff at `/studio` under **Catalogue**. **Products & Services** supports images, descriptions, collection assignment and a separate price configuration for each branch within one catalogue entry. Each branch can have either one current/original price pair or its own priced variants. When an original price is higher than the current price, the website presents it as a crossed-out discount. **Collections** supports adding existing products, manual ordering, collection images, descriptions, branch visibility and featured/hidden states. A published Studio entry with the same slug overrides the imported CSV entry; this keeps the original import as a safe fallback. Watlington items and prices can be added to the same product by adding Watlington under **Available at**.
 
 After creating the West Street branch document in Studio, a developer can perform the one-time catalogue seed with a Sanity editor token in `SANITY_WRITE_TOKEN`:
 
@@ -40,7 +40,7 @@ After creating the West Street branch document in Studio, a developer can perfor
 npm run catalog:seed:sanity
 ```
 
-The seed creates missing editor records without overwriting later staff changes. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader.
+The seed converts the Shopify tags into Studio collections and creates missing editor records without overwriting later staff changes. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader.
 
 ## Branch-aware treatment flow
 

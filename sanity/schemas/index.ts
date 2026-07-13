@@ -17,6 +17,24 @@ const contentType = (name: string, title: string, fields: ReturnType<typeof defi
 
 export const schemaTypes = [
   defineType({
+    name: "catalogCollection",
+    title: "Collections",
+    type: "document",
+    fields: [
+      defineField({ name: "title", title: "Collection name", type: "string", validation: rule => rule.required() }),
+      defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: rule => rule.required() }),
+      defineField({ name: "description", title: "Description", type: "text", rows: 4 }),
+      defineField({ name: "image", title: "Collection image", type: "image", options: { hotspot: true }, fields: [{ name: "alt", title: "Alternative text", type: "string" }] }),
+      defineField({ name: "products", title: "Products & services in this collection", type: "array", description: "Search for and add existing catalogue items. Drag to set their order in this collection.", of: [{ type: "reference", to: [{ type: "catalogItem" }] }] }),
+      defineField({ name: "branches", title: "Show at branches", type: "array", of: [{ type: "reference", to: [{ type: "branch" }] }] }),
+      defineField({ name: "featured", title: "Featured collection", type: "boolean", initialValue: false }),
+      defineField({ name: "order", title: "Display order", type: "number", initialValue: 0 }),
+      defineField({ name: "active", title: "Show on website", type: "boolean", initialValue: true }),
+      ...seoFields,
+    ],
+    preview: { select: { title: "title", media: "image", active: "active", count: "products.length" }, prepare: ({ title, media, active, count }) => ({ title, media, subtitle: `${count || 0} items${active === false ? " · Hidden" : ""}` }) },
+  }),
+  defineType({
     name: "catalogItem",
     title: "Products & Services",
     type: "document",
@@ -25,17 +43,25 @@ export const schemaTypes = [
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: rule => rule.required() }),
       defineField({ name: "kind", title: "Type", type: "string", options: { list: [{ title: "Service", value: "service" }, { title: "Product", value: "product" }, { title: "Course", value: "course" }], layout: "radio" }, validation: rule => rule.required() }),
       defineField({ name: "category", title: "Category", type: "string", description: "For example: Facials, Waxing or Hair Services" }),
+      defineField({ name: "collections", title: "Collections", type: "array", description: "Add this item to one or more existing collections.", of: [{ type: "reference", to: [{ type: "catalogCollection" }] }] }),
       defineField({ name: "description", title: "Description", type: "text", rows: 5 }),
       defineField({ name: "images", title: "Images", type: "array", of: [{ type: "image", options: { hotspot: true }, fields: [{ name: "alt", title: "Alternative text", type: "string" }] }], validation: rule => rule.min(1) }),
       defineField({ name: "branches", title: "Available at", type: "array", of: [{ type: "object", name: "branchListing", fields: [
         defineField({ name: "branch", title: "Branch", type: "reference", to: [{ type: "branch" }], validation: rule => rule.required() }),
-        defineField({ name: "price", title: "Price", type: "number", validation: rule => rule.min(0) }),
+        defineField({ name: "price", title: "Current price", type: "number", description: "The price customers pay at this branch when there are no variants.", validation: rule => rule.min(0) }),
+        defineField({ name: "compareAtPrice", title: "Original price", type: "number", description: "Optional. When higher than the current price, this appears crossed out as a discount.", validation: rule => rule.min(0) }),
         defineField({ name: "priceLabel", title: "Price label", type: "string", description: "Optional, for example: From or Consultation required" }),
+        defineField({ name: "variants", title: "Branch-specific options / variants", type: "array", description: "Use when options have different prices at this branch.", of: [{ type: "object", fields: [
+          defineField({ name: "name", title: "Option name", type: "string", validation: rule => rule.required() }),
+          defineField({ name: "price", title: "Current price", type: "number", validation: rule => rule.min(0).required() }),
+          defineField({ name: "compareAtPrice", title: "Original price", type: "number", description: "Optional crossed-out price.", validation: rule => rule.min(0) }),
+        ] }] }),
         defineField({ name: "available", title: "Available", type: "boolean", initialValue: true }),
       ] }] }),
-      defineField({ name: "variants", title: "Options / variants", type: "array", of: [{ type: "object", fields: [
+      defineField({ name: "variants", title: "Default options / variants", type: "array", description: "Fallback options used when a branch does not have branch-specific variants.", of: [{ type: "object", fields: [
         defineField({ name: "name", title: "Option name", type: "string", validation: rule => rule.required() }),
         defineField({ name: "price", title: "Price", type: "number", validation: rule => rule.min(0).required() }),
+        defineField({ name: "compareAtPrice", title: "Original price", type: "number", description: "Optional crossed-out price.", validation: rule => rule.min(0) }),
       ] }] }),
       defineField({ name: "featured", title: "Featured", type: "boolean", initialValue: false }),
       defineField({ name: "active", title: "Show on website", type: "boolean", initialValue: true }),
