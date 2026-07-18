@@ -1,0 +1,11 @@
+import { PolicyPage } from "@/components/policy-page";
+
+export default function TermsPage() {
+  return <PolicyPage eyebrow="Purchases and bookings" title="Terms." intro="These terms explain the key conditions that apply before you book, enrol or buy from Pink Beauty." sections={[
+    { title: "Who you are buying from", body: "Your contract is with the business operating the branch shown at checkout. West Street is Pink Beauty Salon Ltd T/A Pink Beauty Salon and Academy (company number 10812181), 4–5 West Street, Reading RG1 1TT. Watlington Street is VB Wholesale UK Ltd T/A Pink, 25 Watlington Street, Reading RG1 4EN. Branch contact details are shown before payment." },
+    { title: "Prices, orders and payment", body: "All totals are shown in pounds sterling. The selected branch, item, option and current total are shown before payment. An order or booking is accepted when the relevant branch confirms it. We may decline or cancel an order where an item, appointment or price is unavailable or clearly incorrect, and will return any payment due using the original payment method." },
+    { title: "Treatments, courses and prepaid sessions", body: "Treatment suitability remains subject to consultation, health screening, consent and any required patch test. Prepaid treatments and packages are for the named customer, branch and treatment area unless agreed otherwise, are normally valid for 12 months and cannot be exchanged. Course dates, entry requirements, accreditation, models and kit arrangements must be confirmed before enrolment." },
+    { title: "Third-party payment services", body: "The payment options displayed at checkout are provided by the payment provider selected for the relevant branch. If Klarna is offered for an eligible purchase, Klarna’s separate eligibility checks, privacy notice and customer terms also apply. Choosing a payment provider does not change your statutory rights or Pink Beauty’s responsibility for the order." },
+    { title: "Changes and statutory rights", body: "Prices, offers and availability may change before an order is accepted. Nothing in these terms limits rights that cannot lawfully be excluded, including rights relating to goods or services that are faulty, not as described or not provided with reasonable care and skill." },
+  ]} />;
+}

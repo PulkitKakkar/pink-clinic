@@ -81,8 +81,8 @@ export function OffersCarousel({ offers }: { offers: Offer[] }) {
         </div>
 
         <div className="mt-4 flex items-center justify-between sm:mt-5">
-          <div className="flex gap-2" role="tablist" aria-label="Select offer">
-            {offers.map((offer, index) => <button key={offer.id} onClick={() => goTo(index)} aria-label={`Show ${offer.title}`} aria-selected={active === index} role="tab" className={`h-1.5 rounded-full transition-all ${active === index ? "w-9 bg-pink" : "w-3 bg-black/15"}`} />)}
+          <div className="flex gap-1" role="tablist" aria-label="Select offer">
+            {offers.map((offer, index) => <button key={offer.id} onClick={() => goTo(index)} aria-label={`Show ${offer.title}`} aria-selected={active === index} role="tab" className="grid h-11 min-w-11 place-items-center rounded-full"><span className={`block h-1.5 rounded-full transition-all ${active === index ? "w-9 bg-pink" : "w-3 bg-black/15"}`} /></button>)}
           </div>
           <p className="text-[10px] font-bold uppercase tracking-[.16em] text-black/35">Swipe to explore</p>
         </div>

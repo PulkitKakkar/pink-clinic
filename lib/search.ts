@@ -1,5 +1,6 @@
 import { branches } from "@/lib/branches";
 import { offers, services } from "@/lib/content";
+import westStreetCatalog from "@/data/west-street-catalog.json";
 
 export type SearchItem = {
   id: string;
@@ -46,6 +47,14 @@ export const searchItems: SearchItem[] = [
     category: "Offer",
     href: offer.action === "book" && offer.serviceSlug ? `/treatments/select-branch?service=${offer.serviceSlug}` : offer.href || "/#offers",
     keywords: [offer.eyebrow, offer.price || "", "deal", "promotion", "special"],
+  })),
+  ...(westStreetCatalog as Array<{ handle: string; title: string; description?: string; kind: string; tags: string[] }>).map((item) => ({
+    id: `catalog-${item.handle}`,
+    title: item.title,
+    description: item.description || `Available from Pink Beauty West Street in ${item.tags[0] || item.kind}.`,
+    category: item.kind === "course" ? "Course" : item.kind === "product" ? "Product" : "Service",
+    href: `/products-services/reading-west-st/${item.handle}`,
+    keywords: [item.kind, ...item.tags],
   })),
   { id: "page-services", title: "Our Services", description: "Explore beauty and aesthetic treatments.", category: "Page", href: "/#services", keywords: ["treatments", "facials", "aesthetics"] },
   { id: "page-team", title: "Our Team", description: "Meet the Pink Beauty team across both branches.", category: "Page", href: "/#team", keywords: ["staff", "professionals", "practitioners", "therapists"] },

@@ -8,6 +8,7 @@ import {
 import type { CreateBookingInput } from "@/lib/admin/booking-types";
 import { branches } from "@/lib/branches";
 import { services } from "@/lib/content";
+import { getBranchCatalog } from "@/lib/catalog";
 
 export class BookingValidationError extends Error {}
 
@@ -17,7 +18,7 @@ function normalizeBoolean(value: unknown) {
   );
 }
 
-export function normalizeBookingInput(input: CreateBookingInput) {
+export async function normalizeBookingInput(input: CreateBookingInput) {
   const branch = branches.find((item) => item.id === input.branchId);
   const startsAt = new Date(input.startsAt);
   if (!branch || Number.isNaN(startsAt.valueOf()))
@@ -31,12 +32,20 @@ export function normalizeBookingInput(input: CreateBookingInput) {
     (item) => item.id === input.serviceId,
   );
   const isManualService = input.serviceId === MANUAL_SERVICE_ID;
+  const isCatalogService = input.serviceId?.startsWith("catalog:");
+  const catalogItem = isCatalogService
+    ? (await getBranchCatalog(branch.slug)).find(
+        (item) => `catalog:${item.handle}` === input.serviceId,
+      )
+    : undefined;
   const treatmentName = isManualService
     ? input.treatmentName?.trim()
-    : configuredService?.title;
+    : catalogItem?.title || configuredService?.title;
   const durationMinutes = isManualService
     ? Number(input.durationMinutes)
-    : getServiceDuration(input.serviceId);
+    : isCatalogService
+      ? Number(input.durationMinutes) || 60
+      : getServiceDuration(input.serviceId);
   if (
     !treatmentName ||
     !durationMinutes ||
@@ -71,6 +80,7 @@ export function normalizeBookingInput(input: CreateBookingInput) {
   if (
     configuredStaff &&
     !isManualService &&
+    !isCatalogService &&
     !configuredStaff.serviceIds.includes(input.serviceId)
   )
     throw new BookingValidationError(
@@ -82,7 +92,11 @@ export function normalizeBookingInput(input: CreateBookingInput) {
     ...input,
     staffId,
     practitionerName,
-    serviceId: isManualService ? MANUAL_SERVICE_ID : configuredService!.id,
+    serviceId: isManualService
+      ? MANUAL_SERVICE_ID
+      : isCatalogService
+        ? input.serviceId
+        : configuredService!.id,
     treatmentName,
     durationMinutes,
     customerName: input.customerName.trim(),

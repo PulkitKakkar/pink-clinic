@@ -126,7 +126,7 @@ async function writeLocalBookings(bookings: Booking[]) {
 
 function hasOverlap(
   bookings: Booking[],
-  candidate: ReturnType<typeof normalizeBookingInput>,
+  candidate: Awaited<ReturnType<typeof normalizeBookingInput>>,
   excludedId?: string,
 ) {
   return bookings.some(
@@ -149,7 +149,7 @@ export async function getBookings(): Promise<Booking[]> {
 }
 
 export async function createBooking(input: CreateBookingInput) {
-  const candidate = normalizeBookingInput(input);
+  const candidate = await normalizeBookingInput(input);
   assertProductionStorage();
   if (sql) {
     try {
@@ -197,7 +197,7 @@ export async function updateBooking(input: UpdateBookingInput) {
     (booking) => booking.id === input.id,
   );
   if (!current) throw new BookingValidationError("Booking not found.");
-  const candidate = normalizeBookingInput({ ...current, ...input });
+  const candidate = await normalizeBookingInput({ ...current, ...input });
 
   if (sql) {
     try {

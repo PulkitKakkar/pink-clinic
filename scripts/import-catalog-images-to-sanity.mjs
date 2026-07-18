@@ -5,7 +5,10 @@ const { NEXT_PUBLIC_SANITY_PROJECT_ID: projectId, NEXT_PUBLIC_SANITY_DATASET: da
 if (!projectId || !token) throw new Error("NEXT_PUBLIC_SANITY_PROJECT_ID and SANITY_WRITE_TOKEN are required.");
 
 const client = createClient({ projectId, dataset, token, apiVersion: "2026-06-10", useCdn: false });
-const items = JSON.parse(await readFile(new URL("../data/west-street-catalog.json", import.meta.url), "utf8"));
+const items = [
+  ...JSON.parse(await readFile(new URL("../data/west-street-catalog.json", import.meta.url), "utf8")),
+  ...JSON.parse(await readFile(new URL("../data/watlington-street-catalog.json", import.meta.url), "utf8")),
+].filter((item, index, all) => all.findIndex((candidate) => candidate.handle === item.handle) === index);
 const existing = new Map((await client.fetch(`*[_type == "catalogItem"]{_id, "handle": slug.current, "imageCount": count(images)}`)).map((item) => [item.handle, item]));
 
 let imported = 0;

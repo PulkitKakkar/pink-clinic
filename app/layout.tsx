@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body suppressHydrationWarning className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><BasketProvider><PublicChrome>{children}</PublicChrome></BasketProvider></BranchProvider></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body suppressHydrationWarning className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><BasketProvider><PublicChrome>{children}</PublicChrome></BasketProvider></BranchProvider></body></html>;
 }

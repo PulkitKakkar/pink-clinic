@@ -12,6 +12,7 @@ export function SiteSearch({ mobile = false, onNavigate }: { mobile?: boolean; o
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const results = searchSite(query);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function SiteSearch({ mobile = false, onNavigate }: { mobile?: boolean; o
     setOpen(false);
     setQuery("");
     onNavigate?.();
+    window.setTimeout(() => triggerRef.current?.focus(), 0);
   }
 
   function keyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -56,10 +58,10 @@ export function SiteSearch({ mobile = false, onNavigate }: { mobile?: boolean; o
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : "grid h-11 w-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white hover:text-ink"} aria-label="Search Pink Beauty">
+      <button ref={triggerRef} onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : "grid h-11 w-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white hover:text-ink"} aria-label="Search Pink Beauty" aria-expanded={open}>
         <Search size={mobile ? 18 : 16} />{mobile && "Search"}
       </button>
-      {open && <div className="fixed inset-0 z-[100] bg-[#16010d]/75 p-3 text-ink backdrop-blur-md sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
+      {open && <div role="dialog" aria-modal="true" aria-label="Search Pink Beauty" className="fixed inset-0 z-[100] bg-[#16010d]/75 p-3 text-ink backdrop-blur-md sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
         <div className="mx-auto mt-12 max-w-2xl overflow-hidden rounded-2xl bg-white shadow-luxe sm:mt-20 sm:rounded-[2rem]">
           <div className="flex items-center gap-3 border-b border-black/5 px-4 sm:px-6"><Search size={18} className="shrink-0 text-pink" /><input ref={inputRef} value={query} onChange={(event) => { setQuery(event.target.value); setActive(0); }} onKeyDown={keyDown} placeholder="Search treatments, courses, locations..." className="min-w-0 flex-1 bg-transparent py-5 text-sm outline-none sm:py-6 sm:text-base" /><button onClick={close} aria-label="Close search" className="p-2"><X size={18} /></button></div>
           <div className="max-h-[65vh] overflow-y-auto p-2 sm:p-3">

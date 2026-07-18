@@ -1,15 +1,54 @@
 [
   {
+    "handle": "vtct-skills-level-2-award-in-facial-massage-and-skin-care",
+    "title": "VTCT Skills Level 2 Award in facial Massage and Skin Care",
+    "description": "Fully accredited Ofqual regulated , insurable qualification. VTCT Skills industry-recognised award. Beginner-friendly hands-on training. Ideal for starting your beauty therapy journey. Begin your beauty therapy journey with a Internationally recognised VTCT Skills Level 2 qualification. The VTCT Skills Level 2 Award in Facial Massage and Skin Care is the perfect introduction for those looking to begin a career in beauty therapy. This Internationally recognised qualification provides the essential practical skills, theoretical knowledge, and professional confidence required to perform effective facial treatments within salon or spa environments.",
+    "kind": "course",
+    "tags": [
+      "Facials",
+      "VTCT Courses",
+      "Academy"
+    ],
+    "collections": [
+      {
+        "handle": "facials",
+        "title": "Facials"
+      },
+      {
+        "handle": "vtct-courses",
+        "title": "VTCT Courses"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/woman-at-spa-getting-facial.jpg?v=1753111564"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 950,
+        "compareAtPrice": 1200,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
     "handle": "advanced-make-up-course",
     "title": "Advanced Make up Course",
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/2daymakeupcourse.jpg?v=1697984112"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/2daymakeupcourse.jpg?v=1764435094"
     ],
     "variants": [
       {
@@ -27,11 +66,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/4daybeautytherapydiplomacourse.jpg?v=1697984181"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/4daybeautytherapydiplomacourse.jpg?v=1764435095"
     ],
     "variants": [
       {
@@ -49,11 +94,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/1dayfacialcourse.jpg?v=1697983165"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/1dayfacialcourse.jpg?v=1764435085"
     ],
     "variants": [
       {
@@ -71,11 +122,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/1dayfemaleintwaxingcourse.jpg?v=1697983243"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/1dayfemaleintwaxingcourse.jpg?v=1764435086"
     ],
     "variants": [
       {
@@ -93,11 +150,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/1daygelmenipedicourse.jpg?v=1697983785"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/1daygelmenipedicourse.jpg?v=1764435088"
     ],
     "variants": [
       {
@@ -115,11 +178,17 @@
     "description": "Duration: 3 Days Course Includes: •⁠ ⁠Anatomy and Physiology •⁠ ⁠Colour Theory •⁠ ⁠Brow Mapping •⁠ ⁠Knowledge of needles •⁠ ⁠Machine ombré / powder brows, lip techniques •⁠ ⁠Legal responsibilities •⁠ ⁠Health, Safety & Hygiene •⁠ ⁠Contra-indications •⁠ ⁠Face-to-face training. •⁠ ⁠Fully Accredited and insurable •⁠ ⁠ABT Accredited •⁠ Microblading",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/ultspmu2adv.jpg?v=1746558841"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/ultspmu2adv.jpg?v=1764435103"
     ],
     "variants": [
       {
@@ -137,11 +206,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/ultbrow.jpg?v=1697984864"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/ultbrow.jpg?v=1764435101"
     ],
     "variants": [
       {
@@ -159,11 +234,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/ultspmu1.jpg?v=1697984940"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/ultspmu1.jpg?v=1764435103"
     ],
     "variants": [
       {
@@ -181,11 +262,17 @@
     "description": "",
     "kind": "course",
     "tags": [
+      "Other Courses",
       "Academy"
     ],
-    "collections": [],
+    "collections": [
+      {
+        "handle": "other-courses",
+        "title": "Other Courses"
+      }
+    ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/1daywaxingcourse.jpg?v=1697984004"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/1daywaxingcourse.jpg?v=1764435091"
     ],
     "variants": [
       {
@@ -213,12 +300,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/spa-facial-treatment.jpg?v=1753114853"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/spa-facial-treatment.jpg?v=1753106089"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 2399,
+        "price": 1899,
         "compareAtPrice": 2799,
         "sku": null,
         "available": true
@@ -241,7 +328,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/2_0ac979c8-0fd7-40b6-baad-bac06ac3910a.png?v=1753114862"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/2.png?v=1753112056"
     ],
     "variants": [
       {
@@ -269,41 +356,13 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Khushboo_Work_1080_x_800_px_2.png?v=1753114866"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Khushboo_Work_1080_x_800_px_2.png?v=1753112316"
     ],
     "variants": [
       {
         "name": "Standard",
         "price": 2599,
         "compareAtPrice": 2999,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "vtct-skills-level-2-award-in-facial-massage-and-skin-care",
-    "title": "VTCT Skills Level 2 Award in Facial Massage and Skin Care",
-    "description": "Fully accredited Ofqual regulated , insurable qualification. VTCT Skills industry-recognised award. Beginner-friendly hands-on training. Ideal for starting your beauty therapy journey. Begin your beauty therapy journey with a Internationally recognised VTCT Skills Level 2 qualification. The VTCT Skills Level 2 Award in Facial Massage and Skin Care is the perfect introduction for those looking to begin a career in beauty therapy. This Internationally recognised qualification provides the essential practical skills, theoretical knowledge, and professional confidence required to perform effective facial treatments within salon or spa environments.",
-    "kind": "course",
-    "tags": [
-      "VTCT Courses",
-      "Academy"
-    ],
-    "collections": [
-      {
-        "handle": "vtct-courses",
-        "title": "VTCT Courses"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/woman-at-spa-getting-facial.jpg?v=1753114878"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 950,
-        "compareAtPrice": 1200,
         "sku": null,
         "available": true
       }
@@ -325,7 +384,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Khushboo_Work_1080_x_800_px_1.png?v=1753114875"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Khushboo_Work_1080_x_800_px_1.png?v=1753112203"
     ],
     "variants": [
       {
@@ -353,13 +412,13 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Khushboo_Work_1080_x_800_px_3.png?v=1753114871"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Khushboo_Work_1080_x_800_px_3.png?v=1753112495"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 1499,
-        "compareAtPrice": null,
+        "price": 1399,
+        "compareAtPrice": 1499,
         "sku": null,
         "available": true
       }
@@ -381,7 +440,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/active-moist-moisturiser_3b0479fb-a7cc-4be5-a6a4-f8e977cfd6a7.jpg?v=1744028603"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/active-moist-moisturiser.jpg?v=1743434163"
     ],
     "variants": [
       {
@@ -409,7 +468,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/breakout-clearing-foaming-wash_0fbfb471-0409-4af8-b594-deb8c8c955ef.jpg?v=1744028612"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/breakout-clearing-foaming-wash.jpg?v=1743434165"
     ],
     "variants": [
       {
@@ -437,7 +496,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/daily-microfoliant-exfoliator_799623b2-b2ae-4637-a934-978f94e1e9ed.jpg?v=1744028606"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/daily-microfoliant-exfoliator.jpg?v=1743434163"
     ],
     "variants": [
       {
@@ -465,7 +524,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/dynamic-skin-recovery-spf50-moisturiser_dd3a5242-95d0-4e7f-ab34-c3c1b8ed0c39.jpg?v=1744028609"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/dynamic-skin-recovery-spf50-moisturiser.jpg?v=1743434164"
     ],
     "variants": [
       {
@@ -493,7 +552,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/intensive-moisture-balance-moisturiser_5deda862-7e16-44aa-9c76-b662c92aca72.jpg?v=1744028626"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/intensive-moisture-balance-moisturiser.jpg?v=1743434169"
     ],
     "variants": [
       {
@@ -521,7 +580,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/multi-active-toner_6159a5f9-c796-4d74-8f19-7f01bd64a986.jpg?v=1744028614"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/multi-active-toner.jpg?v=1743434166"
     ],
     "variants": [
       {
@@ -549,7 +608,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/precleanse-cleansing-oil_96e2dc0a-eb24-4f95-88d5-341dc9100ef3.jpg?v=1744028623"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/precleanse-cleansing-oil.jpg?v=1743434169"
     ],
     "variants": [
       {
@@ -577,7 +636,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/skin-smoothing-cream-moisturiser_a18c7bd8-8c33-41bb-965b-a0388a7cdab1.jpg?v=1744028629"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/skin-smoothing-cream-moisturiser.jpg?v=1743434170"
     ],
     "variants": [
       {
@@ -605,7 +664,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/special-cleansing-gel_7d25a039-7be1-477a-bfda-1f71b184a7c4.jpg?v=1744028620"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/special-cleansing-gel.jpg?v=1743434168"
     ],
     "variants": [
       {
@@ -633,7 +692,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/ultracalming-cleanser_5793d942-7dfc-43d1-81a3-fbd8de5cc553.jpg?v=1744028617"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/ultracalming-cleanser.jpg?v=1743434167"
     ],
     "variants": [
       {
@@ -646,21 +705,22 @@
     ]
   },
   {
-    "handle": "pink-beauty-salon-and-academy-gift-card",
-    "title": "Pink Beauty Salon and Academy Gift Card",
+    "handle": "pink-beauty-aesthetic-clinic-and-academy-gift-card",
+    "title": "Pink Beauty Aesthetic clinic and Academy Gift card",
     "description": "",
     "kind": "product",
     "tags": [
-      "Gift card"
+      "Gift Cards",
+      "Gift Card"
     ],
     "collections": [
       {
-        "handle": "gift-card",
-        "title": "Gift card"
+        "handle": "gift-cards",
+        "title": "Gift Cards"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/pink-gift.png?v=1699134690"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/pink-gift.png?v=1744376336"
     ],
     "variants": [
       {
@@ -671,7 +731,7 @@
         "available": true
       },
       {
-        "name": "25.00",
+        "name": "£25.00",
         "price": 25,
         "compareAtPrice": null,
         "sku": null,
@@ -692,14 +752,14 @@
         "available": true
       },
       {
-        "name": "£200",
+        "name": "£200.00",
         "price": 200,
         "compareAtPrice": null,
         "sku": null,
         "available": true
       },
       {
-        "name": "£250",
+        "name": "£250.00",
         "price": 250,
         "compareAtPrice": null,
         "sku": null,
@@ -714,49 +774,26 @@
     "kind": "service",
     "tags": [
       "Advanced Skincare",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "advanced-skincare",
         "title": "Advanced Skincare"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Chemical_Peel_9576b4fd-603f-4d3f-9787-389276ab0346.jpg?v=1744029163"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Chemical_Peel.jpg?v=1743434285"
     ],
     "variants": [
       {
         "name": "Standard",
         "price": 150,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "hydrafacial",
-    "title": "Hydrafacial",
-    "description": "Experience the ultimate in hydration with our Hydrafacial, a premium treatment that delivers deep cleansing and nourishment for a radiant complexion. This advanced facial combines gentle exfoliation, extraction, and infusion of hydrating serums to revitalize and rejuvenate your skin. Our expert aestheticians tailor the treatment to address your specific skin concerns, leaving your skin refreshed, glowing, and perfectly hydrated. Enjoy a luxurious, transformative skincare experience at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Advanced Skincare",
-      "Facials"
-    ],
-    "collections": [
-      {
-        "handle": "advanced-skincare",
-        "title": "Advanced Skincare"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hydrafacial.jpg?v=1744029166"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 100,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -770,16 +807,21 @@
     "kind": "service",
     "tags": [
       "Advanced Skincare",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "advanced-skincare",
         "title": "Advanced Skincare"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Luxury_Dermaplaning_ec07ac87-0532-415e-aea0-b6e641a09910.jpg?v=1744029172"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Luxury_Dermaplaning.jpg?v=1743434288"
     ],
     "variants": [
       {
@@ -793,13 +835,15 @@
   },
   {
     "handle": "luxury-hydrafacial-buy-1-get-2nd-half-price",
-    "title": "Luxury Hydrafacial (Buy 1 get 2nd half price)",
+    "title": "Luxury Hydrafacial (Buy 1 Get 2nd half price)",
     "description": "Experience the ultimate in hydration with our Hydrafacial, a premium treatment that delivers deep cleansing and nourishment for a radiant complexion. This advanced facial combines gentle exfoliation, extraction, and infusion of hydrating serums to revitalize and rejuvenate your skin. Our expert aestheticians tailor the treatment to address your specific skin concerns, leaving your skin refreshed, glowing, and perfectly hydrated. Enjoy a luxurious, transformative skincare experience at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
       "Advanced Skincare",
-      "Offers",
-      "Black friday sale",
+      "Flash Sale",
+      "Black Friday Sale",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Facials"
     ],
     "collections": [
@@ -809,15 +853,19 @@
       },
       {
         "handle": "offers",
-        "title": "Offers"
+        "title": "Flash Sale"
       },
       {
         "handle": "black-friday-sale",
-        "title": "Black friday sale"
+        "title": "Black Friday Sale"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/WhatsAppImage2026-03-12at18.38.54.jpg?v=1773410696"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/WhatsAppImage2026-03-12at18.38.54.jpg?v=1773410575"
     ],
     "variants": [
       {
@@ -836,16 +884,21 @@
     "kind": "service",
     "tags": [
       "Advanced Skincare",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "advanced-skincare",
         "title": "Advanced Skincare"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Micro_Needling_7a11da51-919d-42f7-a499-a1e12e26499f.png?v=1744029160"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Micro_Needling.png?v=1743434284"
     ],
     "variants": [
       {
@@ -878,16 +931,21 @@
     "kind": "service",
     "tags": [
       "Advanced Skincare",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "advanced-skincare",
         "title": "Advanced Skincare"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Micro_Needling_with_PRP_7f8b48f2-4e0b-44b4-abe0-b7c9dd2ef498.jpg?v=1744029158"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Micro_Needling_with_PRP.jpg?v=1743434283"
     ],
     "variants": [
       {
@@ -920,16 +978,21 @@
     "kind": "service",
     "tags": [
       "Advanced Skincare",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "advanced-skincare",
         "title": "Advanced Skincare"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Microdermabrasion_c53a87d5-d3fb-4f4f-a775-0072ab561887.jpg?v=1744029169"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Microdermabrasion.jpg?v=1743434287"
     ],
     "variants": [
       {
@@ -948,16 +1011,21 @@
     "kind": "service",
     "tags": [
       "Anti Wrinkle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "anti-wrinkle",
         "title": "Anti Wrinkle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Anti_Wrinkle_Fillers_5db2fa78-0559-4dc9-9f31-0c2f062fd5ec.jpg?v=1744029152"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Anti_Wrinkle_Fillers.jpg?v=1743434281"
     ],
     "variants": [
       {
@@ -1004,16 +1072,21 @@
     "kind": "service",
     "tags": [
       "Anti Wrinkle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "anti-wrinkle",
         "title": "Anti Wrinkle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Anti_Wrinkle_Injections_4ee342eb-f9e1-4683-9b8b-f423a5c3410c.jpg?v=1744029155"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Anti_Wrinkle_Injections.jpg?v=1743434282"
     ],
     "variants": [
       {
@@ -1039,16 +1112,21 @@
     "kind": "service",
     "tags": [
       "Anti Wrinkle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "anti-wrinkle",
         "title": "Anti Wrinkle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Jalupro_5e1849b0-153e-4a4d-a715-05ee15558498.png?v=1744029148"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Jalupro.png?v=1743434280"
     ],
     "variants": [
       {
@@ -1080,10 +1158,14 @@
       {
         "handle": "body-bleaching",
         "title": "Body Bleaching"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Back_Bleaching_604821e0-1987-4a0f-87d7-3c2385b0a258.png?v=1744028947"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Back_Bleaching.png?v=1743434236"
     ],
     "variants": [
       {
@@ -1108,10 +1190,14 @@
       {
         "handle": "body-bleaching",
         "title": "Body Bleaching"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Face_Neck_Bleaching_084b3e11-4c61-4852-8b42-3fd8f22937fa.png?v=1744028956"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Face_Neck_Bleaching.png?v=1743434238"
     ],
     "variants": [
       {
@@ -1136,10 +1222,14 @@
       {
         "handle": "body-bleaching",
         "title": "Body Bleaching"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Bleaching_336c6b04-b272-42c9-ad9b-900f4601aa1e.png?v=1744028960"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Bleaching.png?v=1743434239"
     ],
     "variants": [
       {
@@ -1164,10 +1254,14 @@
       {
         "handle": "body-bleaching",
         "title": "Body Bleaching"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Back_Bleaching_79cc3bc6-eab1-45de-938c-e57369cb916f.png?v=1744028943"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Back_Bleaching.png?v=1743434236"
     ],
     "variants": [
       {
@@ -1192,10 +1286,14 @@
       {
         "handle": "body-bleaching",
         "title": "Body Bleaching"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Sides_Neck_Bleaching_6ae16408-9d07-4eef-ab06-ff8f4df63234.png?v=1744028951"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Sides_Neck_Bleaching.png?v=1743434237"
     ],
     "variants": [
       {
@@ -1220,10 +1318,14 @@
       {
         "handle": "body-treatments",
         "title": "Body Treatments"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Luxury_Body_Scrub_5f84a315-f69a-47f1-a552-651171d6c79b.png?v=1744028834"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Luxury_Body_Scrub.png?v=1743434214"
     ],
     "variants": [
       {
@@ -1242,16 +1344,21 @@
     "kind": "service",
     "tags": [
       "Body Treatments",
+      "Salon Services",
       "Massage"
     ],
     "collections": [
       {
         "handle": "body-treatments",
         "title": "Body Treatments"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Massage_0119ac5b-1887-4fbf-a712-bdfdcfad34c1.png?v=1744028838"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Massage.png?v=1743434214"
     ],
     "variants": [
       {
@@ -1285,12 +1392,46 @@
     ]
   },
   {
+    "handle": "carbon-peel-facial",
+    "title": "Carbon Peel Facial",
+    "description": "A carbon peel facial is a non-invasive skin treatment using liquid carbon and laser energy to deeply cleanse pores, exfoliate dead skin, and stimulate collagen, improving texture, tone, acne, fine lines, and pigmentation with minimal downtime, making it great for dull, oily, or acne-prone skin . The carbon draws out impurities, and the laser heats the deeper skin layers, promoting rejuvenation and collagen production for smoother, brighter skin. Core Benefits: Deep Cleansing & Exfoliation: The carbon mask acts as a magnet for oil and impurities, which the laser then vaporizes along with dead skin cells. Pore Minimization: The heat from the laser stimulates the inner walls of the pores to contract, making them appear smaller and more refined. Acne Management: The laser's thermal energy destroys acne-causing bacteria and shrinks sebaceous glands to reduce excess oil production. Anti-Aging: Thermal energy reaches the dermis to stimulate collagen and elastin production, helping to soften fine lines and firm the skin. Immediate Results: Most patients notice a \"Hollywood glow\" and smoother texture immediately after a single 30-minute session. Treatment Procedure A session takes approximately 30 to 45 minutes and follows these steps: Preparation: The skin is thoroughly cleansed of surface oils. Carbon Application: A thin layer of liquid carbon is applied and left to dry for about 10 minutes, allowing it to penetrate deep into pores. Laser Pass 1 (Heating): A low-energy laser pass heats the carbon to bind it to the skin's surface and stimulate deeper tissue. Laser Pass 2 (Vaporization): A higher-energy Q-switched laser is used to shatter the carbon particles, taking all trapped debris and impurities with them. Aftercare: A hydrating moisturizer and broad-spectrum SPF 30+ or 50 are applied to protect the fresh skin. Post-Treatment & Maintenance Course of Treatment: While one session provides an instant boost, professionals recommend a course of 4 to 6 sessions spaced 2 to 4 weeks apart for optimal, long-term results. Downtime: There is typically no recovery period. Mild redness or a tingling sensation may occur but usually fades within a few hours. Pre-Care: Avoid sun exposure, retinoids, and exfoliating products for 3–5 days before your appointment.",
+    "kind": "service",
+    "tags": [
+      "Carbon Peel Facial",
+      "Flash Sale"
+    ],
+    "collections": [
+      {
+        "handle": "carbon-peel-facial",
+        "title": "Carbon Peel Facial"
+      },
+      {
+        "handle": "offers",
+        "title": "Flash Sale"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Carbonpeel.png?v=1767697730"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 150,
+        "compareAtPrice": 200,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
     "handle": "cosmelan-pigmentation-peel",
     "title": "Cosmelan Pigmentation Peel",
     "description": "The cosmelan peel helps target and treat hyperpigmentation and melasma, which is a condition that is common for many people. This can often be caused by hormones, medication, sun damage or possibly trauma to the skin. The combination in the peel impedes the formulation of abnormal skin pigments and breaks them down. It can be used to help with superficial hyperpigmentation and dull skin with uneven skin tone.",
     "kind": "service",
     "tags": [
-      "Cosmelan & Dermamelan"
+      "Cosmelan & Dermamelan",
+      "Hair Services",
+      "Offers"
     ],
     "collections": [
       {
@@ -1299,7 +1440,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/f13b394c89a99378b46c0c9ae70e65c34e0f4404b5bdf224110c424c386d0f70_5bc8ab3d-7ba4-4a8c-8922-27597e8e618f.png?v=1744034044"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/f13b394c89a99378b46c0c9ae70e65c34e0f4404b5bdf224110c424c386d0f70_cfa7f16b-b948-466b-b5bd-45e0defc742a.png?v=1744036703"
     ],
     "variants": [
       {
@@ -1317,16 +1458,22 @@
     "description": "Corrective and regulatory depigmenting method that yields an effective result in the short and long term to correct hyperpigmentation in the external intimate area, inner thighs and groin.",
     "kind": "service",
     "tags": [
-      "Cosmelan & Dermamelan"
+      "Cosmelan & Dermamelan",
+      "Aesthetic Treatments",
+      "Clinic Services"
     ],
     "collections": [
       {
         "handle": "cosmelan-dermamelan",
         "title": "Cosmelan & Dermamelan"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/dermaleman-bodegon_1.jpg?v=1744034601"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/dermaleman-bodegon_1.jpg?v=1744036641"
     ],
     "variants": [
       {
@@ -1354,7 +1501,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyebrow_Threading_Tinting_6ab06489-380a-4c4a-8b02-4c5fd437bb76.png?v=1744028846"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyebrow_Threading_Tinting.png?v=1743434216"
     ],
     "variants": [
       {
@@ -1379,10 +1526,14 @@
       {
         "handle": "eyes-brows",
         "title": "Eyes & Brows"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyelash_Lift_7285e6bb-6fc3-4e3c-a9ae-3ca910486313.png?v=1744028850"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyelash_Lift.png?v=1743434217"
     ],
     "variants": [
       {
@@ -1417,7 +1568,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyelash_Tinting_db291326-0325-45c7-b689-65616ebcfc6d.png?v=1744028842"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyelash_Tinting.png?v=1743434215"
     ],
     "variants": [
       {
@@ -1435,16 +1586,21 @@
     "description": "Elevate your skincare routine with our opulent 24K Gold Facial. Infused with real 24K gold, this luxurious treatment enhances your skin’s radiance and firmness. Our expert aestheticians use advanced techniques to deeply cleanse, hydrate, and rejuvenate your complexion, reducing fine lines and promoting a youthful glow. Experience unparalleled elegance and transformative results with this premium facial at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/24K_Gold_Facial_17fab793-80b8-43d8-94d5-f69f0d6f4785.jpg?v=1744029201"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/24K_Gold_Facial.jpg?v=1743434300"
     ],
     "variants": [
       {
@@ -1462,16 +1618,21 @@
     "description": "Reclaim your skin’s natural radiance with our luxurious De-Tan Facial. Using premium, targeted products, our expert aestheticians gently exfoliate and brighten your complexion, effectively removing tan and sun damage. This bespoke treatment soothes, hydrates, and revitalizes, leaving your skin refreshed and luminous. Perfect for restoring your skin’s youthful glow, our De-Tan Facial offers the ultimate in professional skincare at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/De-Tan_Facial_9b02681b-f916-4483-8036-d3c7622d5c7b.jpg?v=1744029204"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/De-Tan_Facial.jpg?v=1743434302"
     ],
     "variants": [
       {
@@ -1489,16 +1650,21 @@
     "description": "Immerse yourself in the ultimate luxury with our Deluxe Herbal Facial. This premium treatment harnesses the power of organic herbs and botanical extracts to purify, rejuvenate, and nourish your skin. Our skilled aestheticians perform a deep cleanse, gentle exfoliation, and soothing mask application, tailored to your unique skin needs. Enjoy a radiant, refreshed complexion and a serene spa experience at our distinguished beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Deluxe_Herbal_Facial_9184579f-ff67-4515-b268-54d81fd28fea.jpg?v=1744029199"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Deluxe_Herbal_Facial.jpg?v=1743434299"
     ],
     "variants": [
       {
@@ -1516,16 +1682,21 @@
     "description": "Illuminate your complexion with our Skin Brightening Facial, a premium treatment designed to enhance radiance and even skin tone. Infused with potent brightening agents and antioxidants, this luxurious facial targets dullness and discoloration, leaving your skin refreshed and glowing. Our expert aestheticians deliver a tailored treatment to exfoliate, brighten, and revitalize, providing a luminous, youthful appearance. Enjoy a refined skincare experience at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Skin_Brightening_Facial_16a6b55a-03ba-44f8-b623-40ee7b102cb6.jpg?v=1744029178"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Skin_Brightening_Facial.jpg?v=1743434290"
     ],
     "variants": [
       {
@@ -1543,16 +1714,21 @@
     "description": "Revitalise your skin with our Age Smart Multi-Vitamin Power Facial, designed to combat signs of aging with advanced, nutrient-rich treatments. Infused with a potent blend of multi-vitamins and antioxidants, this luxurious facial deeply nourishes, firms, and brightens your complexion. Our expert aestheticians deliver a customized treatment that targets fine lines and enhances your natural radiance, offering a sophisticated solution for youthful, glowing skin. Experience premium skincare excellence at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Age_Smart_Multi-Vitamin_Power_Facial_374574c9-4fa4-4d5f-8760-daf2803aa85d.jpg?v=1744029186"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Age_Smart_Multi-Vitamin_Power_Facial.jpg?v=1743434293"
     ],
     "variants": [
       {
@@ -1570,16 +1746,21 @@
     "description": "Achieve clear, healthy skin with our Medibac Facial, specifically designed for acne-prone and problematic skin. This advanced treatment combines powerful, medical-grade products and techniques to cleanse, exfoliate, and treat blemishes. Our expert aestheticians address your skin’s unique needs, reducing inflammation and promoting a clearer, more balanced complexion. Experience effective, professional care and radiant results at our distinguished beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Medibac_Facial_387ca9a7-9a82-4fe9-90c9-8ca5def8d849.jpg?v=1744029181"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Medibac_Facial.jpg?v=1743434291"
     ],
     "variants": [
       {
@@ -1597,16 +1778,21 @@
     "description": "Experience personalised luxury with our Dermalogica Prescriptive Facial. This bespoke treatment utilizes advanced Dermalogica products tailored to your unique skin needs, delivering a deeply effective cleanse, exfoliation, and hydration. Our expert aestheticians analyze your skin’s condition to customize the facial for optimal results, leaving your complexion refreshed, balanced, and radiant. Enjoy a premium skincare experience at our distinguished beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Dermalogica_Prescriptive_Facial_77117b68-d7e0-49bc-b579-905f7552dd89.jpg?v=1744029189"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Dermalogica_Prescriptive_Facial.jpg?v=1743434294"
     ],
     "variants": [
       {
@@ -1624,16 +1810,21 @@
     "description": "Soothe and restore with our Ultra Calming Facial, a luxurious treatment designed to alleviate sensitivity and redness. Infused with calming botanicals and advanced soothing ingredients, this facial provides deep hydration and relief for irritated skin. Our expert aestheticians perform a gentle cleanse, calming mask application, and restorative massage, leaving your complexion balanced and serene. Experience unparalleled comfort and a radiant, calm glow at our premium beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Ultra_Calming_Facial_3489b590-6b4c-4b85-93cd-eccab6e1c22f.jpg?v=1744029183"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Ultra_Calming_Facial.jpg?v=1743434292"
     ],
     "variants": [
       {
@@ -1651,16 +1842,21 @@
     "description": "Illuminate your complexion with our Diamond Glow Facial, a luxurious treatment that transforms your skin with the brilliance of diamond-infused products. Our expert aestheticians use advanced techniques to cleanse, exfoliate, and rejuvenate, enhancing your skin's luminosity and smoothness. Experience unparalleled radiance and a youthful glow with this premium facial, designed to provide a truly opulent skincare experience.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Diamond_Glow_Facial_61b2dbee-50d3-4535-99f0-e9e6f68fac5e.png?v=1744029193"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Diamond_Glow_Facial.png?v=1743434296"
     ],
     "variants": [
       {
@@ -1679,16 +1875,21 @@
     "kind": "service",
     "tags": [
       "Facials",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eye_Firming_3271e831-006c-4530-9fd3-c2c38c2d9b86.jpg?v=1744029175"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eye_Firming.jpg?v=1743434289"
     ],
     "variants": [
       {
@@ -1706,16 +1907,21 @@
     "description": "Indulge in our luxurious Invigorating Facial, designed to rejuvenate and refresh your skin with premium, nutrient-rich products. Our expert aestheticians deliver a bespoke treatment that cleanses, exfoliates, and revitalizes, promoting collagen production and enhancing your natural glow. Perfect for combating signs of aging and fatigue, this facial leaves your skin looking radiant and youthful. Experience the pinnacle of skincare excellence at our premium beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Invigorating_Facial_97f77857-b247-4df3-8e71-1cfe3b4ff8ac.jpg?v=1744029207"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Invigorating_Facial.jpg?v=1743434303"
     ],
     "variants": [
       {
@@ -1733,16 +1939,21 @@
     "description": "Discover the ultimate glow with our Radiance Fruit Facial. This luxurious treatment uses a blend of fresh, exotic fruit extracts to exfoliate, hydrate, and revitalize your skin. Our expert aestheticians deliver a rejuvenating cleanse and a nourishing fruit-infused mask, enhancing your complexion with a natural, radiant glow. Enjoy a fresh, vibrant look and an indulgent spa experience at our premier beauty clinic.",
     "kind": "service",
     "tags": [
-      "Facials"
+      "Facials",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "facials",
         "title": "Facials"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Radiance_Fruit_Facial_233f6317-01f7-4087-b480-bce40244b67f.jpg?v=1744029196"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Radiance_Fruit_Facial.jpg?v=1743434297"
     ],
     "variants": [
       {
@@ -1755,22 +1966,60 @@
     ]
   },
   {
+    "handle": "skin-rejuvenation-treatment",
+    "title": "Skin Rejuvenation Treatment",
+    "description": "Refresh and revitalise your skin with our advanced Skin Rejuvenation Treatment for the face – designed to restore your natural glow and combat signs of ageing, sun damage, and uneven texture. ✨ Benefits: Improves skin tone and texture Reduces fine lines and pigmentation Stimulates collagen production Leaves your skin smoother, firmer, and radiant Using cutting-edge technology and tailored techniques, our specialists ensure visible results after just one session. 💆♀️ Ideal for dull, tired, or ageing skin – book now for only £89 and reveal a fresher, more youthful you.",
+    "kind": "service",
+    "tags": [
+      "Flash Sale",
+      "Aesthetic Treatments",
+      "Clinic Services"
+    ],
+    "collections": [
+      {
+        "handle": "offers",
+        "title": "Flash Sale"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Khushboo_Work_1080_x_800_px_6.png?v=1753114243"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 100,
+        "compareAtPrice": 150,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
     "handle": "balayage",
     "title": "Balayage",
     "description": "Transform your look with our Balayage service, designed to create a natural, sun-kissed effect with hand-painted highlights. Our expert colorists use precise techniques to blend subtle, seamless color transitions, enhancing your hair with a beautiful, multi-dimensional finish. Enjoy a low-maintenance, effortlessly radiant look with exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Balayage_805ce620-f48e-457d-a0f4-fb45ca251e9d.png?v=1744028867"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Balayage.png?v=1743434220"
     ],
     "variants": [
       {
@@ -1803,16 +2052,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Pink_Product_Images_1_46072290-d79d-4fa4-8110-f8fe5d86ad54.png?v=1744028911"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Pink_Product_Images_1.png?v=1743434228"
     ],
     "variants": [
       {
@@ -1845,16 +2099,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Head_Colouring_c81ad922-0998-4c23-92b0-03ed6ce6039f.png?v=1744028884"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Head_Colouring.png?v=1743434223"
     ],
     "variants": [
       {
@@ -1887,16 +2146,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Head_Highlighting_1e002f1b-5af7-4b03-9092-afdb1e68f649.png?v=1744028876"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Head_Highlighting.png?v=1743434221"
     ],
     "variants": [
       {
@@ -1929,16 +2193,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Pink_Product_Images_84f01c96-4be9-4e5c-8a7d-11bba294e4b5.png?v=1744028652"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Pink_Product_Images.png?v=1743434176"
     ],
     "variants": [
       {
@@ -1971,16 +2240,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hair_Curls_35615c40-e4f7-482f-9b30-c2340c8e0845.png?v=1744028895"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hair_Curls.png?v=1743434225"
     ],
     "variants": [
       {
@@ -2013,16 +2287,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hair_Spa_f5d964ac-9458-4773-90b4-c9b726e5d11a.png?v=1744028862"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hair_Spa.png?v=1743434219"
     ],
     "variants": [
       {
@@ -2055,16 +2334,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hair_Straighting_88be7dc0-dd45-4ad2-842b-2c04bc9f9b6c.png?v=1744028887"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hair_Straighting.png?v=1743434224"
     ],
     "variants": [
       {
@@ -2097,16 +2381,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Half_Head_Highlighting_df9f4b05-86f9-4d03-bfa3-ce159fd06304.png?v=1744028872"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Half_Head_Highlighting.png?v=1743434220"
     ],
     "variants": [
       {
@@ -2139,16 +2428,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Roots_Colouring_ab62d21e-20aa-4ab3-84d1-381d112caacd.png?v=1744028880"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Roots_Colouring.png?v=1743434222"
     ],
     "variants": [
       {
@@ -2167,16 +2461,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hair_Wash_Blow_Dry_cb2e9a2e-5113-4fd7-88d9-723c58b721ba.png?v=1744028899"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hair_Wash_Blow_Dry.png?v=1743434226"
     ],
     "variants": [
       {
@@ -2209,16 +2508,21 @@
     "kind": "service",
     "tags": [
       "Hair Care",
+      "Salon Services",
       "Hair Services"
     ],
     "collections": [
       {
         "handle": "hair-care",
         "title": "Hair Care"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hair_Cut_Blow_Dry_1b9f0461-0559-492b-85ec-af1c76eb6440.png?v=1744028907"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hair_Cut_Blow_Dry.png?v=1743434227"
     ],
     "variants": [
       {
@@ -2251,6 +2555,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2260,12 +2565,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Chin_Hot_Waxing_4b84fa06-1fc9-4f14-8777-fcadd395bc05.png?v=1744029013"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Chin_Hot_Waxing.png?v=1743434250"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 5,
+        "price": 8,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2279,21 +2584,26 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
       {
         "handle": "hot-waxing",
         "title": "Hot Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Extended_Hollywood_Waxing_2_08cba34b-ce7e-477c-acd5-b53c5873592a.png?v=1744029002"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Extended_Hollywood_Waxing_2.png?v=1743434248"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 35,
+        "price": 45,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2307,6 +2617,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2316,12 +2627,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyebrows_Hot_Waxing_f4ecd5a7-cac3-4e2a-bfc2-7c8d762b9c44.png?v=1744029025"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyebrows_Hot_Waxing.png?v=1743434253"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 10,
+        "price": 15,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2335,21 +2646,26 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
       {
         "handle": "hot-waxing",
         "title": "Hot Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Hot_Wax_5e20ef23-c88e-4c54-ac6d-52e5777dcde5.png?v=1744028827"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Hot_Wax.png?v=1743434212"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 33,
+        "price": 43,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2363,21 +2679,26 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
       {
         "handle": "hot-waxing",
         "title": "Hot Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Extended_Hollywood_Waxing_90b7c148-5646-4d6e-886a-4132d05b763d.png?v=1744028823"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Extended_Hollywood_Waxing.png?v=1743434259"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 33,
+        "price": 43,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2391,6 +2712,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2400,12 +2722,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Neck_Waxing_ea84f4ab-07c6-475b-80f3-506124946593.png?v=1744029005"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Neck_Waxing.png?v=1743434249"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 10,
+        "price": 15,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2419,6 +2741,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2428,12 +2751,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Nose_Waxing_2fd13d60-f1b0-41d5-9567-9480fe907c8c.png?v=1744029009"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Nose_Waxing.png?v=1743434249"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 5,
+        "price": 8,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2447,6 +2770,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2456,12 +2780,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Sides_Hot_Waxing_a026eed4-5081-47e3-ab81-aadd62b17b1e.png?v=1744029017"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Sides_Hot_Waxing.png?v=1743434251"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 10,
+        "price": 15,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2475,6 +2799,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2484,7 +2809,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Under_Arm_Waxing_bd8f852b-59c0-4378-a883-a45107bb6461.png?v=1744028998"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Under_Arm_Waxing.png?v=1743434247"
     ],
     "variants": [
       {
@@ -2503,6 +2828,7 @@
     "kind": "service",
     "tags": [
       "Hot Waxing",
+      "Salon Services",
       "Waxing"
     ],
     "collections": [
@@ -2512,12 +2838,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Upper_Lip_Hot_Waxing_9e707349-0bf7-402f-86dd-0ea45f869dcb.png?v=1744029021"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Upper_Lip_Hot_Waxing.png?v=1743434252"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 5,
+        "price": 8,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2527,7 +2853,7 @@
   {
     "handle": "anti-aging",
     "title": "Anti Aging IV Drop",
-    "description": "Consultation required before IV administration Anti-ageing IV drips deliver a potent, direct-to-bloodstream blend of antioxidants like glutathione , vitamins (specifically Vitamin C), and sometimes NAD+ to combat oxidative stress and cellular damage. These 30-60 minute sessions aim to boost collagen production, improve skin elasticity, increase energy, and enhance overall rejuvenation. Benefits are often immediate, with effects lasting 4 to 6 weeks Key components and benefits Glutathione: Known as the \"mother of all antioxidants,\" it fights free radicals, detoxifies, and reduces signs of aging. Vitamin C & B Vitamins: Crucial for collagen production, skin elasticity, and repairing muscle tissue. NAD+ (Nicotinamide adenine dinucleotide): A coenzyme that promotes cellular regeneration, DNA repair, and mitochondrial health. Amino Acids: Support skin firmness and tissue repair. Targeted Effect Cellular Repair: Enhanced energy levels and, in some cases, deep repair of cellular damage. Wellness Boost: Strengthened immune system and reduced fatigue Skin Rejuvenation: Reduced fine lines, increased hydration, and improved, radiant skin tone. Treatment Details: Procedure: A small cannula is inserted into a vein, typically in the arm, for direct nutrient absorption. Session Time: Generally 30-60 minutes, though some intensive NAD+ protocols may last longer. Frequency: Often recommended every 4-6 weeks for maintenance",
+    "description": "Consultation required before IV administration Anti-aging IV drips deliver a potent, direct-to-bloodstream blend of antioxidants like glutathione , vitamins (specifically Vitamin C), and sometimes NAD+ to combat oxidative stress and cellular damage. These 30-60 minute sessions aim to boost collagen production, improve skin elasticity, increase energy, and enhance overall rejuvenation. Benefits are often immediate, with effects lasting 4 to 6 weeks Key components and benefits Glutathione: Known as the \"mother of all antioxidants,\" it fights free radicals, detoxifies, and reduces signs of aging. Vitamin C & B Vitamins: Crucial for collagen production, skin elasticity, and repairing muscle tissue. NAD+ (Nicotinamide adenine dinucleotide): A coenzyme that promotes cellular regeneration, DNA repair, and mitochondrial health. Amino Acids: Support skin firmness and tissue repair. Targeted Effect Cellular Repair: Enhanced energy levels and, in some cases, deep repair of cellular damage. Wellness Boost: Strengthened immune system and reduced fatigue Skin Rejuvenation: Reduced fine lines, increased hydration, and improved, radiant skin tone. Treatment Details: Procedure: A small cannula is inserted into a vein, typically in the arm, for direct nutrient absorption. Session Time: Generally 30-60 minutes, though some intensive NAD+ protocols may last longer. Frequency: Often recommended every 4-6 weeks for maintenance",
     "kind": "service",
     "tags": [
       "IV Drips"
@@ -2539,7 +2865,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/IVWELLNESSDRIPS_3.png?v=1769616738"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/IVWELLNESSDRIPS_3.png?v=1769609964"
     ],
     "variants": [
       {
@@ -2566,7 +2892,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/IVWELLNESSDRIPS_4_3a28752c-e026-431e-a87b-4d4b5ac6a902.png?v=1769616739"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/IVWELLNESSDRIPS_4_3a28752c-e026-431e-a87b-4d4b5ac6a902.png?v=1769610705"
     ],
     "variants": [
       {
@@ -2579,7 +2905,7 @@
     ]
   },
   {
-    "handle": "glutathione-and-vitamin-c-iv-drip-1",
+    "handle": "glutathione-and-vitamin-c-iv-drip",
     "title": "Glutathione and Vitamin C IV drip",
     "description": "Consultation required before IV administration An intravenous (IV) drip combining glutathione and Vitamin C offers enhanced benefits due to their synergistic effect, primarily in antioxidant protection, detoxification, immune system support, and skin health. This method ensures maximum absorption by bypassing the digestive system Key Benefits Powerful Antioxidant Protection : Glutathione, the \"master antioxidant,\" and Vitamin C work together to neutralize free radicals, which cause cellular damage and premature aging. They also help regenerate each other, amplifying their protective capabilities. Enhanced Detoxification : Glutathione is crucial for the liver's detoxification processes, helping eliminate environmental toxins, heavy metals, and metabolic waste. Vitamin C further supports liver function, making the body more efficient at cleansing harmful substances. Immune System Support : Both nutrients are vital for a robust immune system. Vitamin C enhances white blood cell production and function, while glutathione maintains immune cell health, helping the body fight infections more effectively. Skin Brightening and Anti-Aging : This is one of the most popular benefits. Glutathione inhibits the enzyme tyrosinase, which is responsible for melanin production, leading to a brighter, more even skin tone and reduced hyperpigmentation (dark spots, acne scars, melasma). Vitamin C is essential for collagen synthesis, which improves skin elasticity and firmness, reducing fine lines and wrinkles. Together, they protect the skin from UV damage and pollution, promoting a radiant and youthful appearance. Increased Energy and Reduced Fatigue : By supporting mitochondrial function (the cell's powerhouses) and reducing oxidative stress, the combination can boost energy levels and improve physical and mental stamina, reducing symptoms of chronic fatigue. Anti-Inflammatory Action : Chronic inflammation is linked to various health conditions. The combined antioxidant therapy helps reduce inflammatory markers, benefiting overall health and conditions like acne, eczema, and psoriasis. Faster Recovery : The treatment aids in faster recovery from strenuous exercise or illness by reducing muscle soreness, speeding up tissue repair, and enhancing the immune response. Enhanced Brain Health : Neuroprotective benefits include improved memory, focus, and mental clarity by protecting brain cells from oxidative damage",
     "kind": "service",
@@ -2593,7 +2919,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/IV_WELLNESS_DRIPS_5.png?v=1769616734"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/IV_WELLNESS_DRIPS_5.png?v=1769610778"
     ],
     "variants": [
       {
@@ -2620,7 +2946,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/IVWELLNESSDRIPS_2.png?v=1769616736"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/IVWELLNESSDRIPS_2.png?v=1769609779"
     ],
     "variants": [
       {
@@ -2647,7 +2973,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/IVWELLNESSDRIPS_1.png?v=1769616735"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/IVWELLNESSDRIPS_1.png?v=1769609696"
     ],
     "variants": [
       {
@@ -2666,16 +2992,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Areola_Laser_Hair_Removal_1624518d-9b6c-4a1e-9298-2b7329561fe9.png?v=1744028807"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Areola_Laser_Hair_Removal.png?v=1743434208"
     ],
     "variants": [
       {
@@ -2701,16 +3033,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Buttocks_Laser_Hair_Removal_c4caddf8-fab5-411e-aa8f-0cb1ac6e20e9.png?v=1744028791"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Buttocks_Laser_Hair_Removal.png?v=1743434205"
     ],
     "variants": [
       {
@@ -2736,16 +3074,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Chin_Laser_Hair_Removal_70289e19-9f0b-442a-94eb-0ac55372cfc0.png?v=1744028811"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Chin_Laser_Hair_Removal.png?v=1743434209"
     ],
     "variants": [
       {
@@ -2771,16 +3115,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Arms_Laser_Hair_Removal.png?v=1744028776"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Arms_Laser_Hair_Removal.png?v=1743434202"
     ],
     "variants": [
       {
@@ -2806,16 +3156,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Back_Laser_Hair_Removal_6a59484c-c686-4418-a98a-b002a27e071e.png?v=1744028783"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Back_Laser_Hair_Removal.png?v=1743434204"
     ],
     "variants": [
       {
@@ -2841,16 +3197,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Body_Laser_Hair_Removal_59609bd3-3d3a-4d71-baea-07315d1fec74.png?v=1744028770"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Body_Laser_Hair_Removal.png?v=1776105201"
     ],
     "variants": [
       {
@@ -2876,16 +3238,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Laser_Hair_Removal_b5e5e0ba-b876-4ce6-8a94-1bfbbefb77ff.png?v=1744028799"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Laser_Hair_Removal.png?v=1767972938"
     ],
     "variants": [
       {
@@ -2911,16 +3279,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Legs_with_Feet_Laser_Hair_Removal_ac9cdebe-c22d-497b-84b5-33f9f662049e.png?v=1744028773"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Legs_with_Feet_Laser_Hair_Removal.png?v=1743434201"
     ],
     "variants": [
       {
@@ -2946,16 +3320,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Stomach_Laser_Hair_Removal_fe90c881-e4a0-466a-8016-657af856ba43.png?v=1744028787"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Stomach_Laser_Hair_Removal.png?v=1743434204"
     ],
     "variants": [
       {
@@ -2981,16 +3361,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Arms_Laser_Hair_Removal_de27c801-5386-48d4-b0ff-780dbcc4ccb7.png?v=1744028649"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Arms_Laser_Hair_Removal.png?v=1743434202"
     ],
     "variants": [
       {
@@ -3016,16 +3402,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hollywood___Brazilian_Laser_Hair_Removal_cf2aeb29-e0c5-43ce-9b93-af5032afce3b.png?v=1744028795"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Hollywood___Brazilian_Laser_Hair_Removal.png?v=1743434206"
     ],
     "variants": [
       {
@@ -3051,16 +3443,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lower_Leg_Laser_Hair_Removal_7b63f0df-e5a0-4128-b7a9-ec83b226925e.png?v=1744028780"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lower_Leg_Laser_Hair_Removal.png?v=1743434203"
     ],
     "variants": [
       {
@@ -3086,16 +3484,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/neck-laser-hair-removal_c064e236-caa6-4337-ac71-20ee29a7b40f.png?v=1744028636"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/neck-laser-hair-removal.png?v=1765653286"
     ],
     "variants": [
       {
@@ -3121,16 +3525,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Sides_of_Face_Hair_Removal_63693d2e-00b0-4101-9415-1db32266a8a9.png?v=1744028803"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Sides_of_Face_Hair_Removal.png?v=1743434207"
     ],
     "variants": [
       {
@@ -3156,16 +3566,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Under_Arm_Laser_Hair_Removal_b11f399f-4f8e-449e-9d9a-4afdd4f424f3.png?v=1744028819"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Under_Arm_Laser_Hair_Removal.png?v=1753093717"
     ],
     "variants": [
       {
@@ -3191,16 +3607,22 @@
     "kind": "service",
     "tags": [
       "Laser Hair Removal",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Women"
     ],
     "collections": [
       {
         "handle": "laser-hair-removal",
         "title": "Laser Hair Removal"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lips_Laser_Hair_Removal_045e1d3a-c03f-450e-818c-5f486f560a60.png?v=1767972750"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lips_Laser_Hair_Removal.png?v=1743434210"
     ],
     "variants": [
       {
@@ -3226,16 +3648,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1744028749"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3261,16 +3688,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_88147aeb-fb8c-4ef5-83e8-0b163147e353.png?v=1744028757"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3296,16 +3728,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_203c5ac7-34b8-497b-8f99-881dc96c7958.png?v=1744028755"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3331,16 +3768,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_0b2b5b7e-03a9-479c-8014-a825a336d59e.png?v=1744028746"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3366,16 +3808,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_a430d01b-f424-48a5-8add-78a171c2e7cf.png?v=1744028752"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3401,16 +3848,21 @@
     "kind": "service",
     "tags": [
       "Lemon Bottle",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "lemon-bottle",
         "title": "Lemon Bottle"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lemon_Bottle_949f434b-480d-46a7-b4b6-42a4ec06bef9.png?v=1744028744"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lemon_Bottle_23bbc1e4-af73-4915-8f07-0b9ab1fd2716.png?v=1743434197"
     ],
     "variants": [
       {
@@ -3444,7 +3896,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Bridal_Makeup_1b4f43e8-7642-435a-a888-38f9defcceff.png?v=1744028931"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Bridal_Makeup.png?v=1743434232"
     ],
     "variants": [
       {
@@ -3471,7 +3923,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Professional_Party_Makeup_c06e1a99-918d-4076-a021-6053207bf03a.png?v=1744028940"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Professional_Party_Makeup.png?v=1743434234"
     ],
     "variants": [
       {
@@ -3498,7 +3950,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Special_Occassion_Makeup_4a898448-0571-4ab3-b701-cecd13665108.png?v=1744028936"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Special_Occassion_Makeup.png?v=1743434233"
     ],
     "variants": [
       {
@@ -3517,16 +3969,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Centre_Brow_Laser_Hair_Removal_48fa51c9-0598-4884-a0db-0272f3425e25.png?v=1744028717"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Centre_Brow_Laser_Hair_Removal_48fa51c9-0598-4884-a0db-0272f3425e25.png?v=1743434188"
     ],
     "variants": [
       {
@@ -3552,16 +4010,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Chest_or_Stomach_Laser_Hair_Removal_d2759af4-8afe-45ef-88e7-41993a265801.png?v=1744028679"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Chest_or_Stomach_Laser_Hair_Removal_d2759af4-8afe-45ef-88e7-41993a265801.png?v=1743434181"
     ],
     "variants": [
       {
@@ -3587,6 +4051,7 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Salon Services",
       "Threading"
     ],
     "collections": [
@@ -3596,12 +4061,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Chicks_Threading___Waxing_a03af9f7-d61a-4a7c-8a83-bcaf61667852.png?v=1744028720"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Chicks_Threading___Waxing.png?v=1743434189"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 10,
+        "price": 15,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -3615,16 +4080,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Ears_Laser_Hair_Removal_c7376420-f9da-4d3e-9413-cb35986d209d.png?v=1744028713"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Ears_Laser_Hair_Removal_c7376420-f9da-4d3e-9413-cb35986d209d.png?v=1743434187"
     ],
     "variants": [
       {
@@ -3650,6 +4121,7 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Salon Services",
       "Threading"
     ],
     "collections": [
@@ -3659,12 +4131,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Eyebrow_Threading___Waxing_54c06a04-5760-425c-ba47-c751b41c4c17.png?v=1744028724"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Eyebrow_Threading___Waxing.png?v=1743434189"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 6,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -3678,16 +4150,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Feet_Toes_Laser_Hair_Removal_be2f8fc0-afbd-4ad4-b7af-fbef90ff1e97.png?v=1744028698"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Feet_Toes_Laser_Hair_Removal_be2f8fc0-afbd-4ad4-b7af-fbef90ff1e97.png?v=1743434185"
     ],
     "variants": [
       {
@@ -3713,16 +4191,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Forearms_Laser_Hair_Removal_8db99c9e-691f-4afa-8aa1-a65a82541ac8.png?v=1744028694"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Forearms_Laser_Hair_Removal_8db99c9e-691f-4afa-8aa1-a65a82541ac8.png?v=1743434184"
     ],
     "variants": [
       {
@@ -3748,16 +4232,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Front_Back_Neck_Laser_Hair_Removal_c8010d9d-4478-4ff7-a399-881415823911.png?v=1744028705"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Front_Back_Neck_Laser_Hair_Removal_c8010d9d-4478-4ff7-a399-881415823911.png?v=1743434186"
     ],
     "variants": [
       {
@@ -3783,16 +4273,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Full_Arms_Laser_Hair_Removal_f7230c7c-c790-4077-babe-c0f0fc0c6d11.png?v=1744028686"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Full_Arms_Laser_Hair_Removal_f7230c7c-c790-4077-babe-c0f0fc0c6d11.png?v=1743434183"
     ],
     "variants": [
       {
@@ -3818,16 +4314,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Full_Back_Laser_Hair_Removal_41e3be79-d276-4c0b-81c4-dcafc5a895a5.png?v=1744028672"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Full_Back_Laser_Hair_Removal_41e3be79-d276-4c0b-81c4-dcafc5a895a5.png?v=1743434180"
     ],
     "variants": [
       {
@@ -3853,16 +4355,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Full_Beard_Laser_Hair_Removal_96bac5d7-e677-48a5-b048-eae6f1efeadb.png?v=1744028701"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Full_Beard_Laser_Hair_Removal_96bac5d7-e677-48a5-b048-eae6f1efeadb.png?v=1743434185"
     ],
     "variants": [
       {
@@ -3888,16 +4396,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Full_Legs_Laser_Hair_Removal_66f4b6b9-fc81-4751-b37e-be81bac32add.png?v=1744028675"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Full_Legs_Laser_Hair_Removal_66f4b6b9-fc81-4751-b37e-be81bac32add.png?v=1743434181"
     ],
     "variants": [
       {
@@ -3923,16 +4437,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Lower_Back_Laser_Hair_Removal_6135afae-562d-4cf0-8169-4c5fbef247b0.png?v=1744028668"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Lower_Back_Laser_Hair_Removal_6135afae-562d-4cf0-8169-4c5fbef247b0.png?v=1743434180"
     ],
     "variants": [
       {
@@ -3958,16 +4478,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Lower_Legs_Laser_Hair_Removal_d40f1a4b-8ba7-4537-a8bf-24d66bc3a14a.png?v=1744028682"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Lower_Legs_Laser_Hair_Removal_d40f1a4b-8ba7-4537-a8bf-24d66bc3a14a.png?v=1743434182"
     ],
     "variants": [
       {
@@ -3993,16 +4519,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Shoulders_Laser_Hair_Removal_404b46e6-26c1-475d-b0be-46c20070b4f1.png?v=1744028690"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Shoulders_Laser_Hair_Removal_404b46e6-26c1-475d-b0be-46c20070b4f1.png?v=1743434183"
     ],
     "variants": [
       {
@@ -4028,16 +4560,22 @@
     "kind": "service",
     "tags": [
       "Men",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Laser Hair Removal Men"
     ],
     "collections": [
       {
         "handle": "men",
         "title": "Men"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Men_s_Underarms_Laser_Hair_Removal_3f0a7d6b-82e1-48d1-9d24-4b4c2d691e5c.png?v=1744028710"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Men_s_Underarms_Laser_Hair_Removal_3f0a7d6b-82e1-48d1-9d24-4b4c2d691e5c.png?v=1743434187"
     ],
     "variants": [
       {
@@ -4063,16 +4601,21 @@
     "kind": "service",
     "tags": [
       "Morpheus8",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "morpheus8",
         "title": "Morpheus8"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Body_-_Morpheus8_def24b11-ea52-4968-baa6-050ed635733e.png?v=1744028761"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Body_-_Morpheus8.png?v=1743434198"
     ],
     "variants": [
       {
@@ -4098,16 +4641,21 @@
     "kind": "service",
     "tags": [
       "Morpheus8",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "morpheus8",
         "title": "Morpheus8"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyes_-_Morpheus8_ad39c604-3ab1-45c1-9e90-c4eae1770f91.png?v=1744028764"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyes_-_Morpheus8.png?v=1743434199"
     ],
     "variants": [
       {
@@ -4133,28 +4681,33 @@
     "kind": "service",
     "tags": [
       "Morpheus8",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "morpheus8",
         "title": "Morpheus8"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Neck_-_Morpheus8_3088250f-742e-4d74-8e72-da30c8ac4d21.png?v=1744028767"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Neck_-_Morpheus8.png?v=1743434200"
     ],
     "variants": [
       {
         "name": "1 Session",
-        "price": 400,
+        "price": 300,
         "compareAtPrice": null,
         "sku": null,
         "available": true
       },
       {
         "name": "3 Sessions",
-        "price": 950,
+        "price": 900,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4174,10 +4727,14 @@
       {
         "handle": "nails",
         "title": "Nails"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Manicure_Images_038ac30a-eb16-4905-8158-dd3cf20f128c.png?v=1744028924"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Manicure_Images.png?v=1743434230"
     ],
     "variants": [
       {
@@ -4202,10 +4759,14 @@
       {
         "handle": "nails",
         "title": "Nails"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Pedicure_Images_f2d1c761-58bc-4d58-964f-1aa003c2992a.png?v=1744028919"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Pedicure_Images.png?v=1743434230"
     ],
     "variants": [
       {
@@ -4230,10 +4791,14 @@
       {
         "handle": "nails",
         "title": "Nails"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Shellac_Nails_7f3db106-31d3-4ac0-9cdd-e53054eb5da3.png?v=1744028915"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Shellac_Nails.png?v=1743434229"
     ],
     "variants": [
       {
@@ -4253,70 +4818,6 @@
     ]
   },
   {
-    "handle": "carbon-peel-facial",
-    "title": "Carbon Peel Facial",
-    "description": "A carbon peel facial is a non-invasive skin treatment using liquid carbon and laser energy to deeply cleanse pores, exfoliate dead skin, and stimulate collagen, improving texture, tone, acne, fine lines, and pigmentation with minimal downtime, making it great for dull, oily, or acne-prone skin . The carbon draws out impurities, and the laser heats the deeper skin layers, promoting rejuvenation and collagen production for smoother, brighter skin. Core Benefits: Deep Cleansing & Exfoliation: The carbon mask acts as a magnet for oil and impurities, which the laser then vaporises along with dead skin cells. Pore Minimization: The heat from the laser stimulates the inner walls of the pores to contract, making them appear smaller and more refined. Acne Management: The laser's thermal energy destroys acne-causing bacteria and shrinks sebaceous glands to reduce excess oil production. Anti-Ageing: Thermal energy reaches the dermis to stimulate collagen and elastin production, helping to soften fine lines and firm the skin. Immediate Results: Most patients notice a \"Hollywood glow\" and smoother texture immediately after a single 30-minute session. Treatment Procedure A session takes approximately 30 to 45 minutes and follows these steps: Preparation: The skin is thoroughly cleansed of surface oils. Carbon Application: A thin layer of liquid carbon is applied and left to dry for about 10 minutes, allowing it to penetrate deep into pores. Laser Pass 1 (Heating): A low-energy laser pass heats the carbon to bind it to the skin's surface and stimulate deeper tissue. Laser Pass 2 (Vaporization): A higher-energy Q-switched laser is used to shatter the carbon particles, taking all trapped debris and impurities with them. Aftercare: A hydrating moisturizer and broad-spectrum SPF 30+ or 50 are applied to protect the fresh skin. Post-Treatment & Maintenance Course of Treatment: While one session provides an instant boost, professionals recommend a course of 4 to 6 sessions spaced 2 to 4 weeks apart for optimal, long-term results. Downtime: There is typically no recovery period. Mild redness or a tingling sensation may occur but usually fades within a few hours. Pre-Care: Avoid sun exposure, retinoids, and exfoliating products for 3–5 days before your appointment.",
-    "kind": "service",
-    "tags": [
-      "Offers",
-      "Carbon Peel Facial"
-    ],
-    "collections": [
-      {
-        "handle": "offers",
-        "title": "Offers"
-      },
-      {
-        "handle": "carbon-peel-facial",
-        "title": "Carbon Peel Facial"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Carbonpeel.png?v=1767697696"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 150,
-        "compareAtPrice": 200,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "skin-rejuvenation-treatment",
-    "title": "Skin Rejuvenation Treatment",
-    "description": "Refresh and revitalise your skin with our advanced Skin Rejuvenation Treatment for the face – designed to restore your natural glow and combat signs of ageing, sun damage, and uneven texture. ✨ Benefits: Improves skin tone and texture Reduces fine lines and pigmentation Stimulates collagen production Leaves your skin smoother, firmer, and radiant Our specialists use cutting-edge technology and tailored techniques to ensure visible results after just one session. 💆♀️ Ideal for dull, tired, or ageing skin – book now for only £89 and reveal a fresher, more youthful you.",
-    "kind": "service",
-    "tags": [
-      "Offers",
-      "Black friday sale"
-    ],
-    "collections": [
-      {
-        "handle": "offers",
-        "title": "Offers"
-      },
-      {
-        "handle": "black-friday-sale",
-        "title": "Black friday sale"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Khushboo_Work_1080_x_800_px_6.png?v=1753114263"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 100,
-        "compareAtPrice": 150,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
     "handle": "ear-piercing",
     "title": "Ear Piercing",
     "description": "Elevate your style with our Ear Piercing service, designed for a safe and precise experience. Our skilled professionals use sterile, high-quality equipment to ensure a clean, comfortable procedure with minimal discomfort. Enjoy beautifully placed piercings and expert aftercare, all delivered with exceptional service at our exclusive beauty clinic.",
@@ -4329,10 +4830,14 @@
       {
         "handle": "piercing",
         "title": "Piercing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Ear_Piercing_f7efb9a9-70f2-434a-ac0a-33f7d568f850.png?v=1744028927"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Ear_Piercing.png?v=1743434231"
     ],
     "variants": [
       {
@@ -4358,16 +4863,21 @@
     "kind": "service",
     "tags": [
       "Semi Permanent Makeup",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "semi-permanent-makeup",
         "title": "Semi Permanent Makeup"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Combination_Brows_af195b4a-49fc-440b-b6f9-fc765cd951e1.png?v=1744029119"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Combination_Brows.png?v=1743434273"
     ],
     "variants": [
       {
@@ -4386,16 +4896,21 @@
     "kind": "service",
     "tags": [
       "Semi Permanent Makeup",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "semi-permanent-makeup",
         "title": "Semi Permanent Makeup"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lip_Enhancement_fe97c1e1-f815-4dcc-9063-e615e448b743.png?v=1744029133"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lip_Enhancement.png?v=1743434276"
     ],
     "variants": [
       {
@@ -4414,16 +4929,21 @@
     "kind": "service",
     "tags": [
       "Semi Permanent Makeup",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "semi-permanent-makeup",
         "title": "Semi Permanent Makeup"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Microblading_b24bae36-09aa-4ef4-ad17-bf9873127c0e.png?v=1744029128"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Microblading.png?v=1743434275"
     ],
     "variants": [
       {
@@ -4442,16 +4962,21 @@
     "kind": "service",
     "tags": [
       "Semi Permanent Makeup",
+      "Aesthetic Treatments",
       "Clinic Services"
     ],
     "collections": [
       {
         "handle": "semi-permanent-makeup",
         "title": "Semi Permanent Makeup"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Microshading_6ccdacab-bb5d-4818-b6a8-da310edf6611.png?v=1744029124"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Microshading.png?v=1743434274"
     ],
     "variants": [
       {
@@ -4469,7 +4994,8 @@
     "description": "Achieve a flawlessly smooth chin with our Chin Threading service. Our skilled technicians use precise threading techniques to gently remove unwanted hair, ensuring a clean and polished look. Enjoy minimal discomfort and long-lasting smoothness with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4478,34 +5004,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Chin_Threading_c1b9295f-2098-4d49-a040-60e8b6b702ba.png?v=1744028984"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 4,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "eyebrow-threading",
-    "title": "Eyebrow Threading",
-    "description": "Experience perfectly shaped brows with our Eyebrow Threading service, a precise and gentle method for defining your eyebrows. Our skilled technicians use expert threading techniques to remove unwanted hair and sculpt your brows to complement your facial features. Enjoy a clean, polished look with minimal discomfort and long-lasting results at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Threading"
-    ],
-    "collections": [
-      {
-        "handle": "threading",
-        "title": "Threading"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyebrow_Threading_d20b2014-760b-42f4-baa0-49dce2bf4265.png?v=1744028994"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Chin_Threading.png?v=1743434244"
     ],
     "variants": [
       {
@@ -4518,12 +5017,13 @@
     ]
   },
   {
-    "handle": "forehead-threading",
-    "title": "Forehead Threading",
-    "description": "Achieve a flawless look with our Forehead Threading service, expertly designed to remove unwanted hair from your forehead. Our skilled technicians use precise threading techniques to deliver a smooth, clean finish with minimal discomfort. Enjoy a well-groomed appearance and long-lasting results with exceptional care at our exclusive beauty clinic.",
+    "handle": "eyebrow-threading",
+    "title": "Eyebrow Threading",
+    "description": "Experience perfectly shaped brows with our Eyebrow Threading service, a precise and gentle method for defining your eyebrows. Our skilled technicians use expert threading techniques to remove unwanted hair and sculpt your brows to complement your facial features. Enjoy a clean, polished look with minimal discomfort and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4532,12 +5032,40 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Forehead_Threading_75913b84-e1a8-4961-8534-5532bc082143.png?v=1744028977"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyebrow_Threading.png?v=1743434246"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 4,
+        "price": 7,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "forehead-threading",
+    "title": "Forehead Threading",
+    "description": "Achieve a flawless look with our Forehead Threading service, expertly designed to remove unwanted hair from your forehead. Our skilled technicians use precise threading techniques to deliver a smooth, clean finish with minimal discomfort. Enjoy a well-groomed appearance and long-lasting results with exceptional care at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Threading",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "threading",
+        "title": "Threading"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Forehead_Threading.png?v=1743434243"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 5,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4550,21 +5078,26 @@
     "description": "Achieve a flawlessly smooth appearance with our Full Face & Neck Threading service. This thorough treatment removes unwanted hair from your entire face and neck, including the forehead, sides, upper lip, chin, and cheeks. Our expert technicians use precise threading techniques to deliver a clean, polished finish with minimal discomfort. Enjoy beautifully groomed skin and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "threading",
         "title": "Threading"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Face_Neck_Threading_b193304f-0617-47cb-b7b9-a01537573928.png?v=1744028966"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Face_Neck_Threading_20daf10a-a519-442e-af74-ae13e9eb6dbb.png?v=1743434240"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 30,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4577,21 +5110,26 @@
     "description": "Experience a flawless, smooth complexion with our Full Face Threading service. This comprehensive treatment removes unwanted hair from your entire face, including the forehead, sides, upper lip, chin, and cheeks. Our skilled technicians use precise threading techniques to ensure a clean, polished look with minimal discomfort. Enjoy beautifully groomed skin and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "threading",
         "title": "Threading"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Face_Threading_362b8277-581d-413a-84a5-30e8ae2bdfcc.png?v=1744028970"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Face_Threading.png?v=1743434241"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 23,
+        "price": 27,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4604,7 +5142,8 @@
     "description": "Refine your look with our Lower Lip Line Threading service, designed to precisely remove unwanted hair from the lower lip area. Our skilled technicians use gentle threading techniques to ensure a smooth, clean finish with minimal discomfort. Enjoy a polished appearance and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4613,7 +5152,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lower_Lip_Line_Threading_6425b08d-174e-4d2f-8763-4612ae107eb7.png?v=1744028987"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lower_Lip_Line_Threading.png?v=1743434245"
     ],
     "variants": [
       {
@@ -4631,7 +5170,8 @@
     "description": "Achieve a smooth, refined look with our Neck Threading service. Our expert technicians use precise threading techniques to gently remove unwanted hair from the neck area, ensuring a clean and polished appearance with minimal discomfort. Enjoy beautifully groomed skin and long-lasting results with exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4640,12 +5180,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Neck_Threading_e1fd1424-e372-401f-93e9-92dd615e39cf.png?v=1744028973"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Neck_Threading.png?v=1743434242"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 5,
+        "price": 8,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4658,7 +5198,8 @@
     "description": "Enhance your look with our Sides Threading service, designed to precisely shape and remove unwanted hair along the sides of your face. Our expert technicians use gentle threading techniques to achieve a clean, smooth finish with minimal discomfort. Enjoy beautifully groomed results and long-lasting smoothness at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4667,12 +5208,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Neck_Bleaching_033216b6-9460-4c06-b003-95c8e44b742b.png?v=1744028980"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Neck_Bleaching.png?v=1743434243"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 7,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4685,7 +5226,8 @@
     "description": "Achieve a smooth and refined upper lip with our Upper Lip Threading service. Our expert technicians use precise threading techniques to gently remove unwanted hair, ensuring a clean and polished look. Enjoy minimal discomfort, perfectly groomed results, and a long-lasting smoothness at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Threading"
+      "Threading",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -4694,12 +5236,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Upper_Lip_Line_Threading_36f5aad4-89e4-41f8-8c22-6b13f83b4bf8.png?v=1744028991"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Upper_Lip_Line_Threading.png?v=1743434246"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 4,
+        "price": 5,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4713,16 +5255,22 @@
     "kind": "service",
     "tags": [
       "Vitamin IM Injections",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Injections"
     ],
     "collections": [
       {
         "handle": "vitamin-im-injections",
         "title": "Vitamin IM Injections"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Biotin_Injection_a3492a89-6208-4c51-b1c2-663202918f4b.png?v=1744028730"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Biotin_Injection.png?v=1743434191"
     ],
     "variants": [
       {
@@ -4741,16 +5289,22 @@
     "kind": "service",
     "tags": [
       "Vitamin IM Injections",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Injections"
     ],
     "collections": [
       {
         "handle": "vitamin-im-injections",
         "title": "Vitamin IM Injections"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Glutathione_Injection_3a24a5b6-4c9b-4a69-85af-e3c1bf4426c1.png?v=1744028727"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Glutathione_Injection.png?v=1743434190"
     ],
     "variants": [
       {
@@ -4769,21 +5323,27 @@
     "kind": "service",
     "tags": [
       "Vitamin IM Injections",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Injections"
     ],
     "collections": [
       {
         "handle": "vitamin-im-injections",
         "title": "Vitamin IM Injections"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Vitamin_B12_Injection_25e11d43-b8de-4954-a0cd-d14c4c93a93c.png?v=1744028733"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Vitamin_B12_Injection.png?v=1743434191"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 30,
+        "price": 25,
         "compareAtPrice": 50,
         "sku": null,
         "available": true
@@ -4797,16 +5357,22 @@
     "kind": "service",
     "tags": [
       "Vitamin IM Injections",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Injections"
     ],
     "collections": [
       {
         "handle": "vitamin-im-injections",
         "title": "Vitamin IM Injections"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Vitamin_C_Injection_28f21733-829b-4d22-87db-d3e891a8552c.png?v=1744028737"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Vitamin_C_Injection.png?v=1743434192"
     ],
     "variants": [
       {
@@ -4825,22 +5391,28 @@
     "kind": "service",
     "tags": [
       "Vitamin IM Injections",
+      "Aesthetic Treatments",
+      "Clinic Services",
       "Injections"
     ],
     "collections": [
       {
         "handle": "vitamin-im-injections",
         "title": "Vitamin IM Injections"
+      },
+      {
+        "handle": "aesthetic-treatments",
+        "title": "Aesthetic Treatments"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Vitamin_D_Injection_8de06af1-eea0-4756-8486-f17c9471528a.png?v=1744028740"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Vitamin_D_Injection.png?v=1743434193"
     ],
     "variants": [
       {
         "name": "Standard",
         "price": 30,
-        "compareAtPrice": 40,
+        "compareAtPrice": 50,
         "sku": null,
         "available": true
       }
@@ -4852,21 +5424,26 @@
     "description": "Refine your look with our Bikini Line Waxing service, designed for precise and smooth hair removal along the bikini line. Our expert aestheticians use high-quality wax to ensure a clean, well-defined edge with minimal discomfort. Enjoy a polished, comfortable finish and long-lasting results with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Bikini_Line_Waxing_1a710397-2de2-45c5-bca9-5b4eb1070fb2.png?v=1744029056"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Bikini_Line_Waxing.png?v=1743434260"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 12,
+        "price": 18,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4879,178 +5456,21 @@
     "description": "Achieve a smooth, flawless look with our Buttocks Waxing service. This precise treatment removes unwanted hair from the buttocks, ensuring an even and polished finish. Our expert aestheticians use high-quality wax to provide gentle and effective hair removal with minimal discomfort. Enjoy beautifully groomed skin and exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Buttocks_Waxing_db74020c-68a6-4514-aa73-a950f0138744.png?v=1744029030"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 10,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "chin",
-    "title": "Chin Waxing",
-    "description": "Achieve a smooth, flawless chin with our Chin Waxing service, a luxurious treatment designed to remove unwanted hair with precision. Our expert aestheticians use high-quality wax to gently and effectively eliminate hair, leaving your chin beautifully smooth and free of irritation. Experience the convenience of a polished, clean look with results that last. Enjoy expert care and refined grooming at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Chin_Waxing_6cca047d-322c-4077-97fc-0d661cad18d0.png?v=1744029101"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 4,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "extended-hollywood-waxing",
-    "title": "Extended Hollywood / Brazilian Waxing",
-    "description": "Achieve total smoothness with our Extended Hollywood Waxing, offering comprehensive hair removal from the entire bikini area and extended zones for a flawless finish. Our skilled aestheticians use high-quality wax to provide thorough, precise removal with minimal discomfort. Enjoy a perfectly groomed appearance and long-lasting results with expert care at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Extended_Hollywood_Waxing.png?v=1744029050"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 37,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "eyebrow-waxing",
-    "title": "Eyebrow Waxing",
-    "description": "Achieve perfectly sculpted brows with our Eyebrow Waxing service, a precise and luxurious treatment designed to enhance your natural beauty. Our skilled aestheticians use high-quality wax to gently remove unwanted hair, shaping your eyebrows to complement your facial features. Experience smooth, clean lines and a polished appearance with results that are both immediate and long-lasting. Enjoy expert care and refined grooming at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Eyebrow_Waxing_4dc3551d-5cf7-4ef9-927e-965bf664500c.png?v=1744029115"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 6,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "forehead-waxing",
-    "title": "Forehead Waxing",
-    "description": "Achieve a flawless, smooth forehead with our Forehead Waxing service. Our expert aestheticians use high-quality wax to gently remove unwanted hair, ensuring a clean and polished look. Enjoy a well-groomed appearance with minimal discomfort and long-lasting results. Experience exceptional care and refined grooming at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Forehead_Waxing_bc7c3425-6c30-4a97-9054-1399a3cb4b13.png?v=1744029092"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 4,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "full-arms-waxing",
-    "title": "Full Arms Waxing",
-    "description": "Achieve flawlessly smooth and polished arms with our Full Arms Waxing service. This luxurious treatment removes unwanted hair from the shoulders to the wrists, ensuring a clean and even look. Our skilled aestheticians use high-quality wax to provide gentle and precise hair removal with minimal discomfort. Enjoy beautifully groomed arms and long-lasting results at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Arm_Waxing_bccc47d4-8082-4802-a456-118f3ccc6077.png?v=1744029079"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 15,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "full-back-waxing",
-    "title": "Full Back Waxing",
-    "description": "Achieve a smooth, clean look with our Full Back Waxing service. This thorough treatment removes unwanted hair from the entire back, ensuring a flawless and even finish. Our expert aestheticians use high-quality wax for a precise and gentle application, minimizing discomfort and providing long-lasting results. Enjoy exceptional care and a perfectly groomed back at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Back_Waxing_c4446f20-21e2-41cc-8198-a7d871fa5fc5.png?v=1744029044"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Buttocks_Waxing.png?v=1743434254"
     ],
     "variants": [
       {
@@ -5063,12 +5483,13 @@
     ]
   },
   {
-    "handle": "full-body-hollywood-waxing",
-    "title": "Full Body Incl. Hollywood Waxing",
-    "description": "Achieve complete smoothness with our Full Body & Hollywood Waxing service, combining full-body hair removal with precise, thorough hair removal from the bikini area. This luxurious treatment covers all areas from head to toe, including a detailed Hollywood Waxing for a flawless, polished look. Our expert aestheticians use high-quality wax to ensure gentle, effective removal with minimal discomfort. Enjoy a perfectly groomed appearance and exceptional care at our exclusive beauty clinic.",
+    "handle": "chin",
+    "title": "Chin Waxing",
+    "description": "Achieve a smooth, flawless chin with our Chin Waxing service, a luxurious treatment designed to remove unwanted hair with precision. Our expert aestheticians use high-quality wax to gently and effectively eliminate hair, leaving your chin beautifully smooth and free of irritation. Experience the convenience of a polished, clean look with results that last. Enjoy expert care and refined grooming at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5077,12 +5498,196 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Body_Hollywood_Waxing_0faed0b5-a234-4c06-80d1-9a76b36f6b31.png?v=1744029035"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Chin_Waxing_33e72834-8a04-4f8e-9968-aeba9a024578.png?v=1743434269"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 90,
+        "price": 5,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "extended-hollywood-waxing",
+    "title": "Extended Hollywood / Brazilian Waxing",
+    "description": "Achieve total smoothness with our Extended Hollywood Waxing, offering comprehensive hair removal from the entire bikini area and extended zones for a flawless finish. Our skilled aestheticians use high-quality wax to provide thorough, precise removal with minimal discomfort. Enjoy a perfectly groomed appearance and long-lasting results with expert care at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Extended_Hollywood_Waxing.png?v=1743434259"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 40,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "eyebrow-waxing",
+    "title": "Eyebrow Waxing",
+    "description": "Achieve perfectly sculpted brows with our Eyebrow Waxing service, a precise and luxurious treatment designed to enhance your natural beauty. Our skilled aestheticians use high-quality wax to gently remove unwanted hair, shaping your eyebrows to complement your facial features. Experience smooth, clean lines and a polished appearance with results that are both immediate and long-lasting. Enjoy expert care and refined grooming at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Eyebrow_Waxing.png?v=1743434272"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 7,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "forehead-waxing",
+    "title": "Forehead Waxing",
+    "description": "Achieve a flawless, smooth forehead with our Forehead Waxing service. Our expert aestheticians use high-quality wax to gently remove unwanted hair, ensuring a clean and polished look. Enjoy a well-groomed appearance with minimal discomfort and long-lasting results. Experience exceptional care and refined grooming at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Forehead_Waxing.png?v=1743434267"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 5,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "full-arms-waxing",
+    "title": "Full Arms Waxing",
+    "description": "Achieve flawlessly smooth and polished arms with our Full Arms Waxing service. This luxurious treatment removes unwanted hair from the shoulders to the wrists, ensuring a clean and even look. Our skilled aestheticians use high-quality wax to provide gentle and precise hair removal with minimal discomfort. Enjoy beautifully groomed arms and long-lasting results at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Arm_Waxing.png?v=1743434264"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 20,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "full-back-waxing",
+    "title": "Full Back Waxing",
+    "description": "Achieve a smooth, clean look with our Full Back Waxing service. This thorough treatment removes unwanted hair from the entire back, ensuring a flawless and even finish. Our expert aestheticians use high-quality wax for a precise and gentle application, minimizing discomfort and providing long-lasting results. Enjoy exceptional care and a perfectly groomed back at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Back_Waxing.png?v=1743434256"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 30,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "full-body-hollywood-waxing",
+    "title": "Full Body Incl. Hollywood Waxing",
+    "description": "Achieve complete smoothness with our Full Body & Hollywood Waxing service, combining full-body hair removal with precise, thorough hair removal from the bikini area. This luxurious treatment covers all areas from head to toe, including a detailed Hollywood Waxing for a flawless, polished look. Our expert aestheticians use high-quality wax to ensure gentle, effective removal with minimal discomfort. Enjoy a perfectly groomed appearance and exceptional care at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Body_Hollywood_Waxing.png?v=1743434255"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 140,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5095,21 +5700,26 @@
     "description": "Experience the ultimate in smooth, polished skin with our Full Body Waxing service. This comprehensive treatment covers hair removal from head to toe, including arms, legs, back, and more. Our expert aestheticians use high-quality wax for a thorough and gentle application, ensuring minimal discomfort and long-lasting results. Enjoy an impeccably groomed appearance and exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Body_Waxing_55f00001-3e45-4b01-afc3-6b3b6165163b.png?v=1744029039"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Body_Waxing.png?v=1743434256"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 80,
+        "price": 120,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5122,21 +5732,26 @@
     "description": "Achieve a completely smooth and polished look with our Full Face and Neck Waxing service. This comprehensive treatment removes unwanted hair from the entire face, including the forehead, sides, upper lip, chin, and cheeks, as well as the neck area. Our expert aestheticians use high-quality wax for a gentle, precise application, ensuring a clean and flawless finish with minimal discomfort. Enjoy a perfectly groomed appearance and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Neck_Waxing_7c73c7d0-b4e8-4c7b-b85c-4936768af548.png?v=1744029083"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Neck_Waxing.png?v=1743434265"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 35,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5149,21 +5764,26 @@
     "description": "Reveal a smooth, radiant complexion with our Full Face Waxing service. This luxurious treatment meticulously removes unwanted hair from all areas of the face, including the forehead, sides, upper lip, chin, and cheeks. Our expert aestheticians use high-quality wax for a gentle, precise application, ensuring a clean, polished look with minimal discomfort. Enjoy a flawlessly groomed appearance and long-lasting results at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Face_Waxing_e09350ac-8f02-4e9a-b219-211a12d2582e.png?v=1744029088"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Face_Waxing.png?v=1743434266"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 23,
+        "price": 30,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5176,21 +5796,26 @@
     "description": "Experience impeccably smooth legs with our Full Legs Waxing service. This comprehensive treatment removes hair from the upper thighs to the ankles, ensuring a flawless, even finish. Our skilled aestheticians use high-quality wax for a gentle and precise application, minimizing discomfort while delivering long-lasting results. Enjoy beautifully groomed legs and exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Leg_Waxing_59123b56-d89e-4c71-a38a-0349ae4da306.png?v=1744029065"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Leg_Waxing.png?v=1743434262"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 30,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5203,21 +5828,26 @@
     "description": "Achieve a flawlessly smooth stomach with our Full Stomach Waxing service. This comprehensive treatment removes unwanted hair from the entire abdominal area, ensuring an even and polished look. Our expert aestheticians use high-quality wax for a precise and gentle application, minimizing discomfort while delivering long-lasting results. Enjoy exceptional care and beautifully groomed skin at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Full_Stomach_Waxing_50b8c8ec-f7c8-4f5c-a0da-308e7e7489e3.png?v=1744029047"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Full_Stomach_Waxing.png?v=1743434257"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 15,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5230,7 +5860,8 @@
     "description": "Experience smooth, impeccable arms with our Half Arms Waxing service. This refined treatment targets hair removal from the upper or lower half of your arms, ensuring a clean, polished appearance. Our expert aestheticians use high-quality wax for precise and gentle removal, minimizing discomfort while delivering long-lasting results. Enjoy beautifully groomed arms with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5239,34 +5870,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Half_Arm_Waxing_d1545019-a653-4fba-a4e2-d39e0c685e97.png?v=1744029074"
-    ],
-    "variants": [
-      {
-        "name": "Standard",
-        "price": 10,
-        "compareAtPrice": null,
-        "sku": null,
-        "available": true
-      }
-    ]
-  },
-  {
-    "handle": "half-legs-waxing",
-    "title": "Half Legs Waxing",
-    "description": "Achieve smooth, beautifully groomed legs with our Half Legs Waxing service. This targeted treatment removes hair from either the upper or lower half of your legs, providing a clean, polished look. Our expert aestheticians use high-quality wax to ensure gentle, precise hair removal with minimal discomfort. Enjoy long-lasting results and exceptional care at our exclusive beauty clinic.",
-    "kind": "service",
-    "tags": [
-      "Waxing"
-    ],
-    "collections": [
-      {
-        "handle": "waxing",
-        "title": "Waxing"
-      }
-    ],
-    "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Half_Leg_Waxing_85b5d1d2-098f-4a9a-ab87-aea5deb6c142.png?v=1744029061"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Half_Arm_Waxing.png?v=1743434263"
     ],
     "variants": [
       {
@@ -5279,26 +5883,63 @@
     ]
   },
   {
-    "handle": "hollywood-waxing",
-    "title": "Hollywood / Brazilian Waxing",
-    "description": "Experience complete smoothness with our Hollywood Waxing service, providing full hair removal from the bikini area for a clean, polished look. Our expert aestheticians use high-quality wax to ensure a thorough and precise treatment with minimal discomfort. Enjoy the confidence of perfectly groomed skin and long-lasting results at our exclusive beauty clinic.",
+    "handle": "half-legs-waxing",
+    "title": "Half Legs Waxing",
+    "description": "Achieve smooth, beautifully groomed legs with our Half Legs Waxing service. This targeted treatment removes hair from either the upper or lower half of your legs, providing a clean, polished look. Our expert aestheticians use high-quality wax to ensure gentle, precise hair removal with minimal discomfort. Enjoy long-lasting results and exceptional care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
         "handle": "waxing",
         "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Extended_Hollywood_Waxing_25285d8e-7b0e-4622-b94d-85214e0035a5.png?v=1744029053"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Half_Leg_Waxing.png?v=1743434261"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 33,
+        "price": 20,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "hollywood-waxing",
+    "title": "Hollywood / Brazilian Waxing",
+    "description": "Experience complete smoothness with our Hollywood Waxing service, providing full hair removal from the bikini area for a clean, polished look. Our expert aestheticians use high-quality wax to ensure a thorough and precise treatment with minimal discomfort. Enjoy the confidence of perfectly groomed skin and long-lasting results at our exclusive beauty clinic.",
+    "kind": "service",
+    "tags": [
+      "Waxing",
+      "Salon Services"
+    ],
+    "collections": [
+      {
+        "handle": "waxing",
+        "title": "Waxing"
+      },
+      {
+        "handle": "salon-services",
+        "title": "Salon Services"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Extended_Hollywood_Waxing.png?v=1743434259"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 35,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5311,7 +5952,8 @@
     "description": "Achieve a flawlessly smooth appearance with our Lower Lip Line Waxing service, designed to precisely remove unwanted hair for a clean, polished look. Our skilled aestheticians use high-quality wax to gently eliminate hair along the lower lip line, ensuring minimal discomfort and long-lasting results. Enjoy a refined and confident look with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5320,12 +5962,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Lower_Lip_Line_Waxing_4f063ac3-532d-4aab-a954-9fb93a834742.png?v=1744029106"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Lower_Lip_Line_Waxing.png?v=1743434270"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 2,
+        "price": 3,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5338,7 +5980,8 @@
     "description": "Enhance your look with our Sideburn Waxing service, designed to precisely shape and remove unwanted hair along the sides of your face. Our skilled aestheticians use high-quality wax to ensure a clean, smooth finish with minimal discomfort. Enjoy well-defined sideburns and a polished appearance that lasts, all with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5347,7 +5990,7 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Sideburn_Waxing_c90392c9-7962-4746-bebe-d06aca820ee3.png?v=1744029097"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Sideburn_Waxing.png?v=1743434268"
     ],
     "variants": [
       {
@@ -5365,7 +6008,8 @@
     "description": "Achieve silky smooth underarms with our Underarm Waxing service. This precise treatment effectively removes unwanted hair, leaving the area clean and flawless. Our expert aestheticians use high-quality wax to ensure gentle, thorough hair removal with minimal discomfort. Enjoy a polished look and long-lasting smoothness with expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5374,12 +6018,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Under_Arm_Waxing_2_19affe3e-c50d-47ec-9b5b-259089050f8a.png?v=1744029070"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Under_Arm_Waxing_2.png?v=1743434263"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 7,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5392,7 +6036,8 @@
     "description": "Enjoy a smooth and flawless finish with our Upper Lip Waxing service, a quick and luxurious treatment designed to remove unwanted hair with precision. Our expert aestheticians use high-quality wax to gently and effectively eliminate hair from the upper lip area, ensuring minimal discomfort and maximum results. Experience the confidence of a clean, polished look that lasts. Indulge in expert care at our exclusive beauty clinic.",
     "kind": "service",
     "tags": [
-      "Waxing"
+      "Waxing",
+      "Salon Services"
     ],
     "collections": [
       {
@@ -5401,12 +6046,12 @@
       }
     ],
     "images": [
-      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Upper_Lip_Line_Waxing_ab1dbe1b-fcbe-494b-a402-6b65397b5960.png?v=1744029110"
+      "https://cdn.shopify.com/s/files/1/0896/0783/1890/files/Upper_Lip_Line_Waxing.png?v=1743434271"
     ],
     "variants": [
       {
         "name": "Standard",
-        "price": 4,
+        "price": 5,
         "compareAtPrice": null,
         "sku": null,
         "available": true
