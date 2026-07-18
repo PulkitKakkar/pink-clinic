@@ -1,5 +1,4 @@
 import westStreetCatalog from "@/data/west-street-catalog.json";
-import { withProposedCatalogImage } from "@/lib/catalog-image-proposals";
 import { sanityClient } from "@/lib/sanity/client";
 
 export type CatalogVariant = { name: string; price: number; compareAtPrice?: number | null; sku?: string | null };
@@ -34,7 +33,7 @@ type SanityCatalogItem = {
 export async function getBranchCatalog(branchSlug: string): Promise<CatalogItem[]> {
   const branchFallback = branchSlug === "reading-west-st" ? fallback : [];
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  if (!projectId || projectId === "replace-me") return branchFallback.map(withProposedCatalogImage);
+  if (!projectId || projectId === "replace-me") return branchFallback;
 
   try {
     const overrides = await sanityClient.fetch<SanityCatalogItem[]>(`*[_type == "catalogItem" && count(branches[branch->slug.current == $branchSlug]) > 0]{
@@ -52,7 +51,7 @@ export async function getBranchCatalog(branchSlug: string): Promise<CatalogItem[
       "branchVariants": branches[branch->slug.current == $branchSlug][0].variants[]{name, price, compareAtPrice},
       "active": active != false && branches[branch->slug.current == $branchSlug][0].available != false
     }`, { branchSlug }, { next: { revalidate: 60 } });
-    if (!overrides.length) return branchFallback.map(withProposedCatalogImage);
+    if (!overrides.length) return branchFallback;
     const byHandle = new Map(overrides.map((item) => [item.handle, item]));
     const merged = branchFallback.flatMap((item) => {
       const override = byHandle.get(item.handle);
@@ -63,8 +62,8 @@ export async function getBranchCatalog(branchSlug: string): Promise<CatalogItem[
       const collectionTitles = override.collectionTitles || [];
       return [{ ...item, ...override, tags: collectionTitles.length ? collectionTitles : override.category ? [override.category] : item.tags, images: override.images?.length ? override.images : item.images, variants }];
     });
-    return [...merged, ...[...byHandle.values()].filter((item) => item.active !== false).map((item) => ({ handle: item.handle, title: item.title, description: item.description || "", kind: item.kind, tags: item.collectionTitles?.length ? item.collectionTitles : item.category ? [item.category] : [], images: item.images || [], variants: item.branchVariants?.length ? item.branchVariants : item.branchPrice != null ? [{ name: item.branchPriceLabel || "Standard", price: item.branchPrice, compareAtPrice: item.branchCompareAtPrice }] : item.variants || [] }))].map(withProposedCatalogImage);
+    return [...merged, ...[...byHandle.values()].filter((item) => item.active !== false).map((item) => ({ handle: item.handle, title: item.title, description: item.description || "", kind: item.kind, tags: item.collectionTitles?.length ? item.collectionTitles : item.category ? [item.category] : [], images: item.images || [], variants: item.branchVariants?.length ? item.branchVariants : item.branchPrice != null ? [{ name: item.branchPriceLabel || "Standard", price: item.branchPrice, compareAtPrice: item.branchCompareAtPrice }] : item.variants || [] }))];
   } catch {
-    return branchFallback.map(withProposedCatalogImage);
+    return branchFallback;
   }
 }
