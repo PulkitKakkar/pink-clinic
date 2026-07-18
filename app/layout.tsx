@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { BranchProvider } from "@/components/providers/branch-provider";
+import { BasketProvider } from "@/components/providers/basket-provider";
 import { PublicChrome } from "@/components/public-chrome";
 import "./globals.css";
 
@@ -16,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body suppressHydrationWarning className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><PublicChrome>{children}</PublicChrome></BranchProvider></body></html>;
+  return <html lang="en"><body suppressHydrationWarning className={`${display.variable} ${sans.variable} font-sans antialiased`}><BranchProvider><BasketProvider><PublicChrome>{children}</PublicChrome></BasketProvider></BranchProvider></body></html>;
 }
