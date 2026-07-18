@@ -20,10 +20,10 @@ import {
 import type {
   Booking,
   BookingStatus,
+  CalendarService,
   StaffMember,
 } from "@/lib/admin/booking-types";
 import type { Branch } from "@/lib/branches";
-import type { Service } from "@/lib/content";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
 
 const MANUAL = "manual";
@@ -65,7 +65,7 @@ type Props = {
   initialBookings: Booking[];
   customers: CustomerHistory[];
   branches: Branch[];
-  services: Service[];
+  services: CalendarService[];
   staff: StaffMember[];
 };
 type CalendarView = "month" | "week" | "day";
@@ -107,6 +107,14 @@ export function BookingCalendar({
   const [editMessage, setEditMessage] = useState<Message>({ type: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
   const customer = customers.find((item) => item.id === selectedCustomer);
+  const branchServices = useMemo(
+    () => services.filter((service) => service.branchIds.includes(formBranch)),
+    [formBranch, services],
+  );
+  const editBranchServices = useMemo(
+    () => services.filter((service) => service.branchIds.includes(editBranch)),
+    [editBranch, services],
+  );
 
   const weekStart = useMemo(() => startOfWeek(cursorDate), [cursorDate]);
   const weekDays = useMemo(
@@ -125,7 +133,7 @@ export function BookingCalendar({
       staff.filter(
         (member) =>
           member.branchIds.includes(formBranch) &&
-          (formService === MANUAL || member.serviceIds.includes(formService)),
+          (formService === MANUAL || formService.startsWith("catalog:") || member.serviceIds.includes(formService)),
       ),
     [formBranch, formService, staff],
   );
@@ -134,7 +142,7 @@ export function BookingCalendar({
       staff.filter(
         (member) =>
           member.branchIds.includes(editBranch) &&
-          (editService === MANUAL || member.serviceIds.includes(editService)),
+          (editService === MANUAL || editService.startsWith("catalog:") || member.serviceIds.includes(editService)),
       ),
     [editBranch, editService, staff],
   );
@@ -166,7 +174,11 @@ export function BookingCalendar({
   function openEdit(booking: Booking) {
     setEditing(booking);
     setEditBranch(booking.branchId);
-    setEditService(booking.serviceId);
+    setEditService(
+      services.some((service) => service.id === booking.serviceId)
+        ? booking.serviceId
+        : MANUAL,
+    );
     setEditStaff(
       booking.staffId.startsWith("manual:") ? MANUAL : booking.staffId,
     );
@@ -391,6 +403,8 @@ export function BookingCalendar({
               value={formBranch}
               onChange={(e) => {
                 setFormBranch(e.target.value);
+                const firstService = services.find((service) => service.branchIds.includes(e.target.value));
+                setFormService(firstService?.id || MANUAL);
                 setFormStaff("");
               }}
               className={inputClass}
@@ -413,9 +427,9 @@ export function BookingCalendar({
               }}
               className={inputClass}
             >
-              {services.map((service) => (
+              {branchServices.map((service) => (
                 <option key={service.id} value={service.id}>
-                  {service.title} · {service.duration}
+                  {service.title} · {service.kind} · {service.duration}
                 </option>
               ))}
               <option value={MANUAL}>Other / enter manually</option>
@@ -447,6 +461,9 @@ export function BookingCalendar({
                 />
               </label>
             </div>
+          )}
+          {formService !== MANUAL && (
+            <input type="hidden" name="durationMinutes" value={services.find((service) => service.id === formService)?.durationMinutes || 60} />
           )}
           <label className="grid gap-2 text-xs font-bold">
             Practitioner
@@ -731,7 +748,12 @@ export function BookingCalendar({
                 <select
                   name="branchId"
                   value={editBranch}
-                  onChange={(e) => setEditBranch(e.target.value)}
+                  onChange={(e) => {
+                    setEditBranch(e.target.value);
+                    const firstService = services.find((service) => service.branchIds.includes(e.target.value));
+                    setEditService(firstService?.id || MANUAL);
+                    setEditStaff("");
+                  }}
                   className={inputClass}
                 >
                   {branches.map((branch) => (
@@ -749,9 +771,9 @@ export function BookingCalendar({
                   onChange={(e) => setEditService(e.target.value)}
                   className={inputClass}
                 >
-                  {services.map((service) => (
+                  {editBranchServices.map((service) => (
                     <option key={service.id} value={service.id}>
-                      {service.title}
+                      {service.title} · {service.kind}
                     </option>
                   ))}
                   <option value={MANUAL}>Other / enter manually</option>
@@ -782,6 +804,9 @@ export function BookingCalendar({
                     />
                   </label>
                 </>
+              )}
+              {editService !== MANUAL && (
+                <input type="hidden" name="durationMinutes" value={services.find((service) => service.id === editService)?.durationMinutes || editing.durationMinutes} />
               )}
               <label className="grid gap-2 text-xs font-bold">
                 Practitioner

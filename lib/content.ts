@@ -104,8 +104,8 @@ export const services: Service[] = [
 ];
 
 export const locations = [
-  { id: "reading-west-street", treatmentSlug: "reading-west-st", slug: "west-street-reading", name: "West Street", address: "4–5 West Street, Reading RG1 1TT", phone: "0118 962 7111", image: "/images/west-street.jpg", note: "Central Reading salon", instagramHandle: "@pinkbeautysalonreading", instagramUrl: "https://www.instagram.com/pinkbeautysalonreading/" },
-  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 962 7111", image: "/images/watlington.jpg", note: "Advanced clinic & academy", instagramHandle: "@pink_aesthetics_clinic_reading", instagramUrl: "https://www.instagram.com/pink_aesthetics_clinic_reading/" },
+  { id: "reading-west-street", treatmentSlug: "reading-west-st", slug: "west-street-reading", name: "West Street", address: "4–5 West Street, Reading RG1 1TT", phone: "0118 996 2711", email: "info@pinkbeautysalons.co.uk", hours: "Monday–Sunday · 9:30 AM–6:30 PM", legalName: "Pink Beauty Salon Ltd T/A Pink Beauty Salon and Academy", companyNumber: "10812181", image: "/images/west-street.jpg", note: "Central Reading salon", instagramHandle: "@pinkbeautysalonreading", instagramUrl: "https://www.instagram.com/pinkbeautysalonreading/" },
+  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 402 8505", secondaryPhone: "07715 277211", email: "pinkbeautyreading@gmail.com", hours: "Monday–Sunday · 9:30 AM–6:30 PM", legalName: "VB Wholesale UK Ltd T/A Pink", image: "/images/watlington.jpg", note: "Advanced clinic & academy", instagramHandle: "@pink_aesthetics_clinic_reading", instagramUrl: "https://www.instagram.com/pink_aesthetics_clinic_reading/" },
 ];
 
 export const reviews = [

@@ -14,7 +14,7 @@ export function Hero() {
           <h1 className="font-display text-[clamp(3.6rem,10vw,8.5rem)] leading-[.82] tracking-[-.065em]">Beauty.<br /><span className="text-pink">Confidence.</span><br />Success.</h1>
           <p className="mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">Choose your journey with Pink Beauty Salon. Advanced treatments and career-shaping education, delivered by experts.</p>
           <div className="mt-6 flex gap-2 sm:mt-8 sm:gap-3"><Link href="/treatments/select-branch" className="button-primary">Explore treatments</Link><Link href="/courses" className="button-outline">Explore courses</Link></div>
-          <div className="mt-6 flex items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs"><div className="flex text-[#ffcb69]">{[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}</div><span><strong className="text-white">4.9</strong> from 500+ client reviews</span></div>
+          <a href="#reviews" className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs"><span className="flex text-[#ffcb69]">{[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}</span><span className="font-bold text-white">Read client reviews</span></a>
         </div>
       </div>
       <a href="#journey" className="absolute bottom-8 right-8 hidden items-center gap-3 text-[10px] font-bold uppercase tracking-[.2em] text-white/55 sm:flex">Discover <span className="grid h-10 w-10 place-items-center rounded-full border border-white/25"><ArrowDown size={15} /></span></a>

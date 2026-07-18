@@ -7,10 +7,10 @@ import { structure } from "@/sanity/structure";
 
 export default defineConfig({
   name: "pink-beauty",
-  title: "Pink Beauty Content Studio",
+  title: "Pink Beauty Website Manager",
   basePath: "/studio",
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "replace-me",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  plugins: [structureTool({ structure })],
+  plugins: [structureTool({ name: "website", title: "Edit website", structure })],
   schema: { types: schemaTypes },
 });

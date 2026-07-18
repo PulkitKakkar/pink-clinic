@@ -1,17 +1,19 @@
 "use client";
 
 import { Check, ShoppingBag } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useBasket } from "@/components/providers/basket-provider";
 import type { Branch } from "@/lib/branches";
 import type { CatalogItem } from "@/lib/catalog";
 
 export function CatalogItemPurchase({ item, branch }: { item: CatalogItem; branch: Branch }) {
-  const { addItem } = useBasket();
+  const { addItem, items } = useBasket();
   const variants = item.variants.filter((variant) => Number.isFinite(variant.price) && variant.price > 0);
   const [selected, setSelected] = useState(0);
   const [added, setAdded] = useState(false);
   const variant = variants[selected];
+  const inBasket = items.some((basketItem) => basketItem.branchId === branch.id && basketItem.handle === item.handle);
   if (!variant) return <a href={`/contact?branchId=${branch.id}&catalogItem=${encodeURIComponent(item.handle)}`} className="button-primary mt-6">Enquire about this {item.kind === "product" ? "product" : "service"}</a>;
 
   function add() {
@@ -22,5 +24,5 @@ export function CatalogItemPurchase({ item, branch }: { item: CatalogItem; branc
     }
   }
 
-  return <div className="mt-7"><label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em] text-white/55">Choose option<select value={selected} onChange={(event) => setSelected(Number(event.target.value))} className="rounded-xl border border-white/15 bg-white px-4 py-3 text-sm font-bold normal-case tracking-normal text-ink outline-none">{variants.map((entry, index) => <option key={entry.name} value={index}>{entry.name} · £{entry.price.toFixed(2)}</option>)}</select></label><button type="button" onClick={add} className="button-primary mt-3 w-full">{added ? <><Check size={16} /> Added to basket</> : <><ShoppingBag size={16} /> Add to basket · £{variant.price.toFixed(2)}</>}</button></div>;
+  return <div className="mt-7"><label className="grid gap-2 text-[10px] font-bold uppercase tracking-[.14em] text-white/55">Choose option<select value={selected} onChange={(event) => setSelected(Number(event.target.value))} className="rounded-xl border border-white/15 bg-white px-4 py-3 text-sm font-bold normal-case tracking-normal text-ink outline-none">{variants.map((entry, index) => <option key={entry.name} value={index}>{entry.name} · £{entry.price.toFixed(2)}</option>)}</select></label><button type="button" onClick={add} className="button-primary mt-3 w-full">{added ? <><Check size={16} /> Added to basket</> : <><ShoppingBag size={16} /> Add to basket · £{variant.price.toFixed(2)}</>}</button>{inBasket && <Link href="/basket" className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 text-sm font-bold text-white"><ShoppingBag size={16} /> View basket</Link>}<p className="mt-3 text-[10px] leading-5 text-white/45">{item.kind === "product" ? "Collection or delivery availability and returns are confirmed before payment." : item.kind === "course" ? "Dates, entry requirements and enrolment terms are confirmed by the academy." : "Consultation, patch-test or suitability requirements may apply."}</p></div>;
 }

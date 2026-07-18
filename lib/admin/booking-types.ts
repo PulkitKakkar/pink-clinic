@@ -18,6 +18,15 @@ export type StaffMember = {
   serviceIds: string[];
 };
 
+export type CalendarService = {
+  id: string;
+  title: string;
+  duration: string;
+  durationMinutes: number;
+  branchIds: string[];
+  kind: "service" | "product" | "course";
+};
+
 export type Booking = {
   id: string;
   branchId: string;

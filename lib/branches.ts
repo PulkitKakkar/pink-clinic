@@ -4,6 +4,8 @@ export type Branch = {
   name: string;
   address: string;
   phone: string;
+  email: string;
+  hours: string;
   image: string;
   note: string;
 };
@@ -14,7 +16,9 @@ export const branches: Branch[] = [
     slug: "reading-west-st",
     name: "Reading West Street",
     address: "4-5 West Street, Reading RG1 1TT",
-    phone: "0118 962 7111",
+    phone: "0118 996 2711",
+    email: "info@pinkbeautysalons.co.uk",
+    hours: "Monday–Sunday · 9:30 AM–6:30 PM",
     image: "/images/west-street.jpg",
     note: "Central Reading salon",
   },
@@ -23,7 +27,9 @@ export const branches: Branch[] = [
     slug: "reading-watlington-st",
     name: "Reading Watlington Street",
     address: "25 Watlington Street, Reading RG1 4EN",
-    phone: "0118 962 7111",
+    phone: "0118 402 8505",
+    email: "pinkbeautyreading@gmail.com",
+    hours: "Monday–Sunday · 9:30 AM–6:30 PM",
     image: "/images/watlington.jpg",
     note: "Advanced clinic and academy",
   },

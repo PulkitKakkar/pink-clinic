@@ -1,4 +1,5 @@
 import westStreetCatalog from "@/data/west-street-catalog.json";
+import watlingtonStreetCatalog from "@/data/watlington-street-catalog.json";
 import { sanityClient } from "@/lib/sanity/client";
 
 export type CatalogVariant = { name: string; price: number; compareAtPrice?: number | null; sku?: string | null };
@@ -12,7 +13,10 @@ export type CatalogItem = {
   variants: CatalogVariant[];
 };
 
-const fallback = westStreetCatalog as CatalogItem[];
+const fallbackByBranch: Record<string, CatalogItem[]> = {
+  "reading-west-st": westStreetCatalog as CatalogItem[],
+  "reading-watlington-st": watlingtonStreetCatalog as CatalogItem[],
+};
 
 type SanityCatalogItem = {
   handle: string;
@@ -31,7 +35,7 @@ type SanityCatalogItem = {
 };
 
 export async function getBranchCatalog(branchSlug: string): Promise<CatalogItem[]> {
-  const branchFallback = branchSlug === "reading-west-st" ? fallback : [];
+  const branchFallback = fallbackByBranch[branchSlug] || [];
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
   if (!projectId || projectId === "replace-me") return branchFallback;
 

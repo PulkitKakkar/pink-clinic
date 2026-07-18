@@ -1,57 +1,71 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
-const source = process.argv[2];
-const destination = process.argv[3] || "data/west-street-catalog.json";
-if (!source) throw new Error("Usage: node scripts/import-west-street-catalog.mjs <shopify.csv> [output.json]");
+const stores = [
+  { key: "west-street", domain: "https://pinkbeautysalons.co.uk", output: "data/west-street-catalog.json" },
+  { key: "watlington-street", domain: "https://pinkclinic.co.uk", output: "data/watlington-street-catalog.json" },
+];
 
-function parseCsv(text) {
-  const rows = [];
-  let row = [], value = "", quoted = false;
-  for (let index = 0; index < text.length; index += 1) {
-    const character = text[index];
-    if (quoted) {
-      if (character === '"' && text[index + 1] === '"') { value += '"'; index += 1; }
-      else if (character === '"') quoted = false;
-      else value += character;
-    } else if (character === '"') quoted = true;
-    else if (character === ",") { row.push(value); value = ""; }
-    else if (character === "\n") { row.push(value.replace(/\r$/, "")); rows.push(row); row = []; value = ""; }
-    else value += character;
-  }
-  if (value || row.length) { row.push(value.replace(/\r$/, "")); rows.push(row); }
-  const headers = rows.shift();
-  return rows.filter((item) => item.some(Boolean)).map((item) => Object.fromEntries(headers.map((header, index) => [header, item[index] || ""])));
+const plainText = (html = "") => html
+  .replace(/<br\s*\/?\s*>/gi, " ")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/&amp;/g, "&")
+  .replace(/&nbsp;|&#160;/g, " ")
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;|&apos;/g, "'")
+  .replace(/\s+/g, " ")
+  .trim();
+
+async function getJson(url) {
+  const response = await fetch(url, { headers: { "user-agent": "PinkClinicCatalogueSync/1.0" } });
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+  return response.json();
 }
 
-function plainText(html) {
-  return html.replace(/<br\s*\/?\s*>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&nbsp;|&#160;/g, " ").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ").trim();
+function classify(collectionHandles, tags) {
+  if (collectionHandles.some((handle) => handle === "vtct-courses" || handle === "other-courses") || tags.includes("Academy")) return "course";
+  if (collectionHandles.some((handle) => ["beauty-products", "gift-card", "gift-cards"].includes(handle)) || tags.some((tag) => /products?|gift cards?/i.test(tag))) return "product";
+  return "service";
 }
 
-const rows = parseCsv(await readFile(resolve(source), "utf8"));
-const grouped = new Map();
-for (const row of rows) {
-  if (!grouped.has(row.Handle)) grouped.set(row.Handle, []);
-  grouped.get(row.Handle).push(row);
-}
+for (const store of stores) {
+  const [{ products }, { collections }] = await Promise.all([
+    getJson(`${store.domain}/products.json?limit=250`),
+    getJson(`${store.domain}/collections.json?limit=250`),
+  ]);
 
-const items = [];
-for (const [handle, productRows] of grouped) {
-  const primary = productRows.find((row) => row.Title) || productRows[0];
-  if (primary.Status.toLowerCase() !== "active" || primary.Published.toLowerCase() !== "true") continue;
-  const tags = primary.Tags.split(",").map((tag) => tag.trim()).filter(Boolean);
-  const images = [...new Set(productRows.map((row) => row["Image Src"]).filter(Boolean))];
-  const variants = productRows.filter((row) => row["Variant Price"]).map((row) => ({
-    name: row["Option1 Value"] && row["Option1 Value"] !== "Default Title" ? row["Option1 Value"] : "Standard",
-    price: Number(row["Variant Price"]),
-    compareAtPrice: row["Variant Compare At Price"] ? Number(row["Variant Compare At Price"]) : null,
-    sku: row["Variant SKU"] || null,
+  const memberships = new Map(products.map((product) => [product.handle, []]));
+  await Promise.all(collections.map(async (collection) => {
+    const data = await getJson(`${store.domain}/collections/${collection.handle}/products.json?limit=250`);
+    for (const product of data.products || []) {
+      const productCollections = memberships.get(product.handle);
+      if (productCollections) productCollections.push({ handle: collection.handle, title: collection.title });
+    }
   }));
-  const kind = tags.includes("Academy") ? "course" : tags.includes("Products") || tags.includes("Gift card") ? "product" : "service";
-  items.push({ handle, title: primary.Title, description: plainText(primary["Body (HTML)"]), kind, tags, images, variants });
-}
 
-items.sort((a, b) => a.kind.localeCompare(b.kind) || (a.tags[0] || "").localeCompare(b.tags[0] || "") || a.title.localeCompare(b.title));
-await mkdir(dirname(resolve(destination)), { recursive: true });
-await writeFile(resolve(destination), `${JSON.stringify(items, null, 2)}\n`);
-console.log(`Imported ${items.length} active West Street catalogue entries to ${destination}`);
+  const items = products.map((product) => {
+    const productCollections = memberships.get(product.handle) || [];
+    const tags = [...new Set(productCollections.map((collection) => collection.title).concat(product.tags || []))];
+    return {
+      handle: product.handle,
+      title: product.title,
+      description: plainText(product.body_html),
+      kind: classify(productCollections.map((collection) => collection.handle), tags),
+      tags,
+      collections: productCollections,
+      images: (product.images || []).map((image) => image.src),
+      variants: (product.variants || []).map((variant) => ({
+        name: variant.title && variant.title !== "Default Title" ? variant.title : "Standard",
+        price: Number(variant.price),
+        compareAtPrice: variant.compare_at_price ? Number(variant.compare_at_price) : null,
+        sku: variant.sku || null,
+        available: variant.available !== false,
+      })),
+    };
+  }).sort((a, b) => a.kind.localeCompare(b.kind) || (a.tags[0] || "").localeCompare(b.tags[0] || "") || a.title.localeCompare(b.title));
+
+  await mkdir(dirname(resolve(store.output)), { recursive: true });
+  await writeFile(resolve(store.output), `${JSON.stringify(items, null, 2)}\n`);
+  const offers = items.filter((item) => item.variants.some((variant) => variant.compareAtPrice > variant.price)).length;
+  console.log(`${store.key}: imported ${items.length} live entries (${offers} with offers) to ${store.output}`);
+}

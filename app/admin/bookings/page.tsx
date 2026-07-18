@@ -8,14 +8,39 @@ import {
   isRecordOnlyBooking,
 } from "@/lib/admin/customer-history";
 import { branches } from "@/lib/branches";
-import { services } from "@/lib/content";
+import { getBranchCatalog } from "@/lib/catalog";
+import type { CalendarService } from "@/lib/admin/booking-types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBookingsPage() {
-  const result = await getBookings()
-    .then((bookings) => ({ bookings, error: undefined }))
-    .catch((error) => ({ bookings: [], error }));
+  const [result, branchCatalogues] = await Promise.all([
+    getBookings()
+      .then((bookings) => ({ bookings, error: undefined }))
+      .catch((error) => ({ bookings: [], error })),
+    Promise.all(branches.map(async (branch) => ({
+      branchId: branch.id,
+      items: await getBranchCatalog(branch.slug),
+    }))),
+  ]);
+  const catalogue = new Map<string, CalendarService>();
+  for (const branchCatalogue of branchCatalogues) {
+    for (const item of branchCatalogue.items) {
+      const id = `catalog:${item.handle}`;
+      const existing = catalogue.get(id);
+      catalogue.set(id, {
+        id,
+        title: item.title,
+        duration: existing?.duration || "60 min default",
+        durationMinutes: existing?.durationMinutes || 60,
+        branchIds: [...new Set([...(existing?.branchIds || []), branchCatalogue.branchId])],
+        kind: item.kind,
+      });
+    }
+  }
+  const calendarServices = [...catalogue.values()].sort((a, b) =>
+    a.kind.localeCompare(b.kind) || a.title.localeCompare(b.title),
+  );
   return (
     <>
       <AdminHeader />
@@ -39,7 +64,7 @@ export default async function AdminBookingsPage() {
             )}
             customers={buildCustomerHistories(result.bookings)}
             branches={branches}
-            services={services}
+            services={calendarServices}
             staff={staffMembers}
           />
         )}

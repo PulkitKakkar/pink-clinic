@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "version:show": "node -p \"require('./package.json').version\"",
+    "catalog:import": "node scripts/import-west-street-catalog.mjs",
     "catalog:import:west-street": "node scripts/import-west-street-catalog.mjs",
     "catalog:seed:sanity": "node --env-file=.env.local scripts/seed-west-street-catalog-to-sanity.mjs",
     "catalog:images:sanity": "node --env-file=.env.local scripts/import-catalog-images-to-sanity.mjs",
