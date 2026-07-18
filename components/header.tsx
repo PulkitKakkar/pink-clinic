@@ -27,7 +27,6 @@ export function Header() {
       document.body.style.overflow = previousOverflow;
     };
   }, [open]);
-
   return (
     <header className="absolute inset-x-0 top-0 z-50 border-b border-white/15 text-white">
       <div className="container-site relative flex h-20 items-center justify-center xl:h-32 xl:flex-col">
@@ -43,7 +42,7 @@ export function Header() {
         <div className="absolute right-[4.5rem] sm:right-[5.25rem] xl:hidden"><BasketLink mobileHeader onNavigate={() => setOpen(false)} /></div>
         <button onClick={() => setOpen(!open)} className="absolute right-5 rounded-full border border-white/30 p-2 sm:right-8 xl:hidden" aria-label="Toggle navigation" aria-expanded={open} aria-controls="mobile-navigation">{open ? <X /> : <Menu />}</button>
       </div>
-      {open && <nav id="mobile-navigation" className="mx-4 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl bg-white p-5 text-ink shadow-luxe xl:hidden"><SiteSearch mobile onNavigate={() => setOpen(false)} />{links.map(([label, href]) => <Link onClick={() => setOpen(false)} key={label} href={href} className="block border-b border-black/5 py-4 font-semibold">{label}</Link>)}<Link href="/treatments/select-branch" onClick={() => setOpen(false)} className="mt-5 block text-xs font-bold uppercase tracking-[.14em] text-pink">Choose or switch branch</Link><BasketLink mobile onNavigate={() => setOpen(false)} /></nav>}
+      {open && <nav id="mobile-navigation" className="mx-4 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl bg-white p-5 text-ink shadow-luxe xl:hidden"><SiteSearch mobile onNavigate={() => setOpen(false)} />{links.map(([label, href]) => <Link onNavigate={() => setOpen(false)} key={label} href={href} className="block border-b border-black/5 py-4 font-semibold">{label}</Link>)}<Link href="/treatments/select-branch" onNavigate={() => setOpen(false)} className="mt-5 block text-xs font-bold uppercase tracking-[.14em] text-pink">Choose or switch branch</Link><BasketLink mobile onNavigate={() => setOpen(false)} /></nav>}
     </header>
   );
 }
