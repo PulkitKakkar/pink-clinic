@@ -11,8 +11,12 @@ export function middleware(request: NextRequest) {
   if (!isAdminPage && !isAdminApi && !isStudioPage) return NextResponse.next();
 
   const expected = isStudioPage
-    ? process.env.STUDIO_ADMIN_SESSION_TOKEN || (process.env.NODE_ENV === "production" ? "" : "pink-local-studio-admin-session")
-    : process.env.ADMIN_SESSION_TOKEN || (process.env.NODE_ENV === "production" ? "" : "pink-local-admin-test-session");
+    ? process.env.NODE_ENV === "production"
+      ? process.env.STUDIO_ADMIN_SESSION_TOKEN || ""
+      : "pink-local-studio-admin-session"
+    : process.env.NODE_ENV === "production"
+      ? process.env.ADMIN_SESSION_TOKEN || ""
+      : "pink-local-admin-test-session";
   const cookieName = isStudioPage ? STUDIO_ADMIN_COOKIE : ADMIN_COOKIE;
   const authenticated = Boolean(expected && request.cookies.get(cookieName)?.value === expected);
   if (authenticated) return NextResponse.next();
@@ -20,8 +24,15 @@ export function middleware(request: NextRequest) {
 
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
   const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
-  const publicOrigin = process.env.NEXT_PUBLIC_SITE_URL
-    || (forwardedHost && (forwardedProtocol === "http" || forwardedProtocol === "https") ? `${forwardedProtocol}://${forwardedHost}` : request.nextUrl.origin);
+  const requestOrigin =
+    forwardedHost &&
+    (forwardedProtocol === "http" || forwardedProtocol === "https")
+      ? `${forwardedProtocol}://${forwardedHost}`
+      : request.nextUrl.origin;
+  const publicOrigin =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_SITE_URL || requestOrigin
+      : requestOrigin;
   const loginUrl = new URL(isStudioPage ? "/studio-login" : "/admin/login", publicOrigin);
   if (!isStudioPage) loginUrl.searchParams.set("next", pathname);
   return NextResponse.redirect(loginUrl);

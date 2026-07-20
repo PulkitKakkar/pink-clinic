@@ -12,6 +12,7 @@ import {
   MapPin,
   Pencil,
   Plus,
+  Search,
   Trash2,
   UserRound,
   X,
@@ -93,12 +94,14 @@ export function BookingCalendar({
   const [branchFilter, setBranchFilter] = useState("all");
   const [staffFilter, setStaffFilter] = useState("all");
   const [formBranch, setFormBranch] = useState(branches[0]?.id || "");
-  const [formService, setFormService] = useState(services[0]?.id || "");
+  const [formService, setFormService] = useState("");
   const [formStaff, setFormStaff] = useState("");
   const [formTreatmentName, setFormTreatmentName] = useState("");
   const [formPractitionerName, setFormPractitionerName] = useState("");
   const [formStartsAt, setFormStartsAt] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState("");
+  const [customerQuery, setCustomerQuery] = useState("");
+  const [showCustomerLookup, setShowCustomerLookup] = useState(false);
   const [editing, setEditing] = useState<Booking | null>(null);
   const [editBranch, setEditBranch] = useState("");
   const [editService, setEditService] = useState("");
@@ -107,6 +110,32 @@ export function BookingCalendar({
   const [editMessage, setEditMessage] = useState<Message>({ type: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
   const customer = customers.find((item) => item.id === selectedCustomer);
+  const normalizedCustomerQuery = customerQuery.trim().toLowerCase();
+  const matchingCustomers = useMemo(
+    () =>
+      normalizedCustomerQuery
+        ? customers
+            .filter((item) =>
+              [item.name, item.phone, item.email].some((value) =>
+                value.toLowerCase().includes(normalizedCustomerQuery),
+              ),
+            )
+            .slice(0, 8)
+        : [],
+    [customers, normalizedCustomerQuery],
+  );
+
+  function selectCustomer(nextCustomer: CustomerHistory) {
+    setSelectedCustomer(nextCustomer.id);
+    setCustomerQuery(nextCustomer.name);
+    setShowCustomerLookup(false);
+  }
+
+  function clearCustomerSelection() {
+    setSelectedCustomer("");
+    setCustomerQuery("");
+    setShowCustomerLookup(false);
+  }
   const branchServices = useMemo(
     () => services.filter((service) => service.branchIds.includes(formBranch)),
     [formBranch, services],
@@ -251,8 +280,9 @@ export function BookingCalendar({
 
   async function create(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setMessage({ type: "saving" });
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -267,6 +297,7 @@ export function BookingCalendar({
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
+        customerGender: form.get("customerGender"),
         marketingConsent: form.get("marketingConsent") === "on",
         startsAt: new Date(String(form.get("startsAt"))).toISOString(),
         notes: form.get("notes"),
@@ -293,13 +324,14 @@ export function BookingCalendar({
             message: "Booking created and customer confirmation sent.",
           },
     );
-    event.currentTarget.reset();
+    formElement.reset();
     setFormBranch(branches[0]?.id || "");
-    setFormService(services[0]?.id || "");
+    setFormService("");
     setFormStaff("");
     setFormTreatmentName("");
     setFormPractitionerName("");
     setFormStartsAt("");
+    clearCustomerSelection();
   }
 
   async function submitEdit(event: React.FormEvent<HTMLFormElement>) {
@@ -319,6 +351,7 @@ export function BookingCalendar({
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
+        customerGender: form.get("customerGender"),
         marketingConsent: form.get("marketingConsent") === "true",
         marketingConsentUpdatedAt:
           form.get("marketingConsent") === String(editing.marketingConsent)
@@ -381,21 +414,60 @@ export function BookingCalendar({
           </div>
         </div>
         <div className="mt-6 grid gap-4">
-          <label className="grid gap-2 text-xs font-bold">
-            Existing customer
-            <select
-              value={selectedCustomer}
-              onChange={(event) => setSelectedCustomer(event.target.value)}
-              className={inputClass}
-            >
-              <option value="">New customer / enter details</option>
-              {customers.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name} · {item.phone}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="grid gap-2 text-xs font-bold">
+            <label htmlFor="bookingCustomerLookup">Find an existing customer</label>
+            <span className="relative">
+              <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" />
+              <input
+                id="bookingCustomerLookup"
+                value={customerQuery}
+                onFocus={() => setShowCustomerLookup(true)}
+                onChange={(event) => {
+                  setCustomerQuery(event.target.value);
+                  setShowCustomerLookup(true);
+                }}
+                placeholder="Search name, phone or email"
+                autoComplete="off"
+                className={`${inputClass} pl-11 pr-10`}
+              />
+              {customerQuery && (
+                <button
+                  type="button"
+                  onClick={clearCustomerSelection}
+                  aria-label="Clear customer search"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-black/35 hover:bg-white hover:text-pink"
+                >
+                  <X size={13} />
+                </button>
+              )}
+              {showCustomerLookup && normalizedCustomerQuery && (
+                <span className="absolute z-30 mt-2 block max-h-72 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-2 shadow-luxe">
+                  {matchingCustomers.length ? matchingCustomers.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => selectCustomer(item)}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-pink-light/40"
+                    >
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-pink-light text-pink"><UserRound size={14} /></span>
+                      <span className="min-w-0">
+                        <strong className="block truncate text-sm">{item.name}</strong>
+                        <small className="block truncate font-medium text-black/45">{[item.phone, item.email].filter(Boolean).join(" · ")}</small>
+                      </span>
+                    </button>
+                  )) : (
+                    <span className="block px-3 py-4 text-xs font-medium text-black/45">No matching customer. Enter details below to create one.</span>
+                  )}
+                </span>
+              )}
+            </span>
+            {customer && (
+              <span className="flex items-center justify-between rounded-xl bg-pink-light/35 px-3 py-2 text-[11px]">
+                <span><strong className="block">Selected: {customer.name}</strong>{customer.phone}</span>
+                <button type="button" onClick={clearCustomerSelection} className="ml-3 shrink-0 font-bold text-pink">New customer</button>
+              </span>
+            )}
+          </div>
           <label className="grid gap-2 text-xs font-bold">
             Branch
             <select
@@ -403,8 +475,7 @@ export function BookingCalendar({
               value={formBranch}
               onChange={(e) => {
                 setFormBranch(e.target.value);
-                const firstService = services.find((service) => service.branchIds.includes(e.target.value));
-                setFormService(firstService?.id || MANUAL);
+                setFormService("");
                 setFormStaff("");
               }}
               className={inputClass}
@@ -419,6 +490,7 @@ export function BookingCalendar({
           <label className="grid gap-2 text-xs font-bold">
             Treatment
             <select
+              required
               name="serviceId"
               value={formService}
               onChange={(e) => {
@@ -427,6 +499,7 @@ export function BookingCalendar({
               }}
               className={inputClass}
             >
+              <option value="">Select treatment</option>
               {branchServices.map((service) => (
                 <option key={service.id} value={service.id}>
                   {service.title} · {service.kind} · {service.duration}
@@ -536,6 +609,18 @@ export function BookingCalendar({
               defaultValue={customer?.email || ""}
               className={inputClass}
             />
+          </label>
+          <label className="grid gap-2 text-xs font-bold">
+            Gender
+            <select
+              key={`gender-${selectedCustomer}`}
+              name="customerGender"
+              defaultValue={customer?.gender || ""}
+              className={inputClass}
+            >
+              <option value="">Select gender</option>
+              <option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option>
+            </select>
           </label>
           <label className="grid gap-2 text-xs font-bold">
             Customer address
@@ -892,6 +977,13 @@ export function BookingCalendar({
                   defaultValue={editing.customerEmail}
                   className={inputClass}
                 />
+              </label>
+              <label className="grid gap-2 text-xs font-bold">
+                Gender
+                <select name="customerGender" defaultValue={editing.customerGender} className={inputClass}>
+                  <option value="">Select gender</option>
+                  <option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option>
+                </select>
               </label>
               <label className="grid gap-2 text-xs font-bold sm:col-span-2">
                 Customer address

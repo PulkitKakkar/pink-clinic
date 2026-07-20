@@ -28,7 +28,7 @@ const sql = databaseUrl
       max: 3,
       idle_timeout: 20,
       connect_timeout: 10,
-      ssl: process.env.NODE_ENV === "production" ? "require" : undefined,
+      ssl: "require",
     }))
   : undefined;
 if (sql && process.env.NODE_ENV !== "production")

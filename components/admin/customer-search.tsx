@@ -20,7 +20,8 @@ export function CustomerSearch({
             .filter(
               (c) =>
                 c.name.toLowerCase().includes(query) ||
-                c.phone.replace(/\s/g, "").includes(query.replace(/\s/g, "")),
+                c.phone.replace(/\s/g, "").includes(query.replace(/\s/g, "")) ||
+                c.email.toLowerCase().includes(query),
             )
             .slice(0, 8)
         : [],
@@ -28,7 +29,9 @@ export function CustomerSearch({
   );
   function choose(customer: CustomerHistory) {
     setValue(customer.name);
-    router.push(`/admin/customers?q=${encodeURIComponent(customer.phone)}`);
+    router.push(
+      `/admin/customers?q=${encodeURIComponent(customer.email || customer.phone)}`,
+    );
   }
   return (
     <div className="relative mt-6 max-w-xl">
@@ -36,7 +39,7 @@ export function CustomerSearch({
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Start typing a customer name or phone number"
+        placeholder="Search by name, phone or email"
         className="w-full rounded-xl border border-black/10 bg-white py-3 pl-11 pr-11 text-sm outline-none focus:border-pink"
       />
       {value && (

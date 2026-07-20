@@ -17,6 +17,7 @@ import { EditCustomerRecord } from "@/components/admin/edit-customer-record";
 import { CustomerTreatmentHistory } from "@/components/admin/customer-treatment-history";
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
 import { CustomerSearch } from "@/components/admin/customer-search";
+import { getAdminTreatmentNames } from "@/lib/admin/lookup-options";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export default async function AdminCustomersPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const query = ((await searchParams).q || "").trim().toLowerCase();
+  const treatmentNames = await getAdminTreatmentNames();
   const result = await getBookings()
     .then((bookings) => ({
       customers: buildCustomerHistories(bookings),
@@ -48,7 +50,8 @@ export default async function AdminCustomersPage({
     ? allCustomers.filter(
         (customer) =>
           customer.name.toLowerCase().includes(query) ||
-          customer.phone.replace(/\s/g, "").includes(query.replace(/\s/g, "")),
+          customer.phone.replace(/\s/g, "").includes(query.replace(/\s/g, "")) ||
+          customer.email.toLowerCase().includes(query),
       )
     : allCustomers;
   const optedIn = allCustomers.filter((customer) => customer.marketingConsent);
@@ -58,7 +61,7 @@ export default async function AdminCustomersPage({
       <AdminHeader />
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="mb-5 flex justify-end">
-          <AddCustomerHistory customers={customers} />
+          <AddCustomerHistory customers={customers} treatmentNames={treatmentNames} />
         </div>
         <CustomerSearch customers={allCustomers} initialQuery={query} />
         <form className="hidden" action="/admin/customers">
@@ -159,6 +162,9 @@ export default async function AdminCustomersPage({
                             {customer.address}
                           </span>
                         )}
+                        {customer.gender && (
+                          <span className="basis-full text-black/45">Gender: {customer.gender}</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-3">
@@ -167,6 +173,7 @@ export default async function AdminCustomersPage({
                         customers={allCustomers}
                         initialCustomerId={customer.id}
                         label="Add treatment record"
+                        treatmentNames={treatmentNames}
                       />
                       <div
                         className={`rounded-xl px-4 py-3 text-xs font-bold ${customer.marketingConsent ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
@@ -193,6 +200,7 @@ export default async function AdminCustomersPage({
                   <CustomerTreatmentHistory
                     bookings={customer.bookings}
                     branches={branches}
+                    treatmentNames={treatmentNames}
                   />
                   <div className="hidden">
                     <div className="mt-5 rounded-xl bg-cream p-4">
@@ -262,7 +270,7 @@ export default async function AdminCustomersPage({
                                   No appointment notes recorded.
                                 </p>
                               )}
-                              <EditTreatmentRecord booking={booking} />
+                              <EditTreatmentRecord booking={booking} treatmentNames={treatmentNames} />
                             </div>
                           </div>
                         );

@@ -1,7 +1,10 @@
 const allowedProtocols = new Set(["http:", "https:"]);
 
 export function getPublicOrigin(request: Request) {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const configured =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_SITE_URL?.trim()
+      : undefined;
   if (configured) {
     const url = new URL(configured);
     if (allowedProtocols.has(url.protocol)) return url.origin;

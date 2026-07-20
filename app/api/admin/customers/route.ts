@@ -17,6 +17,7 @@ export async function PATCH(request: Request) {
       phone?: string;
       email?: string;
       address?: string;
+      gender?: string;
       marketingConsent?: boolean;
       images?: TreatmentImage[];
     };
@@ -64,6 +65,7 @@ export async function PATCH(request: Request) {
           customerPhone: body.phone,
           customerEmail: body.email || "",
           customerAddress: body.address || "",
+          customerGender: body.gender || "",
           marketingConsent: Boolean(body.marketingConsent),
           marketingConsentUpdatedAt:
             booking.marketingConsent === Boolean(body.marketingConsent)

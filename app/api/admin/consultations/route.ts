@@ -4,6 +4,7 @@ import { getConsultationTemplate } from "@/lib/admin/templates";
 import {
   ConsultationStorageConfigurationError,
   saveConsultation,
+  updateConsultationAnswers,
   updateConsultationImages,
 } from "@/lib/admin/storage";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
@@ -48,7 +49,8 @@ export async function POST(request: Request) {
         customerPhone: phone,
         customerEmail: String(body.answers.email || ""),
         customerAddress: String(body.answers.address || ""),
-        marketingConsent: false,
+        customerGender: String(body.answers.gender || ""),
+        marketingConsent: body.answers.marketingConsent === true,
         startsAt: new Date().toISOString(),
         status: "completed",
         notes: `Digital consultation saved: ${template.title}`,
@@ -67,11 +69,20 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const body = (await request.json()) as { id?: string; images?: TreatmentImage[] };
-    if (!body.id || !Array.isArray(body.images)) return NextResponse.json({ error: "Invalid image update." }, { status: 400 });
-    const record = await updateConsultationImages(body.id, body.images);
+    const body = (await request.json()) as {
+      id?: string;
+      answers?: Record<string, string | boolean | string[]>;
+      images?: TreatmentImage[];
+    };
+    if (!body.id || (!body.answers && !Array.isArray(body.images)))
+      return NextResponse.json({ error: "Invalid consultation update." }, { status: 400 });
+    let record = body.answers
+      ? await updateConsultationAnswers(body.id, body.answers)
+      : undefined;
+    if (Array.isArray(body.images))
+      record = await updateConsultationImages(body.id, body.images);
     return record ? NextResponse.json({ record }) : NextResponse.json({ error: "Consultation not found." }, { status: 404 });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not update images." }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not update consultation." }, { status: 500 });
   }
 }

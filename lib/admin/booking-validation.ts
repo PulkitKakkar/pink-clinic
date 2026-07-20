@@ -103,6 +103,7 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
     customerEmail: input.customerEmail?.trim() || "",
     customerPhone: input.customerPhone.trim(),
     customerAddress: input.customerAddress?.trim() || "",
+    customerGender: input.customerGender?.trim() || "",
     marketingConsent: normalizeBoolean(input.marketingConsent),
     marketingConsentUpdatedAt:
       input.marketingConsentUpdatedAt || new Date().toISOString(),

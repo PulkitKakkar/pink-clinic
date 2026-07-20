@@ -6,6 +6,7 @@ export type CustomerHistory = {
   email: string;
   phone: string;
   address: string;
+  gender: string;
   marketingConsent: boolean;
   marketingConsentUpdatedAt: string | null;
   bookings: Booking[];
@@ -69,6 +70,7 @@ export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
         email: latestBooking.customerEmail,
         phone: latestBooking.customerPhone,
         address: latestBooking.customerAddress || "",
+        gender: latestBooking.customerGender || "",
         marketingConsent: consentBooking.marketingConsent,
         marketingConsentUpdatedAt: consentBooking.marketingConsentUpdatedAt,
         bookings: sorted,

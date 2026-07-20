@@ -1,10 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { getConsultations } from "@/lib/admin/storage";
-import { EditConsultationImages } from "@/components/admin/edit-consultation-images";
-import { treatmentImageUrl } from "@/components/admin/treatment-images";
+import { ConsultationForm } from "@/components/admin/consultation-form";
+import { getConsultationTemplate } from "@/lib/admin/templates";
+import { staffMembers } from "@/lib/admin/booking-config";
+import { getAdminTreatmentNames } from "@/lib/admin/lookup-options";
 export const dynamic = "force-dynamic";
 export default async function Page({
   params,
@@ -14,6 +15,9 @@ export default async function Page({
   const id = (await params).id;
   const record = (await getConsultations()).find((r) => r.id === id);
   if (!record) notFound();
+  const template = getConsultationTemplate(record.templateSlug);
+  if (!template) notFound();
+  const treatmentNames = await getAdminTreatmentNames();
   return (
     <>
       <AdminHeader />
@@ -31,35 +35,19 @@ export default async function Page({
           {record.templateTitle} ·{" "}
           {new Date(record.createdAt).toLocaleString("en-GB")}
         </p>
-        <EditConsultationImages id={record.id} initialImages={record.images || []} />
-        {(record.images || []).length > 0 && <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {record.images.map((item) => <div key={item.id} className="relative overflow-hidden rounded-xl border border-black/10 bg-white"><Image src={treatmentImageUrl(item)} alt={`${item.phase} treatment image`} width={500} height={500} unoptimized className="aspect-square w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[9px] font-bold uppercase text-white">{item.phase}</span></div>)}
-        </div>}
-        <div className="mt-7 grid gap-3 sm:grid-cols-2">
-          {Object.entries(record.answers).map(([key, value]) => (
-            <div
-              key={key}
-              className="rounded-xl border border-black/5 bg-white p-4"
-            >
-              <p className="text-[9px] font-bold uppercase tracking-[.14em] text-pink">
-                {key.replace(/([A-Z])/g, " $1")}
-              </p>
-              {key === "signatureData" && typeof value === "string" ? (
-                <Image
-                  src={value}
-                  alt="Customer signature"
-                  width={800}
-                  height={240}
-                  unoptimized
-                  className="mt-3 max-h-48 rounded-xl border border-black/10 bg-white"
-                />
-              ) : (
-                <p className="mt-2 whitespace-pre-wrap text-sm text-black/65">
-                  {Array.isArray(value) ? value.join(", ") : String(value)}
-                </p>
-              )}
-            </div>
-          ))}
+        <p className="mt-4 rounded-xl bg-pink-light/35 p-4 text-xs leading-5 text-black/60">
+          All fields are optional. Add or update any available information and
+          save the record again.
+        </p>
+        <div className="mt-7">
+          <ConsultationForm
+            template={template}
+            practitionerNames={staffMembers.map((member) => member.name)}
+            treatmentNames={treatmentNames}
+            recordId={record.id}
+            initialAnswers={record.answers}
+            initialImages={record.images || []}
+          />
         </div>
       </main>
     </>

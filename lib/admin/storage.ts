@@ -33,7 +33,7 @@ type ConsultationRow = {
 
 const globalDatabase = globalThis as unknown as { consultationSql?: ReturnType<typeof postgres> };
 const sql = databaseUrl
-  ? globalDatabase.consultationSql ?? postgres(databaseUrl, { max: 5, idle_timeout: 20, connect_timeout: 10, ssl: process.env.NODE_ENV === "production" ? "require" : undefined })
+  ? globalDatabase.consultationSql ?? postgres(databaseUrl, { max: 5, idle_timeout: 20, connect_timeout: 10, ssl: "require" })
   : undefined;
 if (sql && process.env.NODE_ENV !== "production") globalDatabase.consultationSql = sql;
 
@@ -87,6 +87,31 @@ export async function updateConsultationImages(id: string, images: TreatmentImag
   const index = existing.findIndex((record) => record.id === id);
   if (index < 0) return undefined;
   existing[index] = { ...existing[index], images };
+  await mkdir(dataDirectory, { recursive: true });
+  await writeFile(dataFile, JSON.stringify(existing, null, 2), "utf8");
+  return existing[index];
+}
+
+export async function updateConsultationAnswers(
+  id: string,
+  answers: ConsultationRecord["answers"],
+) {
+  if (consultationStorageMode === "disabled")
+    throw new ConsultationStorageConfigurationError(
+      "DATABASE_URL is required for production consultation storage.",
+    );
+  if (sql) {
+    const rows = await sql<ConsultationRow[]>`
+      UPDATE consultations
+      SET answers=${sql.json(answers)}, updated_at=now()
+      WHERE id=${id}
+      RETURNING *`;
+    return rows[0] ? fromRow(rows[0]) : undefined;
+  }
+  const existing = await getConsultations();
+  const index = existing.findIndex((record) => record.id === id);
+  if (index < 0) return undefined;
+  existing[index] = { ...existing[index], answers };
   await mkdir(dataDirectory, { recursive: true });
   await writeFile(dataFile, JSON.stringify(existing, null, 2), "utf8");
   return existing[index];

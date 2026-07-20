@@ -23,8 +23,10 @@ const details = (extra: ConsultationField[] = []): ConsultationSection => ({
   title: "Client details",
   fields: [
     f("fullName", "Full name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
+    { id: "gender", label: "Gender", type: "select", options: ["Female", "Male", "Non-binary", "Prefer not to say"].map((value) => ({ value, label: value })) },
     f("contactNumber", "Contact number", "tel", true), f("email", "Email address", "email", true),
     f("address", "Address", "textarea"), f("emergencyContact", "Emergency contact", "text"),
+    f("emergencyContactNumber", "Emergency contact number", "tel", true),
     f("gpDetails", "GP name and address, if applicable", "textarea"), ...extra,
   ],
 });
@@ -37,14 +39,6 @@ const yesNo = (id: string, label: string) => f(id, label, "yes-no", true);
 const options = (id: string, label: string, values: string[], required = false): ConsultationField => ({
   id, label, type: "multi-checkbox", required, options: values.map((value) => ({ value, label: value })),
 });
-const signature = (title = "Client declaration and sign-off"): ConsultationSection => ({
-  title,
-  fields: [
-    f("clientSignatureName", "Client / patient signature name", "text", true),
-    f("clientSignatureDate", "Client / patient signature date", "date", true),
-  ],
-});
-
 const antiWrinkle: ConsultationTemplate = {
   slug: "anti-wrinkle", title: "Anti-Wrinkle Treatment Consultation", description: "Medical assessment and consent for anti-wrinkle treatments.",
   sourceFile: "Anti-Wrinkle Treatment Consultation Form.pdf", reviewRequired: true,
@@ -71,7 +65,6 @@ const antiWrinkle: ConsultationTemplate = {
       yesNo("photographyAdvertisingConsent", "Consent to photographs and their use for advertising/social media?"),
       f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
     ]},
-    signature(),
     practitioner(),
   ],
 };
@@ -104,7 +97,6 @@ const dermalFillers: ConsultationTemplate = {
       yesNo("photographyAdvertisingConsent", "Consent to photographs and their use for advertising/social media?"),
       f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
     ]},
-    signature(),
     practitioner(),
   ],
 };
@@ -113,7 +105,7 @@ const ivTherapy: ConsultationTemplate = {
   slug: "iv-therapy", title: "IV Therapy Consultation and Consent", description: "Patient suitability, blood pressure and administration record for IV therapy.",
   sourceFile: "IV Therapy Consultation and Consent Form.pdf", reviewRequired: true,
   sections: [
-    details([f("emergencyContactNumber", "Emergency contact number", "tel", true)]),
+    details(),
     { title: "IV therapy medical history", fields: [
       yesNo("knownAllergies", "Known allergies?"), f("allergyDetails", "Allergy details", "textarea"),
       yesNo("medicationsSupplements", "Currently taking medications or supplements?"), f("medicationDetails", "Medication and supplement list", "textarea"),
@@ -139,14 +131,10 @@ const ivTherapy: ConsultationTemplate = {
       f("reportReactions", "Agrees to immediately report adverse reactions or concerns", "checkbox", true),
       f("dataProtection", "Understands this form will be retained as a medical record under data protection law", "checkbox", true),
     ]},
-    { title: "Patient and clinician consent sign-off", fields: [
-      f("patientSignatureName", "Patient signature name", "text", true), f("patientSignatureDate", "Patient signature date", "date", true),
-      f("clinicianSignatureName", "Clinician signature name", "text", true), f("clinicianSignatureDate", "Clinician signature date", "date", true),
-    ]},
     practitioner([
       f("treatmentAdministered", "Treatment administered", "text"), f("dosageIngredients", "Dosage and ingredients", "textarea"),
       f("lotNumbers", "Lot numbers", "text"), f("administrationSite", "Administration site", "text"), f("observations", "Observations", "textarea"),
-      f("clinicianNameTitle", "Clinician name and title", "text"), f("clinicUseSignature", "Clinic-use signature name", "text"), f("clinicUseSignatureDate", "Clinic-use signature date", "date"),
+      f("clinicianNameTitle", "Clinician name and title", "text"),
     ]),
   ],
 };
@@ -180,7 +168,6 @@ const lemonBottle: ConsultationTemplate = {
       yesNo("photographyAdvertisingConsent", "Consent to photographs and their use for advertising/social media?"),
       f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
     ]},
-    signature(),
     practitioner(),
   ],
 };
@@ -219,7 +206,6 @@ const spmu: ConsultationTemplate = {
       yesNo("futureFacialLaserIpl", "Laser or IPL on the face scheduled for the future?"), yesNo("givesBlood", "Do you give blood?"),
       yesNo("tattooSensitivity", "Sensitised reactions to tattoos or permanent makeup?"),
     ]},
-    signature(),
     practitioner(),
   ],
 };
@@ -273,21 +259,20 @@ const laserDevice: ConsultationTemplate = {
     ]},
     { title: "Laser consent and consultation checklist", fields: [
       f("risksAccepted", "Laser hair removal risks explained and accepted", "checkbox", true), f("aftercareReceived", "Aftercare instructions received", "checkbox", true),
-      f("patchTestWait", "Patch test requirement and 72-hour waiting period understood", "checkbox", true), f("eyeProtection", "Eye protection requirement understood", "checkbox", true),
+      f("patchTestWait", "Patch test requirement and 48-hour waiting period understood", "checkbox", true), f("eyeProtection", "Eye protection requirement understood", "checkbox", true),
       yesNo("photographyConsent", "Consent to treatment photography?"), f("healthAssessmentCompleted", "Health assessment completed", "checkbox", true),
       f("treatmentProcessExplained", "Treatment process explained", "checkbox", true), f("hairGrowthCycleExplained", "Hair growth cycle explained", "checkbox", true),
       f("seriesMaintenanceExplained", "Treatment series and maintenance explained", "checkbox", true), f("variableResultsExplained", "Variability of results explained", "checkbox", true),
       f("sunPigmentationExplained", "Sun exposure and hyper/hypopigmentation explained", "checkbox", true), f("homeCareSideEffects", "Home care and side effects explained", "checkbox", true),
       f("clientAuthorisation", "Client authorises and consents to laser hair removal", "checkbox", true),
     ]},
-    signature("Client laser consent sign-off"),
     { title: "Test Patch Settings", description: "Practitioner use only.", fields: [
       f("testPatchDate", "Test patch date", "date", true), { id: "testPatchFitzpatrick", label: "Fitzpatrick setting", type: "select", options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: value })) },
       f("testPatchArea", "Laser hair removal patch-test area", "text", true), f("fluence", "Fluence", "text"), f("hz", "HZ", "text"), f("pulse", "Pulse", "text"),
       f("result", "Result", "textarea"), f("shotsFired", "Shots fired", "number"), f("practitionerEyewear", "Protective eyewear worn by practitioner", "checkbox", true),
       f("patientEyewear", "Protective eyewear worn by patient", "checkbox", true), f("concernsComments", "Concerns and comments", "textarea"),
     ]},
-    practitioner([f("practitionerSignatureName", "Practitioner signature name", "text", true), f("practitionerSignatureDate", "Practitioner signature date", "date", true)]),
+    practitioner(),
   ],
 };
 

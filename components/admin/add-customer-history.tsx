@@ -1,29 +1,57 @@
 "use client";
 import { useState } from "react";
-import { LoaderCircle, Plus, X } from "lucide-react";
+import { LoaderCircle, Plus, Search, UserRound, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { TreatmentImages } from "@/components/admin/treatment-images";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
+import { SearchableOptionInput } from "@/components/admin/searchable-option-input";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 export function AddCustomerHistory({
   customers,
   initialCustomerId = "",
   label = "Add customer record",
+  treatmentNames,
 }: {
   customers: CustomerHistory[];
   initialCustomerId?: string;
   label?: string;
+  treatmentNames: string[];
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(initialCustomerId);
+  const initialCustomer = customers.find((c) => c.id === initialCustomerId);
+  const [customerQuery, setCustomerQuery] = useState(initialCustomer?.name || "");
+  const [showLookup, setShowLookup] = useState(false);
   const [images, setImages] = useState<TreatmentImage[]>([]);
   const customer = customers.find((c) => c.id === selected);
+  const normalizedQuery = customerQuery.trim().toLowerCase();
+  const matchingCustomers = normalizedQuery
+    ? customers
+        .filter((item) =>
+          [item.name, item.phone, item.email].some((value) =>
+            value.toLowerCase().includes(normalizedQuery),
+          ),
+        )
+        .slice(0, 8)
+    : [];
+
+  function selectCustomer(nextCustomer: CustomerHistory) {
+    setSelected(nextCustomer.id);
+    setCustomerQuery(nextCustomer.name);
+    setShowLookup(false);
+  }
+
+  function useNewCustomer() {
+    setSelected("");
+    setCustomerQuery("");
+    setShowLookup(false);
+  }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
@@ -37,7 +65,7 @@ export function AddCustomerHistory({
       body: JSON.stringify({
         branchId: "reading-west-street",
         serviceId: "manual",
-        treatmentName: f.get("treatmentName"),
+        treatmentName: String(f.get("treatmentName") || "").trim() || "Customer record",
         durationMinutes: 5,
         staffId: "manual",
         practitionerName: "Historical record",
@@ -45,6 +73,7 @@ export function AddCustomerHistory({
         customerPhone: f.get("customerPhone"),
         customerEmail: f.get("customerEmail"),
         customerAddress: f.get("customerAddress"),
+        customerGender: f.get("customerGender"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
         notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
@@ -61,6 +90,7 @@ export function AddCustomerHistory({
     }
     setOpen(false);
     setSelected("");
+    setCustomerQuery("");
     setImages([]);
     router.refresh();
   }
@@ -70,6 +100,8 @@ export function AddCustomerHistory({
         type="button"
         onClick={() => {
           setSelected(initialCustomerId);
+          setCustomerQuery(initialCustomer?.name || "");
+          setShowLookup(false);
           setOpen(true);
         }}
         className="button-primary"
@@ -105,20 +137,70 @@ export function AddCustomerHistory({
               </button>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label="Existing customer" wide>
-                <select
-                  value={selected}
-                  onChange={(e) => setSelected(e.target.value)}
-                  className={cls}
-                >
-                  <option value="">New customer</option>
-                  {customers.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name} · {c.phone}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <div className="grid gap-2 text-xs font-bold sm:col-span-2">
+                <label htmlFor="customerLookup">Find an existing customer</label>
+                <span className="relative">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35">
+                    <Search size={16} />
+                  </span>
+                  <input
+                    id="customerLookup"
+                    value={customerQuery}
+                    onFocus={() => setShowLookup(true)}
+                    onChange={(event) => {
+                      setCustomerQuery(event.target.value);
+                      setShowLookup(true);
+                    }}
+                    placeholder="Search by name, phone or email"
+                    autoComplete="off"
+                    className={`${cls} pl-11`}
+                  />
+                  {customerQuery && (
+                    <button
+                      type="button"
+                      onClick={useNewCustomer}
+                      aria-label="Clear customer search"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-black/35 hover:bg-white hover:text-pink"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                  {showLookup && normalizedQuery && (
+                    <span className="absolute z-20 mt-2 block max-h-72 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-2 shadow-luxe">
+                      {matchingCustomers.length ? (
+                        matchingCustomers.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => selectCustomer(item)}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-pink-light/40"
+                          >
+                            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-pink-light text-pink">
+                              <UserRound size={14} />
+                            </span>
+                            <span className="min-w-0">
+                              <strong className="block truncate text-sm">{item.name}</strong>
+                              <small className="block truncate font-medium text-black/45">
+                                {[item.phone, item.email].filter(Boolean).join(" · ")}
+                              </small>
+                            </span>
+                          </button>
+                        ))
+                      ) : (
+                        <span className="block px-3 py-4 text-xs font-medium text-black/45">
+                          No matching customer. Continue below to create a new customer.
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </span>
+                {customer && (
+                  <span className="flex items-center justify-between rounded-xl bg-pink-light/35 px-4 py-3 text-xs">
+                    <span><strong className="block">Selected: {customer.name}</strong>{customer.phone}</span>
+                    <button type="button" onClick={useNewCustomer} className="font-bold text-pink">Use a new customer</button>
+                  </span>
+                )}
+              </div>
               <Field label="Customer name">
                 <input
                   key={`name-${selected}`}
@@ -147,6 +229,20 @@ export function AddCustomerHistory({
                   className={cls}
                 />
               </Field>
+              <Field label="Gender">
+                <select
+                  key={`gender-${selected}`}
+                  name="customerGender"
+                  defaultValue={customer?.gender || ""}
+                  className={cls}
+                >
+                  <option value="">Select gender</option>
+                  <option>Female</option>
+                  <option>Male</option>
+                  <option>Non-binary</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </Field>
               <Field label="Customer address" wide>
                 <AddressLookup
                   key={`address-${selected}`}
@@ -155,7 +251,12 @@ export function AddCustomerHistory({
                 />
               </Field>
               <Field label="Treatment" wide>
-                <input required name="treatmentName" className={cls} />
+                <SearchableOptionInput
+                  name="treatmentName"
+                  options={treatmentNames}
+                  placeholder="Optional — search or enter a treatment"
+                  className={cls}
+                />
               </Field>
               <Field label="Session number">
                 <input
@@ -177,14 +278,13 @@ export function AddCustomerHistory({
               </Field>
               <Field label="Consultation sheet / consultation details" wide>
                 <textarea
-                  required
                   name="consultation"
                   rows={5}
                   className={cls}
                 />
               </Field>
               <Field label="Outcome" wide>
-                <textarea required name="outcome" rows={4} className={cls} />
+                <textarea name="outcome" rows={4} className={cls} />
               </Field>
               <TreatmentImages images={images} onChange={setImages} />
               <label className="flex gap-3 rounded-xl bg-pink-light/35 p-4 text-xs sm:col-span-2">

@@ -1,10 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
-export function SignaturePad({ name = "signatureData" }: { name?: string }) {
+export function SignaturePad({
+  name = "signatureData",
+  defaultValue = "",
+}: {
+  name?: string;
+  defaultValue?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
   function prepare() {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -107,13 +113,12 @@ export function SignaturePad({ name = "signatureData" }: { name?: string }) {
         name={name}
         value={value}
         onChange={() => {}}
-        required
         className="sr-only"
         aria-label="Customer signature data"
       />
       {!value && (
         <p className="mt-2 text-[10px] text-black/40">
-          A signature is required before the consultation can be saved.
+          A signature can be added now or when the consultation is updated.
         </p>
       )}
     </div>

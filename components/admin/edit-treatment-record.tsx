@@ -4,6 +4,7 @@ import { LoaderCircle, Pencil, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Booking } from "@/lib/admin/booking-types";
 import { TreatmentImages } from "@/components/admin/treatment-images";
+import { SearchableOptionInput } from "@/components/admin/searchable-option-input";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 function details(notes: string) {
@@ -18,7 +19,7 @@ function details(notes: string) {
     outcome: match?.[2]?.trim() || "",
   };
 }
-export function EditTreatmentRecord({ booking }: { booking: Booking }) {
+export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Booking; treatmentNames: string[] }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -87,10 +88,12 @@ export function EditTreatmentRecord({ booking }: { booking: Booking }) {
             <div className="mt-6 grid gap-4">
               <label className="grid gap-2 text-xs font-bold">
                 Treatment
-                <input
+                <SearchableOptionInput
                   required
                   name="treatmentName"
+                  options={treatmentNames}
                   defaultValue={booking.treatmentName}
+                  placeholder="Search treatments or enter another treatment"
                   className={cls}
                 />
               </label>

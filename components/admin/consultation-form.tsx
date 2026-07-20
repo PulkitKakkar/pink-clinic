@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CheckCircle2, LoaderCircle, Save } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
 import { TreatmentImages } from "@/components/admin/treatment-images";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
+import { SearchableOptionInput } from "@/components/admin/searchable-option-input";
 
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-pink";
@@ -15,8 +16,6 @@ const calculatedFields = new Set([
   "sunExposureReactionScore",
   "tanningHabitsScore",
   "skinTypeTotalScore",
-  "fitzpatrickType",
-  "testPatchFitzpatrick",
   "bloodPressureClassification",
 ]);
 const scoreGroups: Record<string, string[]> = {
@@ -45,34 +44,33 @@ function fitzpatrick(total: number) {
 
 export function ConsultationForm({
   template,
+  practitionerNames,
+  treatmentNames,
+  recordId,
+  initialAnswers = {},
+  initialImages = [],
 }: {
   template: ConsultationTemplate;
+  practitionerNames: string[];
+  treatmentNames: string[];
+  recordId?: string;
+  initialAnswers?: Record<string, string | boolean | string[]>;
+  initialImages?: TreatmentImage[];
 }) {
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
     "idle",
   );
-  const [images, setImages] = useState<TreatmentImage[]>([]);
+  const [images, setImages] = useState<TreatmentImage[]>(initialImages);
+  const datesSynchronized = useRef(false);
+  const manuallySelectedFitzpatrick = useRef(new Set<string>());
+  const today = new Date().toLocaleDateString("en-CA");
+  const initialValue = (name: string) => initialAnswers[name];
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const requiredFields = Array.from(
-      event.currentTarget.querySelectorAll<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >("[required]"),
-    );
-    const invalidFields = requiredFields.filter(
-      (field) => !field.checkValidity(),
-    );
-    requiredFields.forEach((field) =>
-      field.classList.toggle("border-red-500", invalidFields.includes(field)),
-    );
-    if (invalidFields.length) {
-      setStatus("error");
-      invalidFields[0].scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
+    const formElement = event.currentTarget;
     setStatus("saving");
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const answers: Record<string, string | boolean | string[]> = {};
     template.sections
       .flatMap((section) => section.fields)
@@ -85,14 +83,48 @@ export function ConsultationForm({
               : String(form.get(field.id) || "");
       });
     answers.termsAgreement = form.get("termsAgreement") === "on";
+    answers.marketingConsent = form.get("marketingConsent") === "on";
     answers.signatureData = String(form.get("signatureData") || "");
     const response = await fetch("/api/admin/consultations", {
-      method: "POST",
+      method: recordId ? "PATCH" : "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ templateSlug: template.slug, answers, images }),
+      body: JSON.stringify(
+        recordId
+          ? { id: recordId, answers, images }
+          : { templateSlug: template.slug, answers, images },
+      ),
     });
     setStatus(response.ok ? "saved" : "error");
-    if (response.ok) { event.currentTarget.reset(); setImages([]); }
+    if (response.ok && !recordId) {
+      formElement.reset();
+      formElement.querySelectorAll<HTMLInputElement>('input[type="date"]:not([name="dateOfBirth"])').forEach((field) => { field.value = today; });
+      datesSynchronized.current = false;
+      manuallySelectedFitzpatrick.current.clear();
+      setImages([]);
+    }
+  }
+
+  function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
+    const target = event.target as unknown as HTMLInputElement;
+    if (target.name === "fitzpatrickType" || target.name === "testPatchFitzpatrick") {
+      manuallySelectedFitzpatrick.current.add(target.name);
+    }
+    calculateDerivedFields(event.currentTarget);
+  }
+
+  function handleDateInput(event: React.FormEvent<HTMLFormElement>) {
+    const target = event.target as HTMLInputElement;
+    if (
+      !datesSynchronized.current &&
+      target.type === "date" &&
+      target.name !== "dateOfBirth" &&
+      target.value
+    ) {
+      event.currentTarget
+        .querySelectorAll<HTMLInputElement>('input[type="date"]:not([name="dateOfBirth"])')
+        .forEach((field) => { field.value = target.value; });
+      datesSynchronized.current = true;
+    }
   }
 
   function calculateDerivedFields(form: HTMLFormElement) {
@@ -132,15 +164,18 @@ export function ConsultationForm({
     const total = totals.reduce((sum, item) => sum + item.total, 0);
     const type = complete ? fitzpatrick(total) : "";
     setValue("skinTypeTotalScore", complete ? String(total) : "");
-    setValue("fitzpatrickType", type);
-    setValue("testPatchFitzpatrick", type);
+    if (!manuallySelectedFitzpatrick.current.has("fitzpatrickType"))
+      setValue("fitzpatrickType", type);
+    if (!manuallySelectedFitzpatrick.current.has("testPatchFitzpatrick"))
+      setValue("testPatchFitzpatrick", type);
   }
 
   return (
     <form
       noValidate
       onSubmit={submit}
-      onChange={(event) => calculateDerivedFields(event.currentTarget)}
+      onChange={handleChange}
+      onInput={handleDateInput}
       className="grid gap-5"
     >
       {template.sections.map((section) => (
@@ -160,18 +195,34 @@ export function ConsultationForm({
               >
                 {field.type !== "checkbox" && field.label}
                 {field.id === "address" ? (
-                  <AddressLookup name={field.id} />
+                  <AddressLookup name={field.id} defaultValue={String(initialValue(field.id) || "")} />
+                ) : ["practitionerName", "clinicianNameTitle"].includes(field.id) ? (
+                  <SearchableOptionInput
+                    name={field.id}
+                    options={practitionerNames}
+                    defaultValue={String(initialValue(field.id) || "")}
+                    placeholder="Search practitioners or enter another name"
+                    className={inputClass}
+                  />
+                ) : field.id === "treatmentAdministered" ? (
+                  <SearchableOptionInput
+                    name={field.id}
+                    options={treatmentNames}
+                    defaultValue={String(initialValue(field.id) || "")}
+                    placeholder="Search treatments or enter another treatment"
+                    className={inputClass}
+                  />
                 ) : field.type === "textarea" ? (
                   <textarea
                     name={field.id}
-                    required={field.required}
+                    defaultValue={String(initialValue(field.id) || "")}
                     rows={3}
                     className={inputClass}
                   />
                 ) : calculatedFields.has(field.id) ? (
                   <input
                     name={field.id}
-                    required={field.required}
+                    defaultValue={String(initialValue(field.id) || "")}
                     readOnly
                     aria-readonly="true"
                     className={`${inputClass} bg-pink-light/35 font-bold`}
@@ -179,7 +230,7 @@ export function ConsultationForm({
                 ) : field.type === "yes-no" ? (
                   <select
                     name={field.id}
-                    required={field.required}
+                    defaultValue={String(initialValue(field.id) || "")}
                     className={inputClass}
                   >
                     <option value="">Select</option>
@@ -189,7 +240,7 @@ export function ConsultationForm({
                 ) : field.type === "select" ? (
                   <select
                     name={field.id}
-                    required={field.required}
+                    defaultValue={String(initialValue(field.id) || "")}
                     className={inputClass}
                   >
                     <option value="">Select</option>
@@ -210,6 +261,7 @@ export function ConsultationForm({
                           name={field.id}
                           value={option.value}
                           type="checkbox"
+                          defaultChecked={Array.isArray(initialValue(field.id)) && (initialValue(field.id) as string[]).includes(option.value)}
                           className="accent-pink"
                         />
                         {option.label}
@@ -220,8 +272,8 @@ export function ConsultationForm({
                   <span className="flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
                     <input
                       name={field.id}
-                      required={field.required}
                       type="checkbox"
+                      defaultChecked={initialValue(field.id) === true}
                       className="mt-1 accent-pink"
                     />
                     {field.label}
@@ -229,8 +281,13 @@ export function ConsultationForm({
                 ) : (
                   <input
                     name={field.id}
-                    required={field.required}
                     type={field.type}
+                    defaultValue={
+                      String(initialValue(field.id) || "") ||
+                      (!recordId && field.type === "date" && field.id !== "dateOfBirth"
+                        ? today
+                        : undefined)
+                    }
                     className={inputClass}
                   />
                 )}
@@ -240,7 +297,7 @@ export function ConsultationForm({
         </section>
       ))}
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad />
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
       </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <TreatmentImages images={images} onChange={setImages} />
@@ -250,8 +307,8 @@ export function ConsultationForm({
         <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
           <input
             name="termsAgreement"
-            required
             type="checkbox"
+            defaultChecked={initialValue("termsAgreement") === true}
             className="mt-1 accent-pink"
           />
           <span>
@@ -259,7 +316,22 @@ export function ConsultationForm({
               I agree to Pink Beauty&apos;s consultation and treatment terms
             </strong>
             I confirm the information provided is accurate and understand this
-            consultation record and my signature will be retained securely.
+            consultation record and my signature will be retained securely. Read
+            the <a href="/terms" target="_blank" className="font-bold text-pink underline">terms and conditions</a> and <a href="/privacy" target="_blank" className="font-bold text-pink underline">privacy policy</a>.
+          </span>
+        </label>
+        <label className="mt-3 flex items-start gap-3 rounded-xl border border-black/5 bg-cream p-4 text-sm leading-5">
+          <input
+            name="marketingConsent"
+            type="checkbox"
+            defaultChecked={initialValue("marketingConsent") === true}
+            className="mt-1 accent-pink"
+          />
+          <span>
+            <strong className="block">I agree to receive promotional messages</strong>
+            Pink Beauty may use my contact details to send offers and updates by
+            SMS or email. This is optional and I can withdraw my consent at any
+            time.
           </span>
         </label>
       </section>
@@ -267,11 +339,11 @@ export function ConsultationForm({
         <p className="text-xs text-black/45">
           {status === "saved" ? (
             <span className="flex items-center gap-2 font-bold text-green-700">
-              <CheckCircle2 size={16} /> Consultation saved
+              <CheckCircle2 size={16} /> Consultation {recordId ? "updated" : "saved"}
             </span>
           ) : status === "error" ? (
             <span className="font-bold text-red-700">
-              Please complete all highlighted fields
+              Could not save the consultation. Please try again.
             </span>
           ) : status === "saving" ? (
             <span className="flex items-center gap-2 font-bold text-pink">
@@ -279,7 +351,9 @@ export function ConsultationForm({
               consultation...
             </span>
           ) : (
-            "Complete the form, then save the consultation record."
+            recordId
+              ? "Update any details, then save the consultation record."
+              : "Add the available details, then save the consultation record."
           )}
         </p>
         <button
@@ -292,7 +366,7 @@ export function ConsultationForm({
           ) : (
             <Save size={15} />
           )}
-          {status === "saving" ? "Saving..." : "Save record"}
+          {status === "saving" ? "Saving..." : recordId ? "Update record" : "Save record"}
         </button>
       </div>
     </form>

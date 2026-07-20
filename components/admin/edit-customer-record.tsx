@@ -28,6 +28,7 @@ export function EditCustomerRecord({
         phone: f.get("phone"),
         email: f.get("email"),
         address: f.get("address"),
+        gender: f.get("gender"),
         marketingConsent: f.get("marketingConsent") === "true",
       }),
     });
@@ -100,6 +101,15 @@ export function EditCustomerRecord({
                   defaultValue={customer.email}
                   className={cls}
                 />
+              </Field>
+              <Field label="Gender">
+                <select name="gender" defaultValue={customer.gender} className={cls}>
+                  <option value="">Select gender</option>
+                  <option>Female</option>
+                  <option>Male</option>
+                  <option>Non-binary</option>
+                  <option>Prefer not to say</option>
+                </select>
               </Field>
               <Field label="Customer address" wide>
                 <textarea
