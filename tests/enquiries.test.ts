@@ -24,10 +24,10 @@ describe("contact enquiries", () => {
 
   it.each([
     ["reading-west-street", "info@pinkbeautysalons.co.uk"],
-    ["reading-watlington-street", "pinkbeautyreading@gmail.com"],
+    ["reading-watlington-street", "info@pinkbeautysalons.co.uk"],
   ])("emails the selected branch for %s", async (branchId, recipient) => {
     vi.stubEnv("RESEND_API_KEY", "re_test_key");
-    vi.stubEnv("ENQUIRY_FROM_EMAIL", "Pink Beauty Website <enquiries@pinkclinic.co.uk>");
+    vi.stubEnv("ENQUIRY_FROM_EMAIL", "Pink Beauty Website <info@pinkbeautysalons.co.uk>");
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 

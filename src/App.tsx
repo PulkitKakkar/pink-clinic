@@ -33,7 +33,7 @@ const branches: Branch[] = [
     description: 'Classic salon energy, central access, and a familiar beauty-led experience.',
     highlights: ['Classic salon experience', 'Central Reading location', 'Fast-turnaround appointments'],
     phone: '+44 118 999 1100',
-    email: 'weststreet@pinkbeauty.co.uk',
+    email: 'info@pinkbeautysalons.co.uk',
     hours: 'Mon-Sat 9:00-18:00',
   },
   {
@@ -45,7 +45,7 @@ const branches: Branch[] = [
     description: 'Modern clinic ambience, free parking, and a premium positioning for advanced treatments.',
     highlights: ['Free parking', 'Premium ambience', 'Advanced clinic services'],
     phone: '+44 118 999 2200',
-    email: 'watlington@pinkclinic.co.uk',
+    email: 'info@pinkbeautysalons.co.uk',
     hours: 'Mon-Sat 9:00-19:00',
   },
 ]
