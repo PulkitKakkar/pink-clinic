@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { ADMIN_COOKIE } from "@/lib/admin/auth";
 import { STUDIO_ADMIN_COOKIE } from "@/lib/studio/auth";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,18 +23,10 @@ export function proxy(request: NextRequest) {
   if (authenticated) return NextResponse.next();
   if (isAdminApi) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
-  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
-  const requestOrigin =
-    forwardedHost &&
-    (forwardedProtocol === "http" || forwardedProtocol === "https")
-      ? `${forwardedProtocol}://${forwardedHost}`
-      : request.nextUrl.origin;
-  const publicOrigin =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_SITE_URL || requestOrigin
-      : requestOrigin;
-  const loginUrl = new URL(isStudioPage ? "/studio-login" : "/admin/login", publicOrigin);
+  const loginUrl = new URL(
+    isStudioPage ? "/studio-login" : "/admin/login",
+    getPublicOrigin(request),
+  );
   if (!isStudioPage) loginUrl.searchParams.set("next", pathname);
   return NextResponse.redirect(loginUrl);
 }

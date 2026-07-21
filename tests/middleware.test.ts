@@ -20,6 +20,20 @@ describe("admin and Studio access control", () => {
     );
   });
 
+  it("keeps production redirects on the active Amplify host", () => {
+    const response = proxy(
+      new NextRequest("https://main.d269wokvvip0dc.amplifyapp.com/admin", {
+        headers: {
+          "x-forwarded-host": "main.d269wokvvip0dc.amplifyapp.com",
+          "x-forwarded-proto": "https",
+        },
+      }),
+    );
+    expect(response.headers.get("location")).toBe(
+      "https://main.d269wokvvip0dc.amplifyapp.com/admin/login?next=%2Fadmin",
+    );
+  });
+
   it("allows a valid admin session and rejects it for Studio", () => {
     const adminRequest = new NextRequest("http://localhost:3000/admin", {
       headers: { cookie: "pink-admin-session=pink-local-admin-test-session" },
