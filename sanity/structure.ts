@@ -1,16 +1,14 @@
-import {
-  BasketIcon,
-  BlockContentIcon,
-  BulbOutlineIcon,
-  CalendarIcon,
-  ControlsIcon,
-  DocumentsIcon,
-  HomeIcon,
-  PinIcon,
-  StarIcon,
-  TagIcon,
-  UsersIcon,
-} from "@sanity/icons";
+import { BasketIcon } from "@sanity/icons/Basket";
+import { BlockContentIcon } from "@sanity/icons/BlockContent";
+import { BulbOutlineIcon } from "@sanity/icons/BulbOutline";
+import { CalendarIcon } from "@sanity/icons/Calendar";
+import { ControlsIcon } from "@sanity/icons/Controls";
+import { DocumentsIcon } from "@sanity/icons/Documents";
+import { HomeIcon } from "@sanity/icons/Home";
+import { PinIcon } from "@sanity/icons/Pin";
+import { StarIcon } from "@sanity/icons/Star";
+import { TagIcon } from "@sanity/icons/Tag";
+import { UsersIcon } from "@sanity/icons/Users";
 import type { StructureResolver } from "sanity/structure";
 
 const westStreetId = "branch-reading-west-st";
