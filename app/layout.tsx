@@ -9,7 +9,7 @@ const display = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-displ
 const sans = Manrope({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pinkbeauty.co.uk"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pinkclinic.co.uk"),
   title: { default: "Pink Beauty Salon & Academy | Reading", template: "%s | Pink Beauty" },
   description: "Luxury beauty, advanced aesthetics and accredited beauty training in Reading. Book your consultation with Pink Beauty Salon.",
   icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }], shortcut: "/icon.svg", apple: "/apple-icon.png" },

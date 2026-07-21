@@ -8,7 +8,7 @@ class ConfigurableBookingProvider implements BookingProvider {
       if (treatmentPrice?.price != null) return `/checkout/${intent.branchSlug}/${intent.serviceSlug}`;
     }
 
-    const url = new URL("/contact", process.env.NEXT_PUBLIC_SITE_URL || "https://pinkbeauty.co.uk");
+    const url = new URL("/contact", process.env.NEXT_PUBLIC_SITE_URL || "https://pinkclinic.co.uk");
 
     Object.entries(intent).forEach(([key, value]) => value && url.searchParams.set(key, value));
     return `${url.pathname}${url.search}`;
