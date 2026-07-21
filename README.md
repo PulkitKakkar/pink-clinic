@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-Booking buttons route to the website's own contact form and preserve the selected branch and treatment. Set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler before enabling the contact form in production.
+Booking buttons route to the website's own contact form and preserve the selected branch and treatment. For direct email delivery, set `RESEND_API_KEY` and `ENQUIRY_FROM_EMAIL` after verifying the sending domain with Resend. Submissions for both branches are emailed to `info@pinkbeautysalons.co.uk`, with the customer's address as Reply-To. Alternatively, set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler.
 
 ## Products, services and images
 

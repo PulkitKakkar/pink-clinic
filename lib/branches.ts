@@ -28,7 +28,7 @@ export const branches: Branch[] = [
     name: "Reading Watlington Street",
     address: "25 Watlington Street, Reading RG1 4EN",
     phone: "0118 402 8505",
-    email: "pinkbeautyreading@gmail.com",
+    email: "info@pinkbeautysalons.co.uk",
     hours: "Monday–Sunday · 9:30 AM–6:30 PM",
     image: "/images/watlington.jpg",
     note: "Advanced clinic and academy",
