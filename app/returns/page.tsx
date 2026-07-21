@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Returns Policy", description: "Returns and refunds information for Pink Beauty product purchases.", alternates: { canonical: "/returns" } };
 
 export default function ReturnsPage() {
   return <PolicyPage eyebrow="Products, services and courses" title="Returns & refunds." intro="Different refund rules apply to physical products, beauty and aesthetic services, prepaid treatments, and academy courses." sections={[

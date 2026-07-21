@@ -14,7 +14,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ branchSlug: string }> }): Promise<Metadata> {
   const branch = getBranchBySlug((await params).branchSlug);
-  return branch ? { title: `Treatments at ${branch.name}`, description: `View treatment prices and book at ${branch.name}, ${branch.address}.` } : {};
+  return branch ? { title: `Treatments at ${branch.name}`, description: `View treatment prices and book at ${branch.name}, ${branch.address}.`, alternates: { canonical: `/treatments/${branch.slug}` } } : {};
 }
 
 export default async function BranchTreatmentsPage({ params }: { params: Promise<{ branchSlug: string }> }) {

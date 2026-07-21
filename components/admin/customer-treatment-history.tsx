@@ -5,6 +5,10 @@ import type { Booking } from "@/lib/admin/booking-types";
 import type { Branch } from "@/lib/branches";
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
 import { treatmentImageUrl } from "@/components/admin/treatment-images";
+import {
+  getAppointmentSummary,
+  isFutureAppointment,
+} from "@/lib/admin/appointment-timing";
 function progress(notes: string) {
   const match = notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i);
   return match
@@ -51,6 +55,7 @@ export function CustomerTreatmentHistory({
   treatmentNames: string[];
 }) {
   const [selected, setSelected] = useState("all");
+  const [currentTime] = useState(() => Date.now());
   const treatments = useMemo(() => summary(bookings), [bookings]);
   const visible =
     selected === "all"
@@ -97,12 +102,22 @@ export function CustomerTreatmentHistory({
             const branch = branches.find(
               (item) => item.id === booking.branchId,
             );
+            const future = isFutureAppointment(booking, currentTime);
             return (
               <div
                 key={booking.id}
-                className="grid gap-3 border-b border-black/5 p-4 last:border-0 md:grid-cols-[180px_minmax(0,1fr)]"
+                className={`grid gap-3 border-b p-4 last:border-0 md:grid-cols-[180px_minmax(0,1fr)] ${
+                  future
+                    ? "border-sky-100 bg-sky-50/70"
+                    : "border-black/5"
+                }`}
               >
                 <div className="text-xs">
+                  {future && (
+                    <span className="mb-2 inline-flex rounded-full bg-sky-600 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.12em] text-white">
+                      Future appointment
+                    </span>
+                  )}
                   <p className="font-bold">
                     {new Date(booking.startsAt).toLocaleString("en-GB", {
                       weekday: "short",
@@ -113,7 +128,7 @@ export function CustomerTreatmentHistory({
                     })}
                   </p>
                   <p className="mt-1 text-black/40">
-                    {branch?.name || "Unknown branch"} · {booking.status}
+                    {branch?.name || "Unknown branch"} · {future ? "confirmed" : booking.status}
                   </p>
                 </div>
                 <div>
@@ -140,6 +155,41 @@ export function CustomerTreatmentHistory({
           })}
         </div>
       </div>
+    </>
+  );
+}
+
+export function CustomerAppointmentSummary({ bookings }: { bookings: Booking[] }) {
+  const [currentTime] = useState(() => Date.now());
+  const { nextAppointment, lastVisit } = getAppointmentSummary(
+    bookings,
+    currentTime,
+  );
+
+  return (
+    <>
+      <p className="mt-1 text-xs text-black/40">
+        {lastVisit ? "Last visit" : "No previous visits"}
+        {lastVisit && " "}
+        {lastVisit &&
+          new Date(lastVisit.startsAt).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          })}
+      </p>
+      {nextAppointment && (
+        <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-2.5 py-1 text-[10px] font-bold text-sky-700">
+          Next appointment{" "}
+          {new Date(nextAppointment.startsAt).toLocaleString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
+      )}
     </>
   );
 }

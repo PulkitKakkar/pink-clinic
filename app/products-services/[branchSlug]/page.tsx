@@ -9,7 +9,7 @@ export function generateStaticParams() { return branches.map((branch) => ({ bran
 
 export async function generateMetadata({ params }: { params: Promise<{ branchSlug: string }> }): Promise<Metadata> {
   const branch = getBranchBySlug((await params).branchSlug);
-  return branch ? { title: `Products & services at ${branch.name}`, description: `Browse products, salon services and clinic treatments at ${branch.name}.` } : {};
+  return branch ? { title: `Products & services at ${branch.name}`, description: `Browse products, salon services and clinic treatments at ${branch.name}.`, alternates: { canonical: `/products-services/${branch.slug}` } } : {};
 }
 
 export default async function ProductsServicesPage({ params }: { params: Promise<{ branchSlug: string }> }) {

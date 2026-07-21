@@ -6,7 +6,7 @@ import { CourseCatalogue } from "@/components/catalog/course-catalogue";
 import { branches } from "@/lib/branches";
 import { getBranchCatalog } from "@/lib/catalog";
 
-export const metadata: Metadata = { title: "Accredited Beauty Courses Reading", description: "Professional, accredited beauty training and courses at Pink Beauty Academy in Reading." };
+export const metadata: Metadata = { title: "Accredited Beauty Courses Reading", description: "Professional, accredited beauty training and courses at Pink Beauty Academy in Reading.", alternates: { canonical: "/courses" } };
 
 export default async function CoursesPage() {
   const catalogues = await Promise.all(branches.map(async (branch) => ({

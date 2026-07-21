@@ -151,6 +151,12 @@ export async function getBookings(): Promise<Booking[]> {
   return rows.map(fromRow);
 }
 
+export async function checkBookingStorageHealth() {
+  assertProductionStorage();
+  if (!sql) return;
+  await sql`SELECT 1`;
+}
+
 export async function createBooking(input: CreateBookingInput) {
   const candidate = await normalizeBookingInput(input);
   assertProductionStorage();

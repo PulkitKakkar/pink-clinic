@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Cookie Notice", description: "How Pink Beauty uses essential browser storage and third-party services.", alternates: { canonical: "/cookies" } };
 
 export default function CookiesPage() {
   return <PolicyPage eyebrow="Website preferences" title="Cookies." intro="Pink Beauty Salon & Academy and Pink Beauty Clinic use cookies and similar browser storage to operate this website and remember useful choices." sections={[

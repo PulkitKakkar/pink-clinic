@@ -10,7 +10,7 @@ import { getBranchById } from "@/lib/branches";
 export function generateStaticParams() { return locations.map(location => ({ slug: location.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params; const location = locations.find(item => item.slug === slug);
-  return location ? { title: `Pink Beauty ${location.name}, Reading`, description: `Visit Pink Beauty at ${location.address}. Book beauty and aesthetic treatments in Reading.` } : {};
+  return location ? { title: `Pink Beauty ${location.name}, Reading`, description: `Visit Pink Beauty at ${location.address}. Book beauty and aesthetic treatments in Reading.`, alternates: { canonical: `/locations/${location.slug}` } } : {};
 }
 
 export default async function LocationPage({ params }: { params: Promise<{ slug: string }> }) {

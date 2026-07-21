@@ -1,0 +1,23 @@
+name: Production health monitor
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    name: Public site and API health
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check homepage
+        run: curl --fail --show-error --silent --max-time 20 "${{ secrets.MONITOR_URL }}/" >/dev/null
+      - name: Check application version
+        run: curl --fail --show-error --silent --max-time 20 "${{ secrets.MONITOR_URL }}/api/version" >/dev/null
+      - name: Check production dependencies
+        run: curl --fail --show-error --silent --max-time 20 "${{ secrets.MONITOR_URL }}/api/health" >/dev/null
+

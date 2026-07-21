@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Cancellation Policy", description: "Cancellation and rescheduling terms for Pink Beauty appointments and courses.", alternates: { canonical: "/cancellations" } };
 
 export default function CancellationsPage() {
   return <PolicyPage eyebrow="Appointments and courses" title="Cancellations." intro="These arrangements cover appointment changes, cancelled services and academy course enrolments. Contact the relevant Pink Beauty business as soon as your plans change." sections={[
