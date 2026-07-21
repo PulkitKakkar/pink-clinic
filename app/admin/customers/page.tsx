@@ -14,7 +14,10 @@ import { getBookings } from "@/lib/admin/booking-storage";
 import { branches } from "@/lib/branches";
 import { AddCustomerHistory } from "@/components/admin/add-customer-history";
 import { EditCustomerRecord } from "@/components/admin/edit-customer-record";
-import { CustomerTreatmentHistory } from "@/components/admin/customer-treatment-history";
+import {
+  CustomerAppointmentSummary,
+  CustomerTreatmentHistory,
+} from "@/components/admin/customer-treatment-history";
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
 import { CustomerSearch } from "@/components/admin/customer-search";
 import { getAdminTreatmentNames } from "@/lib/admin/lookup-options";
@@ -132,17 +135,7 @@ export default async function AdminCustomersPage({
                           <h2 className="font-display text-3xl leading-none">
                             {customer.name}
                           </h2>
-                          <p className="mt-1 text-xs text-black/40">
-                            Last visit{" "}
-                            {new Date(customer.lastVisitAt).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              },
-                            )}
-                          </p>
+                          <CustomerAppointmentSummary bookings={customer.bookings} />
                         </div>
                       </div>
                       <div className="mt-4 flex flex-wrap gap-3 text-xs text-black/50">

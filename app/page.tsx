@@ -8,7 +8,10 @@ import { Team } from "@/components/sections/team";
 import { WhyPink } from "@/components/sections/why-pink";
 import { locations, offers } from "@/lib/content";
 
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default function Home() {
   const schema = { "@context": "https://schema.org", "@type": "BeautySalon", name: "Pink Beauty Salon & Academy", url: "https://pinkbeauty.co.uk", telephone: locations[0].phone, priceRange: "££", address: locations.map(location => ({ "@type": "PostalAddress", streetAddress: location.address, addressLocality: "Reading", addressCountry: "GB" })) };
   return <main><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /><Hero /><OffersCarousel offers={offers} /><WhyPink /><Team /><ServicesShowcase /><Reviews /><InstagramFeed /><AppointmentCta /></main>;
 }
+import type { Metadata } from "next";

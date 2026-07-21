@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Delivery Information", description: "Delivery charges, areas and timing for Pink Beauty product orders.", alternates: { canonical: "/delivery" } };
 
 export default function DeliveryPage() {
   return <PolicyPage eyebrow="Physical products" title="Delivery." intro="This delivery information applies to physical products sold for shipment by Pink Beauty Salon & Academy or Pink Beauty Clinic." sections={[

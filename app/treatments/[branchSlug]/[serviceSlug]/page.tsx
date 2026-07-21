@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ branchSlu
   const { branchSlug, serviceSlug } = await params;
   const branch = getBranchBySlug(branchSlug);
   const service = services.find((item) => item.slug === serviceSlug);
-  return branch && service ? { title: `${service.title} at ${branch.name}`, description: `${service.excerpt} View pricing and book at ${branch.name}.` } : {};
+  return branch && service ? { title: `${service.title} at ${branch.name}`, description: `${service.excerpt} View pricing and book at ${branch.name}.`, alternates: { canonical: `/treatments/${branch.slug}/${service.slug}` } } : {};
 }
 
 export default async function BranchServicePage({ params }: { params: Promise<{ branchSlug: string; serviceSlug: string }> }) {

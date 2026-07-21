@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Terms and Conditions", description: "Terms for Pink Beauty treatments, courses and product purchases.", alternates: { canonical: "/terms" } };
 
 export default function TermsPage() {
   return <PolicyPage eyebrow="Purchases and bookings" title="Terms." intro="These terms explain the key conditions that apply when you buy products, book services or enrol on a course with either Pink Beauty business." sections={[

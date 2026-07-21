@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Privacy Notice", description: "How Pink Beauty collects, uses and protects customer information.", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return <PolicyPage eyebrow="Your information" title="Privacy." intro="This notice explains how Pink Beauty Salon & Academy and Pink Beauty Clinic collect and use personal information through this website and when providing products, treatments and courses." sections={[

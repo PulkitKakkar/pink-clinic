@@ -3,7 +3,7 @@ import { PageHero } from "@/components/page-hero";
 import { getBranchCatalog } from "@/lib/catalog";
 import { locations, services } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Book & Contact", description: "Book a treatment or enquire about Pink Beauty Academy courses in Reading." };
+export const metadata: Metadata = { title: "Book & Contact", description: "Book a treatment or enquire about Pink Beauty Academy courses in Reading.", alternates: { canonical: "/contact" } };
 export default async function ContactPage({ searchParams }: { searchParams: Promise<{ branchId?: string; serviceSlug?: string; catalogItem?: string; type?: string; course?: string; offer?: string; search?: string; status?: string }> }) {
   const query = await searchParams;
   const selectedBranch = locations.some((location) => location.id === query.branchId) ? query.branchId : "";

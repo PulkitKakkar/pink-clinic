@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { PolicyPage } from "@/components/policy-page";
+
+export const metadata: Metadata = { title: "Accessibility", description: "Accessibility support for Pink Beauty's website, branches and courses.", alternates: { canonical: "/accessibility" } };
 
 export default function AccessibilityPage() {
   return <PolicyPage eyebrow="Inclusive access" title="Accessibility." intro="Pink Beauty Salon & Academy and Pink Beauty Clinic aim to make this website, our services and our learning experiences usable by as many people as possible." sections={[

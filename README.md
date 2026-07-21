@@ -105,6 +105,9 @@ Include the configured `CRON_SECRET` according to the API route requirements. Im
 
 ## Releases
 
+Operational launch, backup, monitoring and rollback steps are documented in
+[`docs/LAUNCH_RUNBOOK.md`](docs/LAUNCH_RUNBOOK.md).
+
 The live version is taken from `package.json` and exposed in the site footer and at:
 
 ```text
