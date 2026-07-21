@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { ADMIN_COOKIE } from "@/lib/admin/auth";
 import { STUDIO_ADMIN_COOKIE } from "@/lib/studio/auth";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAdminPage = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isAdminApi = pathname.startsWith("/api/admin") && pathname !== "/api/admin/login";
