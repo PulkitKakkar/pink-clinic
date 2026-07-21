@@ -8,6 +8,10 @@
 4. Confirm `/api/health` returns HTTP 200 and every named check is `true`.
 5. Record the current release tag, Amplify deployment ID and database backup identifier.
 
+The production origin is `https://pinkclinic.co.uk`. Until DNS cutover, use the
+Amplify branch hostname for smoke tests and monitoring. The domain currently
+serves Shopify, so preserve its DNS records for rollback before replacing them.
+
 ## Database protection
 
 - Production PostgreSQL connections use TLS (`ssl: require`). Restrict inbound access to the hosting environment and named administrators.
