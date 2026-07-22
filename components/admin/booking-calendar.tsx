@@ -539,60 +539,6 @@ export function BookingCalendar({
           </div>
         </div>
         <div className="mt-6 grid gap-4">
-          <div className="grid gap-2 text-xs font-bold">
-            <label htmlFor="bookingCustomerLookup">Find an existing customer</label>
-            <span className="relative">
-              <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" />
-              <input
-                id="bookingCustomerLookup"
-                value={customerQuery}
-                onFocus={() => setShowCustomerLookup(true)}
-                onChange={(event) => {
-                  setCustomerQuery(event.target.value);
-                  setShowCustomerLookup(true);
-                }}
-                placeholder="Search name, phone or email"
-                autoComplete="off"
-                className={`${inputClass} pl-11 pr-10`}
-              />
-              {customerQuery && (
-                <button
-                  type="button"
-                  onClick={clearCustomerSelection}
-                  aria-label="Clear customer search"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-black/35 hover:bg-white hover:text-pink"
-                >
-                  <X size={13} />
-                </button>
-              )}
-              {showCustomerLookup && normalizedCustomerQuery && (
-                <span className="absolute z-30 mt-2 block max-h-72 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-2 shadow-luxe">
-                  {matchingCustomers.length ? matchingCustomers.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => selectCustomer(item)}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-pink-light/40"
-                    >
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-pink-light text-pink"><UserRound size={14} /></span>
-                      <span className="min-w-0">
-                        <strong className="block truncate text-sm">{item.name}</strong>
-                        <small className="block truncate font-medium text-black/45">{[item.phone, item.email].filter(Boolean).join(" · ")}</small>
-                      </span>
-                    </button>
-                  )) : (
-                    <span className="block px-3 py-4 text-xs font-medium text-black/45">No matching customer. Enter details below to create one.</span>
-                  )}
-                </span>
-              )}
-            </span>
-            {customer && (
-              <span className="flex items-center justify-between rounded-xl bg-pink-light/35 px-3 py-2 text-[11px]">
-                <span><strong className="block">Selected: {customer.name}</strong>{customer.phone}</span>
-                <button type="button" onClick={clearCustomerSelection} className="ml-3 shrink-0 font-bold text-pink">New customer</button>
-              </span>
-            )}
-          </div>
           <label className="grid gap-2 text-xs font-bold">
             Branch
             <select
@@ -695,37 +641,65 @@ export function BookingCalendar({
               className={inputClass}
             />
           </label>
-          <label className="grid gap-2 text-xs font-bold">
-            Customer name
-            <input
-              key={`name-${selectedCustomer}`}
-              name="customerName"
-              required
-              defaultValue={customer?.name || ""}
-              className={inputClass}
-            />
-          </label>
-          <label className="grid gap-2 text-xs font-bold">
-            Customer phone
-            <input
-              key={`phone-${selectedCustomer}`}
-              name="customerPhone"
-              required
-              type="tel"
-              defaultValue={customer?.phone || ""}
-              className={inputClass}
-            />
-          </label>
-          <label className="grid gap-2 text-xs font-bold">
-            Customer email
-            <input
-              key={`email-${selectedCustomer}`}
-              name="customerEmail"
-              type="email"
-              defaultValue={customer?.email || ""}
-              className={inputClass}
-            />
-          </label>
+          <fieldset className="grid gap-4 rounded-2xl border border-black/5 bg-pink-light/20 p-4">
+            <legend className="px-1 text-xs font-bold text-black/55">Customer details</legend>
+            <div className="grid gap-2 text-xs font-bold">
+              <label htmlFor="bookingCustomerLookup">Find an existing customer</label>
+              <span className="relative">
+                <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" />
+                <input
+                  id="bookingCustomerLookup"
+                  value={customerQuery}
+                  onFocus={() => setShowCustomerLookup(true)}
+                  onChange={(event) => {
+                    setCustomerQuery(event.target.value);
+                    setShowCustomerLookup(true);
+                  }}
+                  placeholder="Search name, phone or email"
+                  autoComplete="off"
+                  className={`${inputClass} pl-11 pr-10`}
+                />
+                {customerQuery && (
+                  <button type="button" onClick={clearCustomerSelection} aria-label="Clear customer search" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-black/35 hover:bg-white hover:text-pink">
+                    <X size={13} />
+                  </button>
+                )}
+                {showCustomerLookup && normalizedCustomerQuery && (
+                  <span className="absolute z-30 mt-2 block max-h-72 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-2 shadow-luxe">
+                    {matchingCustomers.length ? matchingCustomers.map((item) => (
+                      <button key={item.id} type="button" onClick={() => selectCustomer(item)} className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-pink-light/40">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-pink-light text-pink"><UserRound size={14} /></span>
+                        <span className="min-w-0">
+                          <strong className="block truncate text-sm">{item.name}</strong>
+                          <small className="block truncate font-medium text-black/45">{[item.phone, item.email].filter(Boolean).join(" · ")}</small>
+                        </span>
+                      </button>
+                    )) : (
+                      <span className="block px-3 py-4 text-xs font-medium text-black/45">No matching customer. Enter details below to create one.</span>
+                    )}
+                  </span>
+                )}
+              </span>
+              {customer && (
+                <span className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-[11px]">
+                  <span><strong className="block">Selected: {customer.name}</strong>{customer.phone}</span>
+                  <button type="button" onClick={clearCustomerSelection} className="ml-3 shrink-0 font-bold text-pink">New customer</button>
+                </span>
+              )}
+            </div>
+            <label className="grid gap-2 text-xs font-bold">
+              Customer name
+              <input key={`name-${selectedCustomer}`} name="customerName" required defaultValue={customer?.name || ""} className={inputClass} />
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Customer phone
+              <input key={`phone-${selectedCustomer}`} name="customerPhone" required type="tel" defaultValue={customer?.phone || ""} className={inputClass} />
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Customer email
+              <input key={`email-${selectedCustomer}`} name="customerEmail" type="email" defaultValue={customer?.email || ""} className={inputClass} />
+            </label>
+          </fieldset>
           <label className="grid gap-2 text-xs font-bold">
             Gender
             <select
