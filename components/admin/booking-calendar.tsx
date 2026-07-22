@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -81,6 +81,121 @@ type BookingResponse = {
 };
 type DeleteBookingResponse = { deleted?: { id: string }; error?: string };
 
+type TreatmentPickerProps = {
+  services: CalendarService[];
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function TreatmentPicker({ services, value, onChange }: TreatmentPickerProps) {
+  const optionsId = useId();
+  const selected = services.find((service) => service.id === value);
+  const [query, setQuery] = useState(selected?.title || (value === MANUAL ? "Other / enter manually" : ""));
+  const [open, setOpen] = useState(false);
+  const normalizedQuery = query.trim().toLowerCase();
+  const matches = useMemo(
+    () =>
+      services
+        .filter((service) =>
+          [service.title, service.kind, service.duration].some((field) =>
+            field.toLowerCase().includes(normalizedQuery),
+          ),
+        )
+        .slice(0, 20),
+    [normalizedQuery, services],
+  );
+
+  function choose(service: CalendarService) {
+    onChange(service.id);
+    setQuery(service.title);
+    setOpen(false);
+  }
+
+  return (
+    <span className="relative block">
+      <input type="hidden" name="serviceId" value={value} />
+      <span className="relative block">
+        <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" size={16} />
+        <input
+          required
+          type="search"
+          role="combobox"
+          aria-expanded={open}
+          aria-autocomplete="list"
+          aria-controls={optionsId}
+          placeholder="Search treatments, e.g. Laser"
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            onChange("");
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onBlur={() => window.setTimeout(() => setOpen(false), 150)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setOpen(false);
+            if (event.key === "Enter" && open && matches[0]) {
+              event.preventDefault();
+              choose(matches[0]);
+            }
+          }}
+          className={`${inputClass} pl-11 pr-10`}
+        />
+        {query && (
+          <button
+            type="button"
+            aria-label="Clear treatment search"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              setQuery("");
+              onChange("");
+              setOpen(true);
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-black/35 hover:bg-black/5 hover:text-black"
+          >
+            <X size={15} />
+          </button>
+        )}
+      </span>
+      {open && (
+        <span id={optionsId} role="listbox" className="absolute z-30 mt-2 max-h-72 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-1.5 shadow-xl">
+          {matches.length ? matches.map((service) => (
+            <button
+              key={service.id}
+              type="button"
+              role="option"
+              aria-selected={service.id === value}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => choose(service)}
+              className="block w-full rounded-lg px-3 py-2.5 text-left hover:bg-pink-light/40"
+            >
+              <strong className="block text-sm">{service.title}</strong>
+              <small className="block font-medium text-black/45">{service.kind} · {service.duration}</small>
+            </button>
+          )) : (
+            <span className="block px-3 py-4 text-xs font-medium text-black/45">No matching treatments.</span>
+          )}
+          <button
+            type="button"
+            role="option"
+            aria-selected={value === MANUAL}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onChange(MANUAL);
+              setQuery("Other / enter manually");
+              setOpen(false);
+            }}
+            className="mt-1 block w-full rounded-lg border-t border-black/5 px-3 py-2.5 text-left text-sm font-bold text-pink hover:bg-pink-light/40"
+          >
+            Other / enter manually
+          </button>
+        </span>
+      )}
+      {selected && <small className="mt-1.5 block font-medium text-black/45">Selected: {selected.title}</small>}
+    </span>
+  );
+}
+
 export function BookingCalendar({
   initialBookings,
   customers,
@@ -99,6 +214,7 @@ export function BookingCalendar({
   const [formTreatmentName, setFormTreatmentName] = useState("");
   const [formPractitionerName, setFormPractitionerName] = useState("");
   const [formStartsAt, setFormStartsAt] = useState("");
+  const [formPickerVersion, setFormPickerVersion] = useState(0);
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [customerQuery, setCustomerQuery] = useState("");
   const [showCustomerLookup, setShowCustomerLookup] = useState(false);
@@ -281,8 +397,12 @@ export function BookingCalendar({
   async function create(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
-    setMessage({ type: "saving" });
     const form = new FormData(formElement);
+    if (!form.get("serviceId")) {
+      setMessage({ type: "error", message: "Search for and select a treatment." });
+      return;
+    }
+    setMessage({ type: "saving" });
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -327,6 +447,7 @@ export function BookingCalendar({
     formElement.reset();
     setFormBranch(branches[0]?.id || "");
     setFormService("");
+    setFormPickerVersion((version) => version + 1);
     setFormStaff("");
     setFormTreatmentName("");
     setFormPractitionerName("");
@@ -338,6 +459,10 @@ export function BookingCalendar({
     event.preventDefault();
     if (!editing) return;
     const form = new FormData(event.currentTarget);
+    if (!form.get("serviceId")) {
+      setEditMessage({ type: "error", message: "Search for and select a treatment." });
+      return;
+    }
     const updated = await save(
       {
         id: editing.id,
@@ -489,24 +614,15 @@ export function BookingCalendar({
           </label>
           <label className="grid gap-2 text-xs font-bold">
             Treatment
-            <select
-              required
-              name="serviceId"
+            <TreatmentPicker
+              key={`${formBranch}:${formPickerVersion}`}
+              services={branchServices}
               value={formService}
-              onChange={(e) => {
-                setFormService(e.target.value);
+              onChange={(value) => {
+                setFormService(value);
                 setFormStaff("");
               }}
-              className={inputClass}
-            >
-              <option value="">Select treatment</option>
-              {branchServices.map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.title} · {service.kind} · {service.duration}
-                </option>
-              ))}
-              <option value={MANUAL}>Other / enter manually</option>
-            </select>
+            />
           </label>
           {formService === MANUAL && (
             <div className="grid grid-cols-[1fr_110px] gap-3">
@@ -850,19 +966,12 @@ export function BookingCalendar({
               </label>
               <label className="grid gap-2 text-xs font-bold">
                 Treatment
-                <select
-                  name="serviceId"
+                <TreatmentPicker
+                  key={`${editing.id}:${editBranch}`}
+                  services={editBranchServices}
                   value={editService}
-                  onChange={(e) => setEditService(e.target.value)}
-                  className={inputClass}
-                >
-                  {editBranchServices.map((service) => (
-                    <option key={service.id} value={service.id}>
-                      {service.title} · {service.kind}
-                    </option>
-                  ))}
-                  <option value={MANUAL}>Other / enter manually</option>
-                </select>
+                  onChange={setEditService}
+                />
               </label>
               {editService === MANUAL && (
                 <>
