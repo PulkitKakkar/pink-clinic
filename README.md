@@ -85,6 +85,12 @@ Customers receive a confirmation when a booking is created and reminders approxi
 
 The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. When the Twilio environment variables are used without a webhook, the app sends SMS directly and does not send email notifications. Delivery records prevent duplicate reminders across concurrent production instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
 
+Configure the Twilio number's incoming-message webhook to send `POST` requests
+to `/api/notifications/sms/incoming`. Standard STOP keywords are recorded and
+withdraw promotional consent for every customer record with the matching phone
+number. This opt-out applies only to promotional SMS; transactional booking
+confirmations, changes, cancellations and reminders continue to be sent.
+
 Consultation submissions use local JSON in development and PostgreSQL in production when `DATABASE_URL` is configured. Run `npm run db:migrate` after pulling consultation changes so the `consultations` table exists before staff use the digital forms.
 
 Original supplied consultation PDFs are stored in `private/admin-forms/` and served only through authenticated admin API routes.

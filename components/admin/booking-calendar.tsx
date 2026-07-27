@@ -28,6 +28,7 @@ import type { Branch } from "@/lib/branches";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
 
 const MANUAL = "manual";
+const BOOKING_DURATIONS = Array.from({ length: 8 }, (_, index) => (index + 1) * 15);
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 const statusStyle: Record<BookingStatus, string> = {
@@ -212,6 +213,7 @@ export function BookingCalendar({
   const [formService, setFormService] = useState("");
   const [formStaff, setFormStaff] = useState("");
   const [formTreatmentName, setFormTreatmentName] = useState("");
+  const [formDuration, setFormDuration] = useState(60);
   const [formPractitionerName, setFormPractitionerName] = useState("");
   const [formStartsAt, setFormStartsAt] = useState("");
   const [formPickerVersion, setFormPickerVersion] = useState(0);
@@ -222,6 +224,7 @@ export function BookingCalendar({
   const [editBranch, setEditBranch] = useState("");
   const [editService, setEditService] = useState("");
   const [editStaff, setEditStaff] = useState("");
+  const [editDuration, setEditDuration] = useState(60);
   const [message, setMessage] = useState<Message>({ type: "idle" });
   const [editMessage, setEditMessage] = useState<Message>({ type: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
@@ -327,6 +330,7 @@ export function BookingCalendar({
     setEditStaff(
       booking.staffId.startsWith("manual:") ? MANUAL : booking.staffId,
     );
+    setEditDuration(booking.durationMinutes);
     setEditMessage({ type: "idle" });
   }
 
@@ -450,6 +454,7 @@ export function BookingCalendar({
     setFormPickerVersion((version) => version + 1);
     setFormStaff("");
     setFormTreatmentName("");
+    setFormDuration(60);
     setFormPractitionerName("");
     setFormStartsAt("");
     clearCustomerSelection();
@@ -567,39 +572,48 @@ export function BookingCalendar({
               onChange={(value) => {
                 setFormService(value);
                 setFormStaff("");
+                const duration = services.find((service) => service.id === value)?.durationMinutes;
+                setFormDuration(
+                  duration && BOOKING_DURATIONS.includes(duration)
+                    ? duration
+                    : 60,
+                );
               }}
             />
           </label>
           {formService === MANUAL && (
-            <div className="grid grid-cols-[1fr_110px] gap-3">
-              <label className="grid gap-2 text-xs font-bold">
-                Treatment name
-                <input
-                  required
-                  name="treatmentName"
-                  value={formTreatmentName}
-                  onChange={(e) => setFormTreatmentName(e.target.value)}
-                  className={inputClass}
-                />
-              </label>
-              <label className="grid gap-2 text-xs font-bold">
-                Minutes
-                <input
-                  required
-                  name="durationMinutes"
-                  type="number"
-                  min="5"
-                  max="480"
-                  step="5"
-                  defaultValue="60"
-                  className={inputClass}
-                />
-              </label>
-            </div>
+            <label className="grid gap-2 text-xs font-bold">
+              Treatment name
+              <input
+                required
+                name="treatmentName"
+                value={formTreatmentName}
+                onChange={(e) => setFormTreatmentName(e.target.value)}
+                className={inputClass}
+              />
+            </label>
           )}
-          {formService !== MANUAL && (
-            <input type="hidden" name="durationMinutes" value={services.find((service) => service.id === formService)?.durationMinutes || 60} />
-          )}
+          <label className="grid gap-2 text-xs font-bold">
+            Appointment duration
+            <select
+              name="durationMinutes"
+              value={formDuration}
+              onChange={(event) => setFormDuration(Number(event.target.value))}
+              className={inputClass}
+            >
+              {BOOKING_DURATIONS.map((minutes) => (
+                <option key={minutes} value={minutes}>
+                  {minutes < 60
+                    ? `${minutes} minutes`
+                    : minutes === 60
+                      ? "1 hour"
+                      : minutes === 120
+                        ? "2 hours"
+                        : `1 hour ${minutes - 60} minutes`}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="grid gap-2 text-xs font-bold">
             Practitioner
             <select
@@ -699,45 +713,45 @@ export function BookingCalendar({
               Customer email
               <input key={`email-${selectedCustomer}`} name="customerEmail" type="email" defaultValue={customer?.email || ""} className={inputClass} />
             </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Gender
+              <select
+                key={`gender-${selectedCustomer}`}
+                name="customerGender"
+                defaultValue={customer?.gender || ""}
+                className={inputClass}
+              >
+                <option value="">Select gender</option>
+                <option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option>
+              </select>
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Customer address
+              <textarea
+                key={`address-${selectedCustomer}`}
+                name="customerAddress"
+                rows={2}
+                defaultValue={customer?.address || ""}
+                className={inputClass}
+              />
+            </label>
+            <label className="flex items-start gap-3 rounded-xl border border-black/5 bg-white p-4 text-xs leading-5">
+              <input
+                key={`consent-${selectedCustomer}`}
+                name="marketingConsent"
+                type="checkbox"
+                defaultChecked={customer?.marketingConsent || false}
+                className="mt-1 accent-pink"
+              />
+              <span>
+                <strong className="block">
+                  Customer agrees to promotional messages
+                </strong>
+                Optional GDPR consent for future offers by SMS or email. Leave
+                unticked if they say no.
+              </span>
+            </label>
           </fieldset>
-          <label className="grid gap-2 text-xs font-bold">
-            Gender
-            <select
-              key={`gender-${selectedCustomer}`}
-              name="customerGender"
-              defaultValue={customer?.gender || ""}
-              className={inputClass}
-            >
-              <option value="">Select gender</option>
-              <option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-xs font-bold">
-            Customer address
-            <textarea
-              key={`address-${selectedCustomer}`}
-              name="customerAddress"
-              rows={2}
-              defaultValue={customer?.address || ""}
-              className={inputClass}
-            />
-          </label>
-          <label className="flex items-start gap-3 rounded-xl border border-black/5 bg-pink-light/35 p-4 text-xs leading-5">
-            <input
-              key={`consent-${selectedCustomer}`}
-              name="marketingConsent"
-              type="checkbox"
-              defaultChecked={customer?.marketingConsent || false}
-              className="mt-1 accent-pink"
-            />
-            <span>
-              <strong className="block">
-                Customer agrees to promotional messages
-              </strong>
-              Optional GDPR consent for future offers by SMS or email. Leave
-              unticked if they say no.
-            </span>
-          </label>
           <label className="grid gap-2 text-xs font-bold">
             Appointment notes
             <textarea
@@ -776,7 +790,10 @@ export function BookingCalendar({
                   ? "Daily schedule"
                   : "Weekly schedule"}
             </h2>
-            <p className="mt-1 text-xs text-black/40">{title}</p>
+            <p className="mt-2 inline-flex items-center gap-2 rounded-xl bg-pink-light/50 px-3 py-2 text-sm font-bold text-ink">
+              <CalendarDays size={16} className="text-pink" />
+              {title}
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -944,38 +961,46 @@ export function BookingCalendar({
                   key={`${editing.id}:${editBranch}`}
                   services={editBranchServices}
                   value={editService}
-                  onChange={setEditService}
+                  onChange={(value) => {
+                    setEditService(value);
+                    const duration = services.find((service) => service.id === value)?.durationMinutes;
+                    if (duration && BOOKING_DURATIONS.includes(duration))
+                      setEditDuration(duration);
+                  }}
                 />
               </label>
               {editService === MANUAL && (
-                <>
-                  <label className="grid gap-2 text-xs font-bold">
-                    Treatment name
-                    <input
-                      required
-                      name="treatmentName"
-                      defaultValue={editing.treatmentName}
-                      className={inputClass}
-                    />
-                  </label>
-                  <label className="grid gap-2 text-xs font-bold">
-                    Duration in minutes
-                    <input
-                      required
-                      name="durationMinutes"
-                      type="number"
-                      min="5"
-                      max="480"
-                      step="5"
-                      defaultValue={editing.durationMinutes}
-                      className={inputClass}
-                    />
-                  </label>
-                </>
+                <label className="grid gap-2 text-xs font-bold">
+                  Treatment name
+                  <input
+                    required
+                    name="treatmentName"
+                    defaultValue={editing.treatmentName}
+                    className={inputClass}
+                  />
+                </label>
               )}
-              {editService !== MANUAL && (
-                <input type="hidden" name="durationMinutes" value={services.find((service) => service.id === editService)?.durationMinutes || editing.durationMinutes} />
-              )}
+              <label className="grid gap-2 text-xs font-bold">
+                Appointment duration
+                <select
+                  name="durationMinutes"
+                  value={editDuration}
+                  onChange={(event) => setEditDuration(Number(event.target.value))}
+                  className={inputClass}
+                >
+                  {BOOKING_DURATIONS.map((minutes) => (
+                    <option key={minutes} value={minutes}>
+                      {minutes < 60
+                        ? `${minutes} minutes`
+                        : minutes === 60
+                          ? "1 hour"
+                          : minutes === 120
+                            ? "2 hours"
+                            : `1 hour ${minutes - 60} minutes`}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <label className="grid gap-2 text-xs font-bold">
                 Practitioner
                 <select

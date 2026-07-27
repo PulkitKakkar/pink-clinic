@@ -41,11 +41,9 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
   const treatmentName = isManualService
     ? input.treatmentName?.trim()
     : catalogItem?.title || configuredService?.title;
-  const durationMinutes = isManualService
-    ? Number(input.durationMinutes)
-    : isCatalogService
-      ? Number(input.durationMinutes) || 60
-      : getServiceDuration(input.serviceId);
+  const durationMinutes =
+    Number(input.durationMinutes) ||
+    (isCatalogService ? 60 : getServiceDuration(input.serviceId));
   if (
     !treatmentName ||
     !durationMinutes ||
