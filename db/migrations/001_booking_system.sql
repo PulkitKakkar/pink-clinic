@@ -56,6 +56,17 @@ CREATE TABLE IF NOT EXISTS booking_notification_deliveries (
   UNIQUE (booking_id, notification_type, appointment_starts_at)
 );
 
+CREATE TABLE IF NOT EXISTS marketing_sms_opt_outs (
+  id uuid PRIMARY KEY,
+  phone text NOT NULL,
+  message text NOT NULL,
+  source text NOT NULL CHECK (source IN ('sms')),
+  received_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS marketing_sms_opt_outs_phone_idx
+  ON marketing_sms_opt_outs (phone);
+
 CREATE TABLE IF NOT EXISTS consultations (
   id uuid PRIMARY KEY,
   template_slug text NOT NULL,

@@ -41,10 +41,7 @@ type LocalDelivery = {
   updatedAt: string;
 };
 type DeliveryClaim = { id: string; claimed: boolean };
-const branchContactNumbers: Record<string, string> = {
-  "reading-watlington-street": "0118 402 8505",
-  "reading-west-street": "0118 996 2711",
-};
+const SMS_CONTACT_NUMBER = "+44 7715 277211";
 const branchNotificationNames: Record<string, string> = {
   "reading-watlington-street": "Watlington Street Reading",
   "reading-west-street": "West Street Reading",
@@ -57,8 +54,8 @@ function notificationLocation(booking: Booking) {
   return branchName ? `Pink, ${branchName}` : "Pink Beauty Salon";
 }
 
-function noReplyCopy(booking: Booking) {
-  return `Please do not reply to this message. If you need to contact us, call ${branchContactNumbers[booking.branchId] || "0118 402 8505"}.`;
+function noReplyCopy() {
+  return `For booking help, call ${SMS_CONTACT_NUMBER}. Reply STOP to opt out of promotional SMS only; booking confirmations and reminders will still be sent.`;
 }
 
 function notificationCopy(booking: Booking, type: BookingNotificationType) {
@@ -72,7 +69,7 @@ function notificationCopy(booking: Booking, type: BookingNotificationType) {
     minute: "2-digit",
   });
   const details = `${booking.treatmentName} with ${booking.practitionerName} at ${notificationLocation(booking)} on ${appointment}.`;
-  const footer = noReplyCopy(booking);
+  const footer = noReplyCopy();
   if (type === "booking-confirmation")
     return {
       subject: "Your Pink Beauty booking is confirmed",
