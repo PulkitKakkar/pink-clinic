@@ -53,7 +53,7 @@ export const searchItems: SearchItem[] = [
     title: item.title,
     description: item.description || `Available from Pink Beauty West Street in ${item.tags[0] || item.kind}.`,
     category: item.kind === "course" ? "Course" : item.kind === "product" ? "Product" : "Service",
-    href: `/products-services/reading-west-st/${item.handle}`,
+    href: `/products-services/item/${item.handle}`,
     keywords: [item.kind, ...item.tags],
   })),
   { id: "page-services", title: "Our Services", description: "Explore beauty and aesthetic treatments.", category: "Page", href: "/#services", keywords: ["treatments", "facials", "aesthetics"] },

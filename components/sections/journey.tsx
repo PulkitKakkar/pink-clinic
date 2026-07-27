@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
 const cards = [
-  { title: "Treatments", href: "/treatments/select-branch", description: "Advanced beauty and aesthetic treatments designed to help you look and feel your best.", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1400&q=85", label: "Explore treatments", number: "01" },
+  { title: "Treatments", href: "/products-services", description: "Advanced beauty and aesthetic treatments designed to help you look and feel your best.", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1400&q=85", label: "Explore treatments", number: "01" },
   { title: "Courses", href: "/courses", description: "Professional beauty training and accredited courses for the next generation of specialists.", image: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1400&q=85", label: "Explore courses", number: "02" },
 ];
 
