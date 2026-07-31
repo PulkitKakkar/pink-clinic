@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Instagram } from "lucide-react";
+import { Camera as Instagram } from "lucide-react";
 import { locations } from "@/lib/content";
 import { getInstagramPosts, type InstagramPost } from "@/lib/instagram";
 

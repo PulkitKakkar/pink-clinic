@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, MapPin, Phone } from "lucide-react";
+import { Camera as Instagram, MapPin, Phone } from "lucide-react";
 import { appVersion } from "@/lib/app-version";
 import { locations } from "@/lib/content";
 
@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="bg-[#16010d] py-10 text-white sm:py-16">
       <div className="container-site grid gap-8 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
         <div><p className="font-display text-4xl">pink beauty</p><p className="mt-5 max-w-xs text-sm leading-7 text-white/55">Pink Beauty Salon & Academy and Pink Beauty Clinic — expert beauty, aesthetics and accredited training in Reading.</p></div>
-        <div><p className="text-xs font-bold uppercase tracking-[.2em] text-pink">Explore</p><div className="mt-5 grid gap-3 text-sm text-white/65"><Link href="/treatments/select-branch">Treatments</Link><Link href="/courses">Academy courses</Link><Link href="/#reviews">Reviews</Link><Link href="/contact">Contact</Link></div></div>
+        <div><p className="text-xs font-bold uppercase tracking-[.2em] text-pink">Explore</p><div className="mt-5 grid gap-3 text-sm text-white/65"><Link href="/products-services">Treatments</Link><Link href="/courses">Academy courses</Link><Link href="/#reviews">Reviews</Link><Link href="/contact">Contact</Link></div></div>
         <div><p className="text-xs font-bold uppercase tracking-[.2em] text-pink">Visit us</p><div className="mt-5 grid gap-4">{locations.map(location => <Link key={location.slug} href={`/locations/${location.slug}`} className="flex gap-3 text-sm leading-6 text-white/65"><MapPin size={16} className="mt-1 shrink-0 text-pink" />{location.address}</Link>)}</div></div>
         <div><p className="text-xs font-bold uppercase tracking-[.2em] text-pink">Connect</p><div className="mt-5 grid gap-3">{locations.map(location => <a key={`${location.id}-phone`} href={`tel:${location.phone.replaceAll(" ", "")}`} className="flex items-center gap-3 text-sm text-white/65"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/15"><Phone size={16} /></span>Call {location.name}</a>)}{locations.map(location => <a key={location.id} href={location.instagramUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-sm text-white/65 transition hover:text-white"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/15"><Instagram size={16} /></span>{location.name} Instagram</a>)}</div></div>
       </div>

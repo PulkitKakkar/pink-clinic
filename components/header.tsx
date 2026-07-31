@@ -7,18 +7,11 @@ import { useEffect, useState } from "react";
 import { BranchSwitcher } from "@/components/branch-switcher";
 import { SiteSearch } from "@/components/site-search";
 import { BasketLink } from "@/components/basket-link";
-import { useBranch } from "@/components/providers/branch-provider";
 
-const baseLinks = [["Treatments", "/treatments/select-branch"], ["Academy", "/courses"], ["Reviews", "/#reviews"], ["Our Team", "/#team"], ["Locations", "/locations"]];
+const links = [["Treatments", "/products-services"], ["Find a Treatment", "/treatment-finder"], ["Academy", "/courses"], ["Reviews", "/#reviews"], ["Our Team", "/#team"], ["Locations", "/locations"]];
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const { selectedBranch } = useBranch();
-  const links = [
-    baseLinks[0],
-    ["Products & Services", selectedBranch ? `/products-services/${selectedBranch.slug}` : "/treatments/select-branch"],
-    ...baseLinks.slice(1),
-  ];
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;

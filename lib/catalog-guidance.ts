@@ -6,7 +6,29 @@ export type CatalogGuidance = {
   preparation: string[];
   aftercare: string[];
   suitabilityNote: string;
+  expectedResults: string[];
+  treatmentAreas: string[];
+  duration: string;
+  downtime: string;
+  sessions: string;
+  faqs: { question: string; answer: string }[];
 };
+
+const sharedFaqs = [
+  { question: "Will I need a consultation?", answer: "Many advanced treatments require a consultation, health screening or patch test. The Pink team will confirm this before your appointment." },
+  { question: "Are results guaranteed?", answer: "No. Response, downtime and the number of appointments needed vary between individuals. Your practitioner will discuss realistic expectations with you." },
+];
+
+function details(item: CatalogItem, defaults: Pick<CatalogGuidance, "expectedResults" | "treatmentAreas" | "duration" | "downtime" | "sessions" | "faqs">) {
+  return {
+    expectedResults: item.expectedResults?.length ? item.expectedResults : defaults.expectedResults,
+    treatmentAreas: item.treatmentAreas?.length ? item.treatmentAreas : defaults.treatmentAreas,
+    duration: item.duration || defaults.duration,
+    downtime: item.downtime || defaults.downtime,
+    sessions: item.sessions || defaults.sessions,
+    faqs: item.faqs?.length ? item.faqs : defaults.faqs,
+  };
+}
 
 export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
   const text = `${item.title} ${item.tags.join(" ")}`.toLowerCase();
@@ -17,6 +39,7 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Read the packaging and supplied instructions before first use.", "Patch test where the manufacturer recommends it.", "Start only with the suggested amount and frequency."],
     aftercare: ["Stop using the product if irritation occurs and seek appropriate advice.", "Store and use the product exactly as directed.", "Contact the salon if you need help with your recommended routine."],
     suitabilityNote: "Product suitability varies. Packaging instructions and advice from an appropriately qualified professional take priority over this general guide.",
+    ...details(item, { expectedResults: ["Support your recommended home-care routine"], treatmentAreas: ["As directed on the product packaging"], duration: "Used as directed", downtime: "Not applicable", sessions: "Ongoing use as recommended", faqs: [{ question: "Can I combine this with my current products?", answer: "Ask the Pink team before combining active or prescription skincare, and always follow the manufacturer’s instructions." }] }),
   };
 
   if (item.kind === "course") return {
@@ -25,6 +48,7 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Read the joining information supplied by the academy.", "Tell the educator about any accessibility or learning requirements.", "Arrive ready for both theory and supervised practical work where applicable."],
     aftercare: ["Retain your course notes and follow the taught protocols.", "Complete any required case studies or assessments.", "Contact the academy before offering a new treatment if you are unsure about insurance or qualification requirements."],
     suitabilityNote: "Course completion does not replace any licence, insurance or professional registration required for your intended work.",
+    ...details(item, { expectedResults: ["Structured practical learning", "Support toward the stated course outcome"], treatmentAreas: ["Theory and practical learning as outlined by the academy"], duration: "Confirmed before enrolment", downtime: "Not applicable", sessions: "Course schedule confirmed by Pink Academy", faqs: [{ question: "Do I need a previous qualification?", answer: "Entry requirements vary. Pink Academy will confirm prerequisites, assessment and kit requirements before enrolment." }] }),
   };
 
   if (/(injection|filler|anti wrinkle|iv drip|lemon bottle)/.test(text)) return {
@@ -33,6 +57,7 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Follow only the personalised instructions supplied by your practitioner.", "Do not stop prescribed medication unless the prescriber tells you to.", "Allow time to discuss expected outcomes, alternatives and possible side effects."],
     aftercare: ["Follow the written aftercare supplied at your appointment.", "Contact the clinic if you have concerns or symptoms outside those discussed.", "Seek urgent medical help for any severe or rapidly worsening reaction."],
     suitabilityNote: "Information on this page is general and is not medical advice. No result can be guaranteed.",
+    ...details(item, { expectedResults: ["A result tailored to the agreed treatment goal", "A considered, natural-looking approach where appropriate"], treatmentAreas: ["Confirmed during consultation"], duration: "Usually 30–60 minutes", downtime: "Varies by treatment and individual response", sessions: "Recommended after consultation", faqs: sharedFaqs }),
   };
 
   if (/(laser|morpheus|microneed|peel|rejuvenation|hydrafacial|facial)/.test(text)) return {
@@ -41,6 +66,7 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Follow the pre-treatment instructions supplied after consultation.", "Avoid introducing unfamiliar active skincare immediately before the appointment.", "Arrive with the treatment area clean where practical."],
     aftercare: ["Use the skincare and sun-protection advice supplied by your practitioner.", "Avoid picking, rubbing or using unapproved active products on a sensitised area.", "Contact the clinic if you are concerned about your recovery."],
     suitabilityNote: "Response, downtime and number of appointments vary by individual. Results are not guaranteed.",
+    ...details(item, { expectedResults: ["Support clearer, brighter-looking skin", "Improve the appearance of tone or texture"], treatmentAreas: ["Face", "Neck or body areas where suitable"], duration: "Usually 30–60 minutes", downtime: "Varies from minimal to several days depending on treatment", sessions: "A course may be recommended after consultation", faqs: sharedFaqs }),
   };
 
   if (/(piercing)/.test(text)) return {
@@ -49,6 +75,7 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Eat and hydrate normally before your appointment.", "Keep the intended area clean and free from products where practical.", "Plan around activities that could disturb a new piercing."],
     aftercare: ["Follow the written cleaning and jewellery guidance supplied by the practitioner.", "Avoid unnecessary touching or changing jewellery before healing guidance allows.", "Seek advice promptly if you are concerned about infection or healing."],
     suitabilityNote: "Healing times vary by placement and individual. The practitioner’s written aftercare takes priority.",
+    ...details(item, { expectedResults: ["Professional placement with suitable jewellery"], treatmentAreas: ["Placement confirmed in person"], duration: "Usually 15–30 minutes", downtime: "Healing time varies by placement", sessions: "One appointment with aftercare support", faqs: [{ question: "Can anyone book a piercing?", answer: "Age, identification and consent requirements vary by placement. Contact the salon if you are unsure before booking." }] }),
   };
 
   return {
@@ -57,5 +84,6 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
     preparation: ["Follow any appointment instructions sent by the salon.", "Arrive with the relevant area clean where practical.", "Contact us before attending if you are unsure whether the service is suitable."],
     aftercare: ["Follow the personalised advice given at your appointment.", "Use only recommended products on a sensitive treatment area.", "Contact the salon if you have concerns after your service."],
     suitabilityNote: "This is general guidance. Your practitioner or therapist may give different instructions based on the service and your individual circumstances.",
+    ...details(item, { expectedResults: ["A finish tailored to your preferences"], treatmentAreas: ["Confirmed when booking"], duration: "Varies by selected option", downtime: "Usually minimal; individual response varies", sessions: "Book as needed or as advised", faqs: [{ question: "How do I choose the right option?", answer: "Select the closest option when booking. The Pink team can confirm the most suitable service before your appointment." }] }),
   };
 }
