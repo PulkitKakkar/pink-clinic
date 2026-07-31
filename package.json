@@ -26,18 +26,18 @@
     "db:migrate": "psql \"$DATABASE_URL\" -f db/migrations/001_booking_system.sql"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1085.0",
-    "@aws-sdk/s3-request-presigner": "^3.1085.0",
-    "@sanity/client": "^7.24.0",
+    "@aws-sdk/client-s3": "^3.1096.0",
+    "@aws-sdk/s3-request-presigner": "^3.1096.0",
+    "@sanity/client": "^7.25.0",
     "@sanity/image-url": "^2.1.1",
     "framer-motion": "^12.23.24",
-    "lucide-react": "^0.468.0",
-    "next": "^16.2.11",
-    "next-sanity": "^13.1.5",
-    "postgres": "^3.4.7",
+    "lucide-react": "^1.27.0",
+    "next": "^16.2.12",
+    "next-sanity": "^13.2.2",
+    "postgres": "^3.4.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "sanity": "^6.5.0",
+    "sanity": "^6.6.0",
     "styled-components": "^6.4.4"
   },
   "devDependencies": {
