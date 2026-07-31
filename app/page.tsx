@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { AppointmentCta } from "@/components/sections/cta";
 import { Hero } from "@/components/sections/hero";
-import { InstagramFeed } from "@/components/sections/instagram";
+import { LocationComparison } from "@/components/sections/location-comparison";
 import { OffersCarousel } from "@/components/sections/offers-carousel";
-import { PinkStory } from "@/components/sections/pink-story";
 import { Reviews } from "@/components/sections/reviews";
-import { Team } from "@/components/sections/team";
 import { TreatmentConcerns } from "@/components/sections/treatment-concerns";
-import { WhyPink } from "@/components/sections/why-pink";
+import { TreatmentFinderPrompt } from "@/components/sections/treatment-finder-prompt";
 import { locations, offers } from "@/lib/content";
 import { getCombinedCatalog } from "@/lib/catalog";
 import { matchesConcern, treatmentConcerns } from "@/lib/concerns";
@@ -60,13 +58,11 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <Hero />
-      <PinkStory />
       <TreatmentConcerns concerns={concerns} />
-      <WhyPink />
-      <OffersCarousel offers={offers} />
+      <TreatmentFinderPrompt />
       <Reviews />
-      <Team />
-      <InstagramFeed />
+      <OffersCarousel offers={offers} />
+      <LocationComparison />
       <AppointmentCta />
     </main>
   );

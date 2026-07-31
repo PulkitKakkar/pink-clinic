@@ -19,19 +19,22 @@ export function Hero() {
         <div className="max-w-3xl">
           <div className="mb-5 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[.28em] text-white/75 sm:mb-8 sm:text-[10px]">
             <span className="h-px w-8 bg-pink" />
-            Advanced skin & aesthetics · Reading
+            Our story
           </div>
           <h1 className="font-display text-[clamp(3.6rem,10vw,8rem)] leading-[.82] tracking-[-.065em]">
-            Advanced skin.
+            Born in Reading.
             <br />
-            <span className="text-pink">Aesthetics.</span>
+            <span className="text-pink">Built around</span>
             <br />
-            Made personal.
+            confidence.
           </h1>
           <p className="mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">
-            Consultation-led treatments for lines, pigmentation, skin quality,
-            acne, unwanted hair and body concerns—across two trusted Reading
-            locations.
+            From our first Reading salon to two specialist destinations, Pink
+            brings together advanced aesthetics and expert beauty with one
+            personal standard of care.
+          </p>
+          <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
+            Advanced skin and aesthetic treatments across two Reading locations
           </p>
           <div className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
             <Link href="/#treatment-concerns" className="button-primary">
@@ -41,17 +44,16 @@ export function Hero() {
               Help me choose
             </Link>
           </div>
-          <a
-            href="#reviews"
-            className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs"
-          >
+          <div className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs">
             <span className="flex text-[#ffcb69]">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} size={12} fill="currentColor" />
               ))}
             </span>
-            <span className="font-bold text-white">Read client reviews</span>
-          </a>
+            <span className="font-bold text-white">
+              Trusted by clients across both Reading locations
+            </span>
+          </div>
         </div>
       </div>
       <a
