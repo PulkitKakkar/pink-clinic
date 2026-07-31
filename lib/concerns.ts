@@ -102,11 +102,20 @@ export const treatmentConcerns: TreatmentConcern[] = [
   },
   {
     slug: "skin-boosters",
-    name: "Skin booster treatments",
-    shortName: "Skin boosters",
+    name: "Skin hydration and rejuvenation treatments",
+    shortName: "Skin hydration & rejuvenation",
     description:
       "Hydration and rejuvenation treatments selected around your skin quality, texture and radiance goals.",
-    terms: ["jalupro", "morpheus8", "skin rejuvenation", "hydrafacial"],
+    terms: [
+      "jalupro",
+      "morpheus8",
+      "skin rejuvenation",
+      "hydrafacial",
+      "chemical peel",
+      "dermaplaning",
+      "micro needling",
+      "microdermabrasion",
+    ],
     goals: [
       "Improve hydration",
       "Support skin quality",
@@ -149,7 +158,7 @@ export const treatmentConcerns: TreatmentConcern[] = [
     shortName: "Acne & texture",
     description:
       "A consultation-led approach to congestion, post-acne marks, scarring and uneven skin texture.",
-    terms: ["acne", "scar", "carbon peel", "morpheus8", "advanced skincare"],
+    terms: ["acne", "scar", "carbon peel", "morpheus8"],
     goals: [
       "Refine uneven texture",
       "Support clearer-looking skin",
@@ -235,7 +244,7 @@ export const treatmentConcerns: TreatmentConcern[] = [
     shortName: "Body contouring",
     description:
       "Consultation-led treatments for targeted body goals, selected only after an individual suitability assessment.",
-    terms: ["lemon bottle", "body treatment", "body bleaching"],
+    terms: ["lemon bottle"],
     goals: [
       "Discuss targeted areas",
       "Explore non-surgical options",
@@ -307,9 +316,9 @@ export type BeautyServiceArea = {
 export const beautyServiceAreas: BeautyServiceArea[] = [
   {
     slug: "facials-skin-maintenance",
-    name: "Facials & skin maintenance",
-    description: "Glow, hydration and routine skin appointments.",
-    terms: ["facial", "eye firming"],
+    name: "Facials, body & skin maintenance",
+    description: "Glow, hydration and routine face or body appointments.",
+    terms: ["facial", "eye firming", "body treatment", "body bleaching"],
   },
   {
     slug: "hair",
