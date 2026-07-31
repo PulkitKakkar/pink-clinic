@@ -18,7 +18,7 @@ function getPriceDisplay(item: CatalogItem) {
   return { current: `${hasRange ? "From " : ""}£${cheapest.price.toFixed(2)}`, original };
 }
 
-export function CatalogBrowser({ items, branchId, branchSlug, hideTypeFilters = false, collectionEyebrow = "Our services", collectionTitle = "Browse collections" }: { items: CatalogItem[]; branchId: string; branchSlug: string; hideTypeFilters?: boolean; collectionEyebrow?: string; collectionTitle?: string }) {
+export function CatalogBrowser({ items, branchId = "", branchSlug = "", combined = false, hideTypeFilters = false, collectionEyebrow = "Our services", collectionTitle = "Browse collections" }: { items: CatalogItem[]; branchId?: string; branchSlug?: string; combined?: boolean; hideTypeFilters?: boolean; collectionEyebrow?: string; collectionTitle?: string }) {
   const { addItem, items: basketItems } = useBasket();
   const collections = useMemo(() => [...new Set(items.flatMap((item) => item.tags))].filter(Boolean).sort((a, b) => a === "Offers" ? -1 : b === "Offers" ? 1 : a.localeCompare(b)), [items]);
   const [type, setType] = useState("all");
@@ -74,6 +74,7 @@ export function CatalogBrowser({ items, branchId, branchSlug, hideTypeFilters = 
     <p className="my-5 text-xs text-black/45">{filtered.length} result{filtered.length === 1 ? "" : "s"} · showing {Math.min(visibleCount, filtered.length)}</p>
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {filtered.slice(0, visibleCount).map((item, index) => {
+        const itemHref = combined ? `/products-services/item/${item.handle}` : `/products-services/${branchSlug}/${item.handle}`;
         const price = getPriceDisplay(item);
         const variants = item.variants.filter((variant) => Number.isFinite(variant.price) && variant.price > 0);
         const variantIndex = selectedVariants[item.handle] || 0;
@@ -81,13 +82,16 @@ export function CatalogBrowser({ items, branchId, branchSlug, hideTypeFilters = 
         const justAdded = addedItem === `${item.handle}:${selected?.name}`;
         const inBasket = basketItems.some((basketItem) => basketItem.branchId === branchId && basketItem.handle === item.handle);
         return <article key={item.handle} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-soft">
-          <Link href={`/products-services/${branchSlug}/${item.handle}`} className="relative block aspect-[4/3] overflow-hidden bg-pink-light"><Image src={item.images[0]} alt={item.title} fill priority={index === 0} className="object-cover transition duration-500 group-hover:scale-105" sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw" /></Link>
+          <Link href={itemHref} className="relative block aspect-[4/3] overflow-hidden bg-pink-light"><Image src={item.images[0]} alt={item.title} fill priority={index === 0} className="object-cover transition duration-500 group-hover:scale-105" sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw" /></Link>
           <div className="flex flex-1 flex-col p-5">
             <p className="text-[9px] font-bold uppercase tracking-[.16em] text-pink">{item.tags[0] || typeLabels[item.kind]}</p>
-            <h2 className="mt-2 font-display text-2xl leading-none"><Link href={`/products-services/${branchSlug}/${item.handle}`} className="transition hover:text-pink">{item.title}</Link></h2>
+            <h2 className="mt-2 font-display text-2xl leading-none"><Link href={itemHref} className="transition hover:text-pink">{item.title}</Link></h2>
             <div className="mt-3 flex items-baseline gap-2"><p className="text-sm font-bold text-pink">{price.current}</p>{price.original && <p className="text-xs text-black/40 line-through" aria-label={`Original price ${price.original}`}>{price.original}</p>}</div>
+            {combined && <Link href={itemHref} className="mt-auto inline-flex min-h-10 items-center justify-center rounded-full bg-pink px-4 text-xs font-bold text-white transition hover:bg-pink-dark">View branch prices</Link>}
+            {!combined && <>
             {variants.length > 1 && <label className="mt-4 grid gap-1.5 text-[9px] font-bold uppercase tracking-[.12em] text-black/40">Choose option<select value={variantIndex} onChange={(event) => setSelectedVariants((current) => ({ ...current, [item.handle]: Number(event.target.value) }))} className="rounded-xl border border-black/10 bg-cream px-3 py-2.5 text-xs font-bold normal-case tracking-normal text-ink outline-none focus:border-pink">{variants.map((variant, index) => <option key={variant.name} value={index}>{variant.name} · £{variant.price.toFixed(2)}</option>)}</select></label>}
             {variants.length ? <div className="mt-auto grid gap-2 pt-4"><button type="button" onClick={() => addCatalogItem(item, variants)} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-pink px-4 text-xs font-bold text-white transition hover:bg-pink-dark">{justAdded ? <><Check size={14} /> Added</> : <><ShoppingBag size={14} /> Add to basket</>}</button>{inBasket ? <Link href="/basket" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-pink/20 bg-pink-light/50 px-4 text-xs font-bold text-pink"><ShoppingBag size={14} /> View basket</Link> : <Link href={`/checkout/${branchSlug}/catalog/${encodeURIComponent(item.handle)}`} className="text-center text-[10px] font-bold text-pink underline underline-offset-4">Buy now</Link>}</div> : <Link href={`/contact?branchId=${branchId}&catalogItem=${encodeURIComponent(item.handle)}`} className="mt-auto inline-flex pt-5 text-xs font-bold text-pink underline underline-offset-4">Enquire</Link>}
+            </>}
           </div>
         </article>;
       })}

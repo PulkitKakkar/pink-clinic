@@ -1,6 +1,7 @@
 import westStreetCatalog from "@/data/west-street-catalog.json";
 import watlingtonStreetCatalog from "@/data/watlington-street-catalog.json";
 import { sanityClient } from "@/lib/sanity/client";
+import { branches, type Branch } from "@/lib/branches";
 
 export type CatalogVariant = { name: string; price: number; compareAtPrice?: number | null; sku?: string | null };
 export type CatalogItem = {
@@ -11,6 +12,11 @@ export type CatalogItem = {
   tags: string[];
   images: string[];
   variants: CatalogVariant[];
+};
+
+export type BranchCatalogItem = { branch: Branch; item: CatalogItem };
+export type CombinedCatalogItem = CatalogItem & {
+  branchItems: BranchCatalogItem[];
 };
 
 const fallbackByBranch: Record<string, CatalogItem[]> = {
@@ -70,4 +76,31 @@ export async function getBranchCatalog(branchSlug: string): Promise<CatalogItem[
   } catch {
     return branchFallback;
   }
+}
+
+export async function getCombinedCatalog(): Promise<CombinedCatalogItem[]> {
+  const branchCatalogs = await Promise.all(
+    branches.map(async (branch) => ({
+      branch,
+      items: await getBranchCatalog(branch.slug),
+    })),
+  );
+  const combined = new Map<string, CombinedCatalogItem>();
+  for (const { branch, items } of branchCatalogs) {
+    for (const item of items) {
+      const current = combined.get(item.handle);
+      if (!current) {
+        combined.set(item.handle, {
+          ...item,
+          branchItems: [{ branch, item }],
+        });
+        continue;
+      }
+      current.branchItems.push({ branch, item });
+      current.tags = [...new Set([...current.tags, ...item.tags])];
+      current.images = current.images.length ? current.images : item.images;
+      current.variants = [...current.variants, ...item.variants];
+    }
+  }
+  return [...combined.values()].sort((a, b) => a.title.localeCompare(b.title));
 }

@@ -12,7 +12,7 @@ export function ServicesShowcase() {
             <p className="eyebrow">Expert care, tailored to you</p>
             <h2 className="section-title">Our services</h2>
           </div>
-          <Link href="/treatments/select-branch" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-pink sm:text-xs">
+          <Link href="/products-services" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-pink sm:text-xs">
             Explore all treatments <ArrowRight size={16} />
           </Link>
         </div>
@@ -20,7 +20,7 @@ export function ServicesShowcase() {
         <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {services.map((service) => (
             <Link
-              href={`/treatments/select-branch?service=${service.slug}`}
+              href="/products-services"
               key={service.slug}
               className="group relative min-h-[230px] overflow-hidden rounded-2xl bg-ink text-white shadow-soft sm:min-h-[440px] sm:rounded-[1.5rem]"
             >

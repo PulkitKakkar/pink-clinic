@@ -22,14 +22,10 @@ export function Treatments({ branch }: { branch?: Branch }) {
             <h2 className="section-title">Loved treatments</h2>
           </div>
           <Link
-            href={
-              activeBranch
-                ? `/treatments/${activeBranch.slug}`
-                : "/treatments/select-branch"
-            }
+            href="/products-services"
             className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.16em] text-pink sm:text-xs"
           >
-            {activeBranch ? "View branch treatments" : "Choose branch"}{" "}
+            View all treatments{" "}
             <ArrowRight size={16} />
           </Link>
         </div>
@@ -37,7 +33,7 @@ export function Treatments({ branch }: { branch?: Branch }) {
           {services.map((service) => {
             const href = activeBranch
               ? `/treatments/${activeBranch.slug}/${service.slug}`
-              : "/treatments/select-branch";
+              : "/products-services";
             const price = activeBranch
               ? formatTreatmentPrice(
                   pricingProvider.getTreatmentPrice(
@@ -45,7 +41,7 @@ export function Treatments({ branch }: { branch?: Branch }) {
                     activeBranch.id,
                   ),
                 )
-              : "Select branch for price";
+              : "View prices by branch";
             return (
               <Link
                 href={href}

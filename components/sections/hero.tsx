@@ -13,7 +13,7 @@ export function Hero() {
           <div className="mb-5 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[.28em] text-white/75 sm:mb-8 sm:text-[10px]"><span className="h-px w-8 bg-pink" />Reading’s beauty destination</div>
           <h1 className="font-display text-[clamp(3.6rem,10vw,8.5rem)] leading-[.82] tracking-[-.065em]">Beauty.<br /><span className="text-pink">Confidence.</span><br />Success.</h1>
           <p className="mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">Choose your journey with Pink Beauty Salon. Advanced treatments and career-shaping education, delivered by experts.</p>
-          <div className="mt-6 flex gap-2 sm:mt-8 sm:gap-3"><Link href="/treatments/select-branch" className="button-primary">Explore treatments</Link><Link href="/courses" className="button-outline">Explore courses</Link></div>
+          <div className="mt-6 flex gap-2 sm:mt-8 sm:gap-3"><Link href="/products-services" className="button-primary">Explore treatments</Link><Link href="/courses" className="button-outline">Explore courses</Link></div>
           <a href="#reviews" className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs"><span className="flex text-[#ffcb69]">{[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}</span><span className="font-bold text-white">Read client reviews</span></a>
         </div>
       </div>
