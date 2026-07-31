@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, MapPin, Phone } from "lucide-react";
+import { Camera as Instagram, MapPin, Phone } from "lucide-react";
 import { appVersion } from "@/lib/app-version";
 import { locations } from "@/lib/content";
 

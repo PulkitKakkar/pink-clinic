@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Clock, ExternalLink, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Camera as Instagram, Clock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import { BookingLink } from "@/components/ui/booking-link";
 import { Treatments } from "@/components/sections/treatments";
