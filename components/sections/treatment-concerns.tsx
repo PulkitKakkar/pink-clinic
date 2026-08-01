@@ -82,15 +82,15 @@ export function TreatmentConcerns({
               Looking for hair, nails or everyday beauty?
             </h3>
             <p className="mt-1 text-xs leading-6 text-black/50">
-              Salon and wellness services remain available in the complete
-              catalogue.
+              Hair, nails and everyday salon services remain available in the
+              complete catalogue.
             </p>
           </div>
           <Link
             href="/products-services#beauty-wellness"
             className="inline-flex min-h-11 items-center gap-2 text-xs font-bold text-pink"
           >
-            Browse beauty & wellness <ArrowRight size={15} />
+            Browse salon services <ArrowRight size={15} />
           </Link>
         </div>
       </div>

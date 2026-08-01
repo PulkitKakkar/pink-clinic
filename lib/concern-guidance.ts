@@ -334,6 +334,55 @@ export const concernDecisionGuides: Record<string, ConcernDecisionGuide> = {
     ],
     sources: cosmeticSources,
   },
+  "wellness-vitamins": {
+    causes: [
+      "Vitamin levels and symptoms can be influenced by diet, absorption, medicines and underlying health conditions",
+      "Fatigue or low energy has many possible causes and should not be assumed to be a vitamin deficiency",
+      "Some people have a diagnosed deficiency requiring a treatment plan from an appropriate healthcare professional",
+    ],
+    maySuit: [
+      "Adults who have completed an appropriate health and suitability assessment",
+      "People who understand the evidence, limitations and procedure-specific risks",
+      "Clients for whom the administering practitioner considers the exact treatment appropriate",
+    ],
+    discussFirst: [
+      "Pregnancy, breastfeeding, allergies, kidney or heart conditions and other significant health history",
+      "Prescription medicines, supplements, previous reactions and any recent test results",
+      "Persistent, severe or unexplained symptoms that have not been assessed by a GP",
+    ],
+    treatmentCourse:
+      "The ingredients, dose, route, appointment time and any repeat schedule must be based on the exact treatment and individual assessment. IV drips and vitamin injections should not be presented as a general cure or a substitute for diagnosis and evidence-based medical care.",
+    commonEffects: [
+      "Pain, bruising, bleeding, swelling or infection can occur at an injection or cannula site",
+      "Dizziness, fainting, allergic reactions and treatment-specific side effects are possible",
+      "IV administration carries additional risks that the practitioner must explain before consent",
+    ],
+    preparation: [
+      "Provide complete medical, medicine, allergy and supplement information",
+      "Ask for the exact ingredients, dose, practitioner credentials and evidence supporting the proposed treatment",
+      "Follow only the preparation instructions given after your suitability assessment",
+    ],
+    aftercare: [
+      "Follow the written advice supplied for the exact injection or infusion",
+      "Contact the clinic promptly about increasing pain, swelling, redness or other unexpected symptoms",
+      "Seek urgent help for breathing difficulty, collapse or signs of a severe allergic reaction",
+    ],
+    medicalAdvice:
+      "Speak to a GP about persistent fatigue, neurological symptoms or a suspected deficiency. Call 999 for breathing difficulty, collapse or a rapidly developing severe reaction following an injection or IV infusion.",
+    faqs: [
+      {
+        question: "Do I need a consultation before an IV drip or vitamin injection?",
+        answer:
+          "Yes. The practitioner needs to review your health, medicines, allergies, symptoms and the exact proposed ingredients before deciding whether treatment is appropriate.",
+      },
+      {
+        question: "Will a wellness drip treat tiredness or a medical condition?",
+        answer:
+          "It should not be assumed to. Tiredness has many causes, and unexplained or persistent symptoms need appropriate medical assessment rather than unverified treatment claims.",
+      },
+    ],
+    sources: cosmeticSources,
+  },
 };
 
 export const concernGuidanceReviewed = "31 July 2026";
