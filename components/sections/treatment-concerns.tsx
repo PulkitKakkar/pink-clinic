@@ -37,12 +37,12 @@ export function TreatmentConcerns({
             </Link>
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {concerns.map((concern, index) => (
             <Link
               key={concern.slug}
               href={`/concerns/${concern.slug}`}
-              className="group relative min-h-[280px] overflow-hidden rounded-2xl bg-[#210013] text-white shadow-soft sm:min-h-[360px] sm:rounded-[1.5rem]"
+              className="group relative min-h-[220px] overflow-hidden rounded-2xl bg-pink-berry text-white shadow-soft sm:min-h-[360px] sm:rounded-[1.5rem]"
             >
               {concern.image && (
                 <Image
@@ -51,21 +51,21 @@ export function TreatmentConcerns({
                   fill
                   priority={index === 0}
                   className="object-cover opacity-65 transition duration-700 group-hover:scale-105"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  sizes="(min-width: 1024px) 33vw, 50vw"
                 />
               )}
               <span className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent" />
-              <span className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                <span className="block text-[9px] font-bold uppercase tracking-[.2em] text-pink-light">
+              <span className="absolute inset-x-0 bottom-0 p-4 sm:p-7">
+                <span className="block text-[8px] font-bold uppercase tracking-[.12em] text-pink-light sm:text-[9px] sm:tracking-[.2em]">
                   Concern guide
                 </span>
-                <span className="mt-2 block font-display text-3xl leading-none sm:text-4xl">
+                <span className="mt-2 block font-display text-2xl leading-none sm:text-4xl">
                   {concern.shortName}
                 </span>
-                <span className="mt-3 block text-xs leading-5 text-white/65">
+                <span className="mt-3 hidden text-xs leading-5 text-white/65 sm:block">
                   {concern.description}
                 </span>
-                <span className="mt-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.15em]">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[.1em] sm:mt-5 sm:gap-2 sm:text-[10px] sm:tracking-[.15em]">
                   Explore treatments{" "}
                   <ArrowRight
                     size={14}
