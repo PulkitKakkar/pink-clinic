@@ -240,10 +240,10 @@ export const treatmentConcerns: TreatmentConcern[] = [
   },
   {
     slug: "body-contouring",
-    name: "Body contouring treatments",
-    shortName: "Body contouring",
+    name: "Weight management and body shaping treatments",
+    shortName: "Weight & body shaping",
     description:
-      "Consultation-led treatments for targeted body goals, selected only after an individual suitability assessment.",
+      "Explore targeted body-shaping options alongside honest guidance about when medical weight-management support is more appropriate.",
     terms: ["lemon bottle"],
     goals: [
       "Discuss targeted areas",
@@ -279,6 +279,58 @@ export const treatmentConcerns: TreatmentConcern[] = [
       "A confidential health and suitability consultation",
       "No promises of weight loss or guaranteed results",
       "Clear consent, aftercare and escalation information",
+    ],
+  },
+  {
+    slug: "wellness-vitamins",
+    name: "Wellness, IV drip and vitamin treatments",
+    shortName: "Wellness, IV drips & vitamins",
+    description:
+      "Consultation-led IV drips and vitamin injections, considered around your health history, suitability and individual needs.",
+    terms: [
+      "iv drip",
+      "iv drop",
+      "vitamin im injections",
+      "vitamin injection",
+      "vitamin b12",
+      "glutathione",
+      "biotin injection",
+      "myers cocktail",
+    ],
+    goals: [
+      "Understand the available options",
+      "Discuss suitability and safety",
+      "Choose only after an individual assessment",
+    ],
+    whatItMeans:
+      "IV drips and vitamin injections deliver nutrients by intravenous or intramuscular administration. They are clinical procedures rather than routine beauty services, and suitability depends on your health, medicines, symptoms and whether there is a diagnosed deficiency or medical reason for treatment.",
+    commonSigns: [
+      "Questions about vitamin or nutrient support",
+      "Interest in injectable wellness treatments",
+      "A wish to understand evidence, risks and alternatives",
+      "Symptoms that may need assessment by a GP before treatment",
+    ],
+    approaches: [
+      {
+        title: "Health and suitability review",
+        description:
+          "A qualified practitioner reviews relevant conditions, medicines, allergies, symptoms and previous reactions before recommending any procedure.",
+      },
+      {
+        title: "Explain the exact treatment",
+        description:
+          "The ingredients, route of administration, evidence, limitations, possible side effects and alternatives should be clear before consent.",
+      },
+      {
+        title: "Refer when appropriate",
+        description:
+          "Unexplained fatigue, recurrent symptoms or suspected deficiency may require GP assessment and appropriate testing rather than a cosmetic wellness treatment.",
+      },
+    ],
+    whatToExpect: [
+      "A consultation and clinical suitability assessment",
+      "Clear information about ingredients, risks and realistic limitations",
+      "Aftercare instructions and guidance about when to seek help",
     ],
   },
 ];
@@ -359,19 +411,6 @@ export const beautyServiceAreas: BeautyServiceArea[] = [
       "micro-shading",
       "combination brows",
       "lip enhancement",
-    ],
-  },
-  {
-    slug: "wellness-vitamins",
-    name: "Wellness, IV drips & vitamins",
-    description: "Consultation-led drips and vitamin injections.",
-    terms: [
-      "iv drip",
-      "iv drop",
-      "vitamin",
-      "glutathione",
-      "biotin injection",
-      "myers cocktail",
     ],
   },
 ];

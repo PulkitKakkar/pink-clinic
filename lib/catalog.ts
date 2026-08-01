@@ -115,13 +115,70 @@ catalogueContent["pink-beauty-aesthetic-clinic-and-academy-gift-card"] = { title
 
 function normalizeItem(item: CatalogItem): CatalogItem {
   const content = catalogueContent[item.handle];
+  const handle =
+    item.handle === "glutathione-and-vitamin-c-iv-drip-1"
+      ? "glutathione-and-vitamin-c-iv-drip"
+      : item.handle;
   return {
     ...item,
+    handle,
     ...(content?.title && !item.description?.trim() ? { title: content.title } : {}),
     ...(content?.description && !item.description?.trim() ? { description: content.description } : {}),
     ...(content?.brand && !item.brand ? { brand: content.brand } : {}),
     tags: normalizeCollections(item.tags || []),
   };
+}
+
+const lemonBottleAreas: Record<string, string> = {
+  "lemon-bottle-back": "Back",
+  "lemon-bottle-double-chin": "Double chin",
+  "lemon-bottle-double-chin-jawline": "Double chin and jawline",
+  "lemon-bottle-love-handles": "Love handles",
+  "lemon-bottle-upper-arms": "Upper arms",
+  "lemon-bottle-upper-or-lower-stomach": "Upper or lower stomach",
+};
+
+function consolidateLemonBottle(items: CatalogItem[]): CatalogItem[] {
+  const entries = items.filter((item) => item.handle in lemonBottleAreas);
+  if (!entries.length) return items;
+  const firstHandle = entries[0].handle;
+  const consolidated: CatalogItem = {
+    ...entries[0],
+    handle: "lemon-bottle",
+    title: "Lemon Bottle Targeted Body Treatment",
+    description:
+      "A consultation-led injectable body treatment for selected face or body areas. Choose the treatment area and session option below; suitability, realistic limitations, risks and alternatives are discussed before treatment.",
+    tags: normalizeCollections(entries.flatMap((item) => item.tags)),
+    images: entries[0].images[0] ? [entries[0].images[0]] : [],
+    variants: entries.flatMap((item) =>
+      item.variants.map((variant) => ({
+        ...variant,
+        name: `${lemonBottleAreas[item.handle]} · ${variant.name.replace(/\b3 Session\b/i, "3 sessions").replace(/\b1 Session\b/i, "1 session")}`,
+      })),
+    ),
+    concerns: [
+      ...new Set([
+        "body-contouring",
+        ...entries.flatMap((item) => item.concerns || []),
+      ]),
+    ],
+    expectedResults: [
+      "A treatment plan tailored to the assessed cosmetic goal",
+      "Possible change in the appearance of the selected area",
+    ],
+    treatmentAreas: Object.values(lemonBottleAreas),
+    duration: "Usually 30–60 minutes, depending on the selected area",
+    downtime: "Swelling, tenderness or bruising may occur; individual response varies",
+    sessions: "Choose one or three sessions; the final plan is confirmed during consultation",
+  };
+  return items.flatMap((item) => {
+    if (!(item.handle in lemonBottleAreas)) return [item];
+    return item.handle === firstHandle ? [consolidated] : [];
+  });
+}
+
+function prepareCatalog(items: CatalogItem[]) {
+  return consolidateLemonBottle(items.map(normalizeItem));
 }
 
 export async function getBranchCatalog(
@@ -130,7 +187,7 @@ export async function getBranchCatalog(
   const branchFallback = fallbackByBranch[branchSlug] || [];
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
   if (!projectId || projectId === "replace-me")
-    return branchFallback.map(normalizeItem);
+    return prepareCatalog(branchFallback);
 
   try {
     const overrides = await sanityClient.fetch<SanityCatalogItem[]>(
@@ -166,7 +223,7 @@ export async function getBranchCatalog(
       { branchSlug },
       { next: { revalidate: 60 } },
     );
-    if (!overrides.length) return branchFallback.map(normalizeItem);
+    if (!overrides.length) return prepareCatalog(branchFallback);
     const byHandle = new Map(overrides.map((item) => [item.handle, item]));
     const merged = branchFallback.flatMap((item) => {
       const override = byHandle.get(item.handle);
@@ -201,7 +258,7 @@ export async function getBranchCatalog(
         }),
       ];
     });
-    return [
+    return prepareCatalog([
       ...merged,
       ...[...byHandle.values()]
         .filter((item) => item.active !== false)
@@ -244,9 +301,9 @@ export async function getBranchCatalog(
             merchantAvailability: item.merchantAvailability,
           }),
         ),
-    ];
+    ]);
   } catch {
-    return branchFallback;
+    return prepareCatalog(branchFallback);
   }
 }
 

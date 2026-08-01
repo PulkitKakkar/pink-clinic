@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Check, Search, ShoppingBag } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBasket } from "@/components/providers/basket-provider";
 import type { CatalogItem } from "@/lib/catalog";
 import {
@@ -81,6 +81,7 @@ export function CatalogBrowser({
   >({});
   const [addedItem, setAddedItem] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
+  const resultsRef = useRef<HTMLElement>(null);
   const filtered = useMemo(
     () =>
       items.filter(
@@ -193,6 +194,20 @@ export function CatalogBrowser({
     }
   }
 
+  function updateFilterAndShowResults(update: () => void) {
+    update();
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+          block: "start",
+        });
+      });
+    });
+  }
+
   return (
     <div>
       <div className="grid gap-4 rounded-2xl bg-pink-light/45 p-4 sm:p-5">
@@ -258,12 +273,12 @@ export function CatalogBrowser({
                 <button
                   type="button"
                   aria-pressed={concern === slug}
-                  onClick={() => {
+                  onClick={() => updateFilterAndShowResults(() => {
                     setConcern(slug);
                     setServiceArea("all");
                     setCollection("all");
                     setVisibleCount(12);
-                  }}
+                  })}
                   className={`group relative min-h-36 overflow-hidden rounded-2xl bg-[#210013] p-4 text-left text-white ring-offset-2 transition ${concern === slug ? "ring-2 ring-pink" : ""}`}
                 >
                   {item?.images[0] && (
@@ -299,13 +314,13 @@ export function CatalogBrowser({
         >
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Beauty & wellness</p>
+              <p className="eyebrow">Salon services</p>
               <h2 className="font-display text-4xl">
                 Browse everyday services
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-black/50">
-                Hair, beauty, maintenance and wellness appointments that do not
-                sit naturally under a clinical concern.
+                Hair, beauty and maintenance appointments that do not sit
+                naturally under a treatment concern.
               </p>
             </div>
             {serviceArea !== "all" && (
@@ -327,12 +342,12 @@ export function CatalogBrowser({
                 key={slug}
                 type="button"
                 aria-pressed={serviceArea === slug}
-                onClick={() => {
+                onClick={() => updateFilterAndShowResults(() => {
                   setServiceArea(slug);
                   setConcern("all");
                   setCollection("all");
                   setVisibleCount(12);
-                }}
+                })}
                 className={`group grid min-h-28 grid-cols-[88px_1fr] overflow-hidden rounded-2xl border text-left transition ${serviceArea === slug ? "border-pink bg-pink-light/40" : "border-black/5 bg-cream hover:border-pink/30"}`}
               >
                 <span className="relative bg-pink-light">
@@ -390,12 +405,12 @@ export function CatalogBrowser({
                   key={name}
                   type="button"
                   aria-pressed={collection === name}
-                  onClick={() => {
+                  onClick={() => updateFilterAndShowResults(() => {
                     setCollection(name);
                     setConcern("all");
                     setServiceArea("all");
                     setVisibleCount(12);
-                  }}
+                  })}
                   className="group relative min-h-32 overflow-hidden rounded-2xl bg-[#210013] p-4 text-left text-white"
                 >
                   {item?.images[0] && (
@@ -424,12 +439,12 @@ export function CatalogBrowser({
               <button
                 type="button"
                 aria-pressed={collection === "all"}
-                onClick={() => {
+                onClick={() => updateFilterAndShowResults(() => {
                   setCollection("all");
                   setConcern("all");
                   setServiceArea("all");
                   setVisibleCount(12);
-                }}
+                })}
                 className={`min-h-11 rounded-full px-4 text-[10px] font-bold ${collection === "all" ? "bg-pink text-white" : "bg-cream"}`}
               >
                 All collections
@@ -439,12 +454,12 @@ export function CatalogBrowser({
                   key={name}
                   type="button"
                   aria-pressed={collection === name}
-                  onClick={() => {
+                  onClick={() => updateFilterAndShowResults(() => {
                     setCollection(name);
                     setConcern("all");
                     setServiceArea("all");
                     setVisibleCount(12);
-                  }}
+                  })}
                   className={`min-h-11 rounded-full px-4 text-[10px] font-bold ${collection === name ? "bg-pink text-white" : "bg-cream"}`}
                 >
                   {name}
@@ -454,7 +469,8 @@ export function CatalogBrowser({
           </details>
         </section>
       )}
-      <p className="my-5 text-xs text-black/45">
+      <section ref={resultsRef} id="catalog-results" className="scroll-mt-24 pt-px">
+      <p className="my-5 text-xs text-black/45" aria-live="polite">
         {filtered.length} result{filtered.length === 1 ? "" : "s"} · showing{" "}
         {Math.min(visibleCount, filtered.length)}
       </p>
@@ -611,6 +627,7 @@ export function CatalogBrowser({
           No matching products or services.
         </div>
       )}
+      </section>
     </div>
   );
 }

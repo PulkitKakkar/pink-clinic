@@ -217,7 +217,7 @@ export default async function CombinedCatalogItemPage({ params }: PageProps) {
       </section>
       <section
         id="branch-prices"
-        className="section-shell scroll-mt-6 bg-cream"
+        className="section-shell scroll-mt-24 bg-cream"
       >
         <div className="container-site">
           <div className="max-w-2xl">
