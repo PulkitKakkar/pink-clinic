@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SiteSearch } from "@/components/site-search";
 import { BasketLink } from "@/components/basket-link";
+import { OfferBanner, type Promotion } from "@/components/offer-banner";
 
 const links = [
   ["Treatments", "/products-services"],
@@ -15,7 +16,7 @@ const links = [
   ["Locations", "/locations"],
 ];
 
-export function Header() {
+export function Header({ offers = [] }: { offers?: Promotion[] }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open) return;
@@ -75,6 +76,7 @@ export function Header() {
           {open ? <X /> : <Menu />}
         </button>
       </div>
+      <OfferBanner offers={offers} />
       {open && (
         <nav
           id="mobile-navigation"

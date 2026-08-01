@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { BranchProvider } from "@/components/providers/branch-provider";
 import { BasketProvider } from "@/components/providers/basket-provider";
 import { PublicChrome } from "@/components/public-chrome";
+import { getCombinedCatalog } from "@/lib/catalog";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -61,11 +62,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://pinkclinic.co.uk";
+  const offerItems = (await getCombinedCatalog())
+    .filter((item) => item.tags.includes("Offers"))
+    .slice(0, 4);
+  const offers = offerItems.map((item) => {
+    const variants = item.variants.filter((variant) => variant.price > 0);
+    const lowest = variants.length
+      ? variants.reduce((current, variant) =>
+          variant.price < current.price ? variant : current,
+        )
+      : undefined;
+    const price = lowest ? `£${lowest.price.toFixed(0)}` : "View offer";
+    const saving =
+      lowest?.compareAtPrice && lowest.compareAtPrice > lowest.price
+        ? ` · was £${lowest.compareAtPrice.toFixed(0)}`
+        : "";
+    return {
+      label: `${item.title} · ${price}${saving}`,
+      href: `/products-services/item/${item.handle}`,
+    };
+  });
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -106,7 +127,7 @@ export default function RootLayout({
         />
         <BranchProvider>
           <BasketProvider>
-            <PublicChrome>{children}</PublicChrome>
+            <PublicChrome offers={offers}>{children}</PublicChrome>
           </BasketProvider>
         </BranchProvider>
       </body>

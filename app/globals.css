@@ -16,6 +16,10 @@ html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--cream); }
 ::selection { background: var(--pink); color: white; }
 
+#main-content > main > section:first-of-type {
+  border-top: 2rem solid transparent;
+}
+
 @layer components {
   .container-site { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12 xl:px-16; }
   .section-shell { @apply py-10 sm:py-20 lg:py-24; }
@@ -42,6 +46,19 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
   100% { transform: translateX(420%); }
 }
 
+@keyframes offer-ticker-scroll {
+  to { transform: translateX(-50%); }
+}
+
+.offer-ticker-track {
+  animation: offer-ticker-scroll 32s linear infinite;
+}
+
+.offer-ticker:hover .offer-ticker-track,
+.offer-ticker:focus-within .offer-ticker-track {
+  animation-play-state: paused;
+}
+
 .action-loader-spinner {
   animation: action-loader-spin .7s linear infinite;
 }
@@ -59,5 +76,13 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
   .action-loader-spinner,
   .action-loader-bar {
     animation-duration: 1.8s;
+  }
+
+  .offer-ticker-track {
+    animation: none;
+  }
+
+  .offer-ticker-track > [aria-hidden="true"] {
+    display: none;
   }
 }
