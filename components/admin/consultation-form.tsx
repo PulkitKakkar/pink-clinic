@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CheckCircle2, LoaderCircle, Save } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle, Save } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
@@ -60,24 +60,65 @@ export function ConsultationForm({
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "invalid" | "error">(
     "idle",
   );
+  const [validationError, setValidationError] = useState("");
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
   const datesSynchronized = useRef(false);
   const manuallySelectedFitzpatrick = useRef(new Set<string>());
   const today = new Date().toLocaleDateString("en-CA");
   const initialValue = (name: string) => initialAnswers[name];
+  const [recordStatus, setRecordStatus] = useState(String(initialValue("recordStatus") || "draft"));
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
-    const missingGroup = template.sections
-      .flatMap((section) => section.fields)
-      .find((field) => field.required && field.type === "multi-checkbox" && form.getAll(field.id).length === 0);
-    if (missingGroup) {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+    const intent = submitter?.value || "draft";
+    const fields = template.sections.flatMap((section) => section.fields);
+    const requiredFields = fields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
+    const missingField = intent === "draft" ? undefined : requiredFields.find((field) =>
+      field.type === "checkbox"
+        ? form.get(field.id) !== "on"
+        : field.type === "multi-checkbox"
+          ? form.getAll(field.id).length === 0
+          : !String(form.get(field.id) || "").trim(),
+    );
+    const unmetConditional = intent === "draft" ? undefined : template.conditionalRequirements?.find((rule) =>
+      rule.values.includes(String(form.get(rule.whenField) || "")) && !String(form.get(rule.requiredField) || "").trim(),
+    );
+    const unmetDetailGroup = intent === "draft" ? undefined : template.detailGroups?.find((group) =>
+      group.fields.some((fieldId) => form.get(fieldId) === "Yes") && !String(form.get(group.requiredField) || "").trim(),
+    );
+    const unexplainedYes = intent === "draft" ? undefined : fields.find((field, index) => {
+      if (field.type !== "yes-no" || form.get(field.id) !== "Yes") return false;
+      const next = fields[index + 1];
+      return Boolean(next && ["text", "textarea"].includes(next.type) && /detail|explain|when|where|list/i.test(next.label) && !String(form.get(next.id) || "").trim());
+    });
+    const unexplainedOther = intent === "draft" ? undefined : fields.find((field, index) => {
+      if (field.type !== "multi-checkbox" || !form.getAll(field.id).includes("Other")) return false;
+      const next = fields[index + 1];
+      return Boolean(next && /other/i.test(next.label) && !String(form.get(next.id) || "").trim());
+    });
+    const emergencyContactIncomplete = intent === "draft" ? false : Boolean(String(form.get("emergencyContact") || "").trim()) !== Boolean(String(form.get("emergencyContactNumber") || "").trim());
+    const signatureMissing = intent !== "draft" && !String(form.get("signatureData") || "");
+    const completionBlocker = intent === "complete" ? template.completionBlockers?.find((rule) => rule.values.includes(String(form.get(rule.field) || ""))) : undefined;
+    if (missingField || unmetConditional || unmetDetailGroup || unexplainedYes || unexplainedOther || emergencyContactIncomplete || signatureMissing || completionBlocker) {
       setStatus("invalid");
-      formElement.querySelector<HTMLElement>(`[name="${missingGroup.id}"]`)?.focus();
+      const unexplainedYesIndex = unexplainedYes ? fields.indexOf(unexplainedYes) : -1;
+      const unexplainedOtherIndex = unexplainedOther ? fields.indexOf(unexplainedOther) : -1;
+      const missingName = missingField?.id || unmetConditional?.requiredField || unmetDetailGroup?.requiredField || (unexplainedYesIndex >= 0 ? fields[unexplainedYesIndex + 1]?.id : "") || (unexplainedOtherIndex >= 0 ? fields[unexplainedOtherIndex + 1]?.id : "") || (emergencyContactIncomplete ? (!String(form.get("emergencyContact") || "").trim() ? "emergencyContact" : "emergencyContactNumber") : "") || completionBlocker?.field || "signatureData";
+      setValidationError(
+        unmetConditional?.message || unmetDetailGroup?.message || completionBlocker?.message ||
+        (unexplainedYes ? `Add details for “${unexplainedYes.label}”.` : "") ||
+        (unexplainedOther ? `Describe the Other selection for “${unexplainedOther.label}”.` : "") ||
+        (emergencyContactIncomplete ? "Enter both the emergency contact name and number, or leave both blank." : "") ||
+        (signatureMissing ? "Add the customer signature before finalising." : "") ||
+        `Complete “${missingField?.label || "the required field"}”.`,
+      );
+      formElement.querySelector<HTMLElement>(`[name="${missingName}"]`)?.focus();
       return;
     }
+    setValidationError("");
     setStatus("saving");
     const answers: Record<string, string | boolean | string[]> = {};
     template.sections
@@ -93,6 +134,15 @@ export function ConsultationForm({
     answers.termsAgreement = form.get("termsAgreement") === "on";
     answers.marketingConsent = form.get("marketingConsent") === "on";
     answers.signatureData = String(form.get("signatureData") || "");
+    answers.recordStatus = intent === "complete" ? "completed" : intent === "finalize" ? "ready-for-treatment" : recordStatus;
+    answers.consentVersion = template.version || "2026-08-02";
+    answers.lastUpdatedAt = new Date().toISOString();
+    if (intent === "finalize" && !initialValue("consultationFinalizedAt"))
+      answers.consultationFinalizedAt = new Date().toISOString();
+    else if (initialValue("consultationFinalizedAt"))
+      answers.consultationFinalizedAt = String(initialValue("consultationFinalizedAt"));
+    if (intent === "complete") answers.treatmentCompletedAt = new Date().toISOString();
+    else if (initialValue("treatmentCompletedAt")) answers.treatmentCompletedAt = String(initialValue("treatmentCompletedAt"));
     const response = await fetch("/api/admin/consultations", {
       method: recordId ? "PATCH" : "POST",
       headers: { "content-type": "application/json" },
@@ -103,6 +153,7 @@ export function ConsultationForm({
       ),
     });
     setStatus(response.ok ? "saved" : "error");
+    if (response.ok) setRecordStatus(String(answers.recordStatus));
     if (response.ok && !recordId) {
       formElement.reset();
       formElement.querySelectorAll<HTMLInputElement>('input[type="date"]:not([name="dateOfBirth"])').forEach((field) => { field.value = today; });
@@ -190,7 +241,14 @@ export function ConsultationForm({
           key={section.title}
           className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7"
         >
-          <h2 className="font-display text-2xl">{section.title}</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-2xl">{section.title}</h2>
+            {section === template.sections[0] && (
+              <span className="rounded-full bg-pink-light px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-pink">
+                {recordStatus.replaceAll("-", " ")}
+              </span>
+            )}
+          </div>
           {section.description && (
             <p className="mt-2 text-sm text-black/55">{section.description}</p>
           )}
@@ -300,6 +358,8 @@ export function ConsultationForm({
                     name={field.id}
                     type={field.type}
                     required={field.required}
+                    min={field.min}
+                    max={field.max}
                     defaultValue={
                       String(initialValue(field.id) || "") ||
                       (!recordId && field.type === "date" && field.id !== "dateOfBirth"
@@ -362,7 +422,7 @@ export function ConsultationForm({
             </span>
           ) : status === "invalid" ? (
             <span className="font-bold text-red-700">
-              Complete all required fields marked with an asterisk.
+              {validationError || "Complete all required fields marked with an asterisk."}
             </span>
           ) : status === "error" ? (
             <span className="font-bold text-red-700">
@@ -379,18 +439,18 @@ export function ConsultationForm({
               : "Add the available details, then save the consultation record."
           )}
         </p>
-        <button
-          disabled={status === "saving"}
-          type="submit"
-          className="button-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {status === "saving" ? (
-            <LoaderCircle className="animate-spin" size={15} />
-          ) : (
-            <Save size={15} />
-          )}
-          {status === "saving" ? "Saving..." : recordId ? "Update record" : "Save record"}
-        </button>
+        <div className="flex flex-wrap justify-end gap-2">
+          <button disabled={status === "saving"} formNoValidate name="submitIntent" value="draft" type="submit" className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-xs font-bold disabled:opacity-60">
+            <FilePenLine size={14} /> Save draft
+          </button>
+          <button disabled={status === "saving"} name="submitIntent" value="finalize" type="submit" className="inline-flex items-center gap-2 rounded-full border border-pink px-4 py-2 text-xs font-bold text-pink disabled:opacity-60">
+            <ClipboardCheck size={14} /> Finalize consultation
+          </button>
+          <button disabled={status === "saving"} name="submitIntent" value="complete" type="submit" className="button-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-70">
+            {status === "saving" ? <LoaderCircle className="animate-spin" size={15} /> : <Save size={15} />}
+            {status === "saving" ? "Saving..." : "Complete treatment"}
+          </button>
+        </div>
       </div>
     </form>
   );

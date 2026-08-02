@@ -28,9 +28,14 @@ export default async function Page() {
                     {record.templateTitle}
                   </small>
                 </span>
-                <time className="text-xs text-black/40">
-                  {new Date(record.createdAt).toLocaleString("en-GB")}
-                </time>
+                <span className="text-right">
+                  <span className="rounded-full bg-pink-light px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-pink">
+                    {String(record.answers.recordStatus || "draft").replaceAll("-", " ")}
+                  </span>
+                  <time className="mt-2 block text-xs text-black/40">
+                    {new Date(record.createdAt).toLocaleString("en-GB")}
+                  </time>
+                </span>
               </Link>
             ))
           ) : (

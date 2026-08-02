@@ -36,8 +36,7 @@ export default async function Page({
           {new Date(record.createdAt).toLocaleString("en-GB")}
         </p>
         <p className="mt-4 rounded-xl bg-pink-light/35 p-4 text-xs leading-5 text-black/60">
-          All fields are optional. Add or update any available information and
-          save the record again.
+          Save incomplete work as a draft. Finalising requires the consultation fields and customer signature; completing treatment also requires the treatment record.
         </p>
         <div className="mt-7">
           <ConsultationForm
