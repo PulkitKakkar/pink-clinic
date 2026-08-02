@@ -1,5 +1,32 @@
 import { NextResponse } from "next/server";
 import { locations } from "@/lib/content";
+import { consumeRateLimit, requestIdentifier } from "@/lib/security/rate-limit";
+
+const limits = {
+  firstName: 80,
+  lastName: 80,
+  email: 254,
+  phone: 40,
+  interest: 100,
+  context: 200,
+  serviceSlug: 120,
+  serviceName: 160,
+  message: 4000,
+} as const;
+
+type EnquiryField = keyof typeof limits;
+
+function cleanField(data: Record<string, FormDataEntryValue>, field: EnquiryField) {
+  const value = data[field];
+  if (typeof value !== "string") return "";
+  const cleaned = value.trim();
+  if (
+    cleaned.length > limits[field] ||
+    /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(cleaned)
+  )
+    return undefined;
+  return cleaned;
+}
 
 function enquiryText(enquiry: Record<string, FormDataEntryValue | string>) {
   return [
@@ -56,15 +83,46 @@ async function deliverEnquiry(
 export async function POST(request: Request) {
   const data = Object.fromEntries((await request.formData()).entries());
   const returnUrl = new URL("/contact", request.url);
-  const branch = locations.find((location) => location.id === data.branchId);
-  const email = String(data.email || "");
-  const valid = branch && data.firstName && data.lastName && data.phone && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const allowed = await consumeRateLimit({
+    scope: "public-enquiry",
+    identifier: requestIdentifier(request),
+    limit: 5,
+    windowSeconds: 60 * 60,
+  });
+  if (!allowed) {
+    returnUrl.searchParams.set("status", "error");
+    return NextResponse.redirect(returnUrl, 303);
+  }
+
+  const branchId = typeof data.branchId === "string" ? data.branchId : "";
+  const branch = locations.find((location) => location.id === branchId);
+  const fields = Object.fromEntries(
+    (Object.keys(limits) as EnquiryField[]).map((field) => [
+      field,
+      cleanField(data, field),
+    ]),
+  ) as Record<EnquiryField, string | undefined>;
+  const valid =
+    branch &&
+    fields.firstName &&
+    fields.lastName &&
+    fields.phone &&
+    fields.email &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email) &&
+    Object.values(fields).every((value) => value !== undefined);
   if (!valid) {
     returnUrl.searchParams.set("status", "error");
     return NextResponse.redirect(returnUrl, 303);
   }
 
-  const enquiry = { ...data, branchName: branch.name, branchAddress: branch.address };
+  const enquiry = {
+    ...Object.fromEntries(
+      Object.entries(fields).map(([key, value]) => [key, value || ""]),
+    ),
+    branchId,
+    branchName: branch.name,
+    branchAddress: branch.address,
+  };
   try {
     await deliverEnquiry(enquiry, branch.email);
     returnUrl.searchParams.set("status", "success");

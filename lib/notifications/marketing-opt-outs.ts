@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "crypto";
 import { mkdir, readFile, rename, writeFile } from "fs/promises";
 import path from "path";
-import postgres from "postgres";
+import { sql } from "@/lib/database";
 import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import { normalizePhoneNumber } from "@/lib/notifications/marketing-opt-out-utils";
 
@@ -12,28 +12,12 @@ export {
   normalizePhoneNumber,
 } from "@/lib/notifications/marketing-opt-out-utils";
 
-const databaseUrl = process.env.DATABASE_URL;
 const localFile = path.join(
   process.cwd(),
   "data",
   "admin",
   "marketing-opt-outs.json",
 );
-const globalDatabase = globalThis as unknown as {
-  marketingOptOutSql?: ReturnType<typeof postgres>;
-};
-const sql = databaseUrl
-  ? (globalDatabase.marketingOptOutSql ??
-    postgres(databaseUrl, {
-      max: 3,
-      idle_timeout: 20,
-      connect_timeout: 10,
-      ssl: "require",
-    }))
-  : undefined;
-if (sql && process.env.NODE_ENV !== "production")
-  globalDatabase.marketingOptOutSql = sql;
-
 export type MarketingOptOut = {
   id: string;
   phone: string;

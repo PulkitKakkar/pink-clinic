@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "crypto";
 import { mkdir, readFile, rename, writeFile } from "fs/promises";
 import path from "path";
-import postgres from "postgres";
+import { sql } from "@/lib/database";
 import type { Booking } from "@/lib/admin/booking-types";
 import { branches } from "@/lib/branches";
 import { getNotificationProvider } from "@/lib/notifications/provider";
@@ -12,28 +12,12 @@ import type {
   BookingNotificationType,
 } from "@/lib/notifications/types";
 
-const databaseUrl = process.env.DATABASE_URL;
 const localFile = path.join(
   process.cwd(),
   "data",
   "admin",
   "booking-notifications.json",
 );
-const globalDatabase = globalThis as unknown as {
-  notificationSql?: ReturnType<typeof postgres>;
-};
-const sql = databaseUrl
-  ? (globalDatabase.notificationSql ??
-    postgres(databaseUrl, {
-      max: 3,
-      idle_timeout: 20,
-      connect_timeout: 10,
-      ssl: "require",
-    }))
-  : undefined;
-if (sql && process.env.NODE_ENV !== "production")
-  globalDatabase.notificationSql = sql;
-
 type LocalDelivery = {
   key: string;
   status: "sent" | "failed";

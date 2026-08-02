@@ -23,7 +23,7 @@
     "release:minor": "npm version minor -m \"release: %s\"",
     "release:major": "npm version major -m \"release: %s\"",
     "release:push": "git push origin main --follow-tags",
-    "db:migrate": "psql \"$DATABASE_URL\" -f db/migrations/001_booking_system.sql"
+    "db:migrate": "node scripts/migrate-database.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1096.0",
