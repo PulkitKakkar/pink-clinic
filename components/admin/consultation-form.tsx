@@ -57,7 +57,7 @@ export function ConsultationForm({
   initialAnswers?: Record<string, string | boolean | string[]>;
   initialImages?: TreatmentImage[];
 }) {
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "invalid" | "error">(
     "idle",
   );
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
@@ -69,8 +69,16 @@ export function ConsultationForm({
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
-    setStatus("saving");
     const form = new FormData(formElement);
+    const missingGroup = template.sections
+      .flatMap((section) => section.fields)
+      .find((field) => field.required && field.type === "multi-checkbox" && form.getAll(field.id).length === 0);
+    if (missingGroup) {
+      setStatus("invalid");
+      formElement.querySelector<HTMLElement>(`[name="${missingGroup.id}"]`)?.focus();
+      return;
+    }
+    setStatus("saving");
     const answers: Record<string, string | boolean | string[]> = {};
     template.sections
       .flatMap((section) => section.fields)
@@ -172,7 +180,6 @@ export function ConsultationForm({
 
   return (
     <form
-      noValidate
       onSubmit={submit}
       onChange={handleChange}
       onInput={handleDateInput}
@@ -193,13 +200,19 @@ export function ConsultationForm({
                 key={field.id}
                 className={`grid gap-2 text-xs font-bold ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
               >
-                {field.type !== "checkbox" && field.label}
+                {field.type !== "checkbox" && (
+                  <span>
+                    {field.label}
+                    {field.required && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
+                  </span>
+                )}
                 {field.id === "address" ? (
                   <AddressLookup name={field.id} defaultValue={String(initialValue(field.id) || "")} />
                 ) : ["practitionerName", "clinicianNameTitle"].includes(field.id) ? (
                   <SearchableOptionInput
                     name={field.id}
                     options={practitionerNames}
+                    required={field.required}
                     defaultValue={String(initialValue(field.id) || "")}
                     placeholder="Search practitioners or enter another name"
                     className={inputClass}
@@ -217,6 +230,7 @@ export function ConsultationForm({
                     name={field.id}
                     defaultValue={String(initialValue(field.id) || "")}
                     rows={3}
+                    required={field.required}
                     className={inputClass}
                   />
                 ) : calculatedFields.has(field.id) ? (
@@ -231,6 +245,7 @@ export function ConsultationForm({
                   <select
                     name={field.id}
                     defaultValue={String(initialValue(field.id) || "")}
+                    required={field.required}
                     className={inputClass}
                   >
                     <option value="">Select</option>
@@ -241,6 +256,7 @@ export function ConsultationForm({
                   <select
                     name={field.id}
                     defaultValue={String(initialValue(field.id) || "")}
+                    required={field.required}
                     className={inputClass}
                   >
                     <option value="">Select</option>
@@ -273,6 +289,7 @@ export function ConsultationForm({
                     <input
                       name={field.id}
                       type="checkbox"
+                      required={field.required}
                       defaultChecked={initialValue(field.id) === true}
                       className="mt-1 accent-pink"
                     />
@@ -282,6 +299,7 @@ export function ConsultationForm({
                   <input
                     name={field.id}
                     type={field.type}
+                    required={field.required}
                     defaultValue={
                       String(initialValue(field.id) || "") ||
                       (!recordId && field.type === "date" && field.id !== "dateOfBirth"
@@ -308,6 +326,7 @@ export function ConsultationForm({
           <input
             name="termsAgreement"
             type="checkbox"
+            required
             defaultChecked={initialValue("termsAgreement") === true}
             className="mt-1 accent-pink"
           />
@@ -340,6 +359,10 @@ export function ConsultationForm({
           {status === "saved" ? (
             <span className="flex items-center gap-2 font-bold text-green-700">
               <CheckCircle2 size={16} /> Consultation {recordId ? "updated" : "saved"}
+            </span>
+          ) : status === "invalid" ? (
+            <span className="font-bold text-red-700">
+              Complete all required fields marked with an asterisk.
             </span>
           ) : status === "error" ? (
             <span className="font-bold text-red-700">
