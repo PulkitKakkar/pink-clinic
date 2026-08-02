@@ -39,63 +39,187 @@ const yesNo = (id: string, label: string) => f(id, label, "yes-no", true);
 const options = (id: string, label: string, values: string[], required = false): ConsultationField => ({
   id, label, type: "multi-checkbox", required, options: values.map((value) => ({ value, label: value })),
 });
+const comprehensiveMedicalScreen = (): ConsultationSection => ({
+  title: "Comprehensive medical history and contraindications",
+  description: "Answer every question. Give dates, diagnoses, medication names and relevant details in the notes field.",
+  fields: [
+    yesNo("tryingToConceive", "Trying to conceive?"), yesNo("pregnant", "Currently pregnant?"), yesNo("breastfeeding", "Currently breastfeeding?"),
+    yesNo("hrtContraception", "Using HRT or hormonal contraception?"), yesNo("underMedicalCare", "Under the care of a GP, medical practitioner or healthcare specialist in the last year?"),
+    yesNo("prescriptionMedication", "Using prescription medication, including oral or topical medication?"),
+    yesNo("supplementsHerbal", "Using supplements or herbal remedies, including St John’s Wort?"),
+    yesNo("antibiotics", "Currently taking antibiotics?"), yesNo("anticoagulants", "Taking anticoagulants, blood thinners, aspirin or anti-inflammatory medication?"),
+    yesNo("steroidsImmunosuppression", "Using steroid medication or affected by immunosuppression?"),
+    yesNo("retinoids", "Using retinoic acid, Retin-A or isotretinoin/Roaccutane, or used isotretinoin in the last 6 months?"),
+    yesNo("photosensitisingMedication", "Taking photosensitising medication?"), yesNo("allergies", "Any known allergies or previous allergic reactions?"),
+    yesNo("asthma", "Asthma?"), yesNo("diabetes", "Diabetes?"), yesNo("epilepsy", "Epilepsy or seizures?"),
+    yesNo("cardiacDisease", "Cardiac disease or another heart condition?"), yesNo("kidneyLiverDisease", "Kidney or liver disease?"),
+    yesNo("bloodDisorder", "Blood disorder, including a clotting disorder, HIV or hepatitis?"), yesNo("autoimmuneDisease", "Autoimmune disease?"),
+    yesNo("anxietyMentalHealth", "Anxiety, depression, a diagnosed mental-health condition or severe procedure-related anxiety?"),
+    yesNo("cancerRadiation", "Cancer, skin cancer, chemotherapy or radiation treatment, current or previous?"), yesNo("recentSurgery", "Recent surgery or planned surgery?"),
+    yesNo("activeInfection", "Active bacterial, fungal, viral or herpetic infection, including cold sores?"),
+    yesNo("inflammatorySkinCondition", "Active eczema, psoriasis, dermatitis, inflammatory dermatosis or another skin condition?"),
+    yesNo("woundsBruising", "Open wounds, recent scar tissue, abrasions, cuts, bruising, sunburn, or unexplained pain/swelling in the treatment area?"),
+    yesNo("healingScarring", "Impaired healing or a history of keloid or hypertrophic scarring?"),
+    yesNo("oedema", "Medical oedema or significant swelling?"), yesNo("tattoosMoles", "Tattoos, permanent makeup or moles in the proposed treatment area?"),
+    f("medicalHistoryDetails", "Details of every Yes answer, current medication and allergies", "textarea", true),
+  ],
+});
+const lifestyleAndSkin = (): ConsultationSection => ({
+  title: "Lifestyle, skin and wellbeing",
+  fields: [
+    yesNo("smokesOrVapes", "Smoke or vape?"), f("smokingAmount", "Cigarettes/vaping frequency", "text"),
+    yesNo("drinksAlcohol", "Drink alcohol?"), f("alcoholUnits", "Approximate alcohol units per week", "number"),
+    f("workStress", "Work stress level (1–10)", "number"), f("homeStress", "Home stress level (1–10)", "number"),
+    f("morningSkincare", "Morning skincare routine and products", "textarea"), f("eveningSkincare", "Evening skincare routine and products", "textarea"),
+    f("skinConcerns", "Specific skin concerns", "textarea"),
+    options("skinCharacteristics", "Current skin characteristics", ["Normal", "Dry", "Oily", "Combination", "Sensitive", "Dehydrated", "Mature", "Congested", "Acne", "Erythema", "Pigmentation", "Scarring", "Broken capillaries", "Large/open pores", "Dark circles"]),
+  ],
+});
+const referralDecision = (): ConsultationSection => ({
+  title: "Suitability and referral decision",
+  description: "Practitioner use only. Do not proceed until restrictions and referral requirements have been resolved.",
+  fields: [
+    { id: "suitabilityOutcome", label: "Consultation outcome", type: "select", required: true, options: ["Suitable to proceed", "Defer or restrict treatment", "Medical referral required", "Not suitable"].map((value) => ({ value, label: value })) },
+    options("restrictionReasons", "Restrictions identified", ["Allergy", "Active illness or fever", "Anxiety", "Cuts/bruising/open wound", "Recent injectable or facial treatment", "Recent vaccination", "Herpes simplex", "Hypersensitive skin", "Scarring risk", "Other"]),
+    options("referralReasons", "Medical referral considerations", ["Anticoagulant use", "Cardiac disease", "Diabetes", "Liver or kidney disease", "Medical oedema", "Prescribed medication", "Recent surgery", "Radiation treatment", "Undiagnosed pain or swelling", "Other"]),
+    { id: "writtenPermission", label: "Written permission / additional consent", type: "select", options: ["Not required", "GP or specialist permission attached", "Additional informed consent recorded", "Pending"].map((value) => ({ value, label: value })) },
+    f("clinicalDecisionNotes", "Clinical reasoning, restrictions, referral details and alternative options", "textarea", true),
+  ],
+});
+const injectableDeclarations = (): ConsultationSection => ({
+  title: "Pre-treatment declarations and informed consent",
+  description: "Each statement must be discussed and confirmed before treatment.",
+  fields: [
+    f("ageEligibilityConfirmed", "The client’s identity and eligibility for cosmetic injectable treatment, including being aged 18 or over, have been confirmed", "checkbox", true),
+    f("accurateMedicalInformation", "I have provided accurate and complete medical and consultation information", "checkbox", true),
+    f("avoidTopicals", "I will avoid prescribed topical retinoids and salicylic acid for the advised period before treatment", "checkbox", true),
+    f("noRecentConflictingTreatment", "I have disclosed injectables, peels, microneedling, laser/IPL and other facial treatments in the previous 14 days", "checkbox", true),
+    f("noRecentIsotretinoin", "I confirm that I have not used isotretinoin/Roaccutane in the last 6 months", "checkbox", true),
+    f("sunProtection", "I will avoid direct sun exposure and apply daily broad-spectrum sunscreen of at least SPF30", "checkbox", true),
+    f("risksAlternatives", "The purpose, expected benefits, limitations, alternatives, material risks and possible complications have been explained", "checkbox", true),
+    f("resultsNotGuaranteed", "I understand results vary, are not guaranteed and may require review, correction or further treatment", "checkbox", true),
+    f("adverseEffects", "I understand possible adverse reactions and will contact the clinic promptly if I have concerns", "checkbox", true),
+    f("questionsAnswered", "My questions have been answered and I have had sufficient time to make an informed decision", "checkbox", true),
+    yesNo("clinicalPhotographyConsent", "Consent to before, during and after photographs for confidential clinical records?"),
+    yesNo("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?"),
+    f("consentToTreatment", "I consent to the agreed treatment and will follow all pre-treatment and aftercare instructions", "checkbox", true),
+  ],
+});
+const procedureRecord = (kind: "toxin" | "filler"): ConsultationSection => ({
+  title: "Procedure record and aftercare",
+  description: "Practitioner use only. Complete at the treatment appointment.",
+  fields: [
+    f("prescriber", "Prescriber, if applicable", "text"), f("productName", "Product name", "text"),
+    f("batchNumber", "Batch / lot number", "text"), f("expiryDate", "Expiry date", "date"),
+    f("areasTreated", "Areas treated and injection points", "textarea"), f("quantityUsed", kind === "toxin" ? "Units and dilution used" : "Volume used (ml)", "text"),
+    ...(kind === "filler" ? [options("treatmentMethod", "Treatment method", ["Needle", "Cannula"]), options("treatmentTechnique", "Technique", ["Threading", "Depot", "Fanning", "Bolus", "Cross-hatching", "Other"])] : []),
+    f("procedureObservations", "Procedure observations, immediate response and any complications", "textarea"),
+    yesNo("postProcedurePhoto", "Post-procedure photographs taken and uploaded to the clinical record?"),
+    f("aftercareGiven", "Aftercare and home-care advice given", "textarea"), f("followUpDate", "Follow-up / review date", "date"),
+  ],
+});
 const antiWrinkle: ConsultationTemplate = {
-  slug: "anti-wrinkle", title: "Anti-Wrinkle Treatment Consultation", description: "Medical assessment and consent for anti-wrinkle treatments.",
+  slug: "anti-wrinkle", title: "Anti-Wrinkle Treatment Consultation", description: "Comprehensive medical assessment, treatment planning, informed consent and procedure record for botulinum toxin treatment.",
   sourceFile: "Anti-Wrinkle Treatment Consultation Form.pdf", reviewRequired: true,
   sections: [
-    details(),
-    { title: "Anti-wrinkle medical history", fields: [
-      yesNo("pregnantBreastfeeding", "Currently pregnant or breastfeeding?"),
-      yesNo("previousAntiWrinkle", "Had previous anti-wrinkle treatments?"), f("previousAntiWrinkleDetails", "Previous treatment details", "textarea"),
-      yesNo("knownAllergies", "Any known allergies?"), f("allergyDetails", "Allergy details", "textarea"),
-      yesNo("medicationBloodThinners", "Taking medication or blood thinners?"), f("medicationDetails", "Medication list", "textarea"),
-      yesNo("neurologicalDisorders", "Neurological disorders, including Myasthenia Gravis or ALS?"),
-      yesNo("heartConditions", "Heart conditions?"), yesNo("autoimmuneDisease", "Autoimmune disease?"),
-      yesNo("skinConditions", "Skin conditions such as eczema or psoriasis?"), f("otherMedicalConcerns", "Other medical concerns", "textarea"),
+    details([f("occupation", "Occupation", "text")]),
+    { title: "Consultation goals and previous treatment", fields: [
+      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+      yesNo("previousAntiWrinkle", "Previous botulinum toxin or anti-wrinkle treatment?"), f("previousAntiWrinkleDetails", "Previous product, areas, dates, results and complications", "textarea"),
+      yesNo("neuromuscularDisorder", "Neuromuscular disorder, including myasthenia gravis, Lambert-Eaton syndrome, ALS, facial palsy or swallowing difficulty?"),
+      yesNo("specialEvents", "Special event or travel planned in the next 2 weeks?"), f("specialEventDetails", "Event or travel details", "textarea"),
     ]},
-    { title: "Lifestyle, treatment areas and expectations", fields: [
-      yesNo("smokeAlcohol", "Smoke or consume alcohol regularly?"), yesNo("specialEvents", "Special events planned in the next 2 weeks?"),
-      f("specialEventDetails", "Special event details", "textarea"), options("treatmentAreas", "Areas to treat", ["Forehead", "Frown lines", "Crow's feet", "Other"], true),
-      f("otherTreatmentArea", "Other treatment area", "text"), f("expectations", "Treatment expectations", "textarea", true),
+    comprehensiveMedicalScreen(), lifestyleAndSkin(), referralDecision(),
+    { title: "Botulinum toxin treatment plan", fields: [
+      options("treatmentAreas", "Proposed treatment areas", ["Frontalis / forehead", "Corrugator and procerus / frown lines", "Orbicularis oculi / crow’s feet", "Nasalis / bunny lines", "Masseter", "Mentalis / chin", "Platysma / neck", "Orbicularis oris / lip lines", "Depressor anguli oris", "Levator labii superioris", "Other"], true),
+      f("otherTreatmentArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Assessment, muscle activity, asymmetry, planned outcome and limitations", "textarea", true),
     ]},
-    { title: "Treatment and photography consent", fields: [
-      f("natureRisksUnderstood", "Nature, purpose, benefits, risks and alternatives have been explained and questions answered", "checkbox", true),
-      f("variableResultsUnderstood", "Variable results and the possible need for multiple sessions are understood", "checkbox", true),
-      f("sideEffectsAftercareUnderstood", "Potential side effects and post-treatment care are understood", "checkbox", true),
-      yesNo("photographyAdvertisingConsent", "Consent to photographs and their use for advertising/social media?"),
-      f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
-    ]},
-    practitioner(),
+    injectableDeclarations(), procedureRecord("toxin"), practitioner(),
   ],
 };
 
 const dermalFillers: ConsultationTemplate = {
-  slug: "dermal-fillers", title: "Dermal Fillers Consultation", description: "Medical assessment and consent for dermal fillers.",
+  slug: "dermal-fillers", title: "Dermal Fillers Consultation", description: "Comprehensive medical assessment, treatment planning, informed consent and procedure record for dermal fillers.",
   sourceFile: "Dermal Fillers Consultation Form.pdf", reviewRequired: true,
   sections: [
-    details(),
-    { title: "Dermal filler medical history", fields: [
-      yesNo("pregnantBreastfeeding", "Currently pregnant or breastfeeding?"), yesNo("previousFillers", "Previous fillers or cosmetic procedures?"),
-      f("previousFillersDetails", "Previous procedure details", "textarea"), yesNo("lidocaineHyaluronicAllergy", "Allergy to lidocaine, hyaluronic acid, or any other substance?"),
-      f("allergyDetails", "Allergy details", "textarea"), yesNo("medications", "Taking blood thinners, immunosuppressants, or other medication?"),
-      f("medicationDetails", "Medication list", "textarea"), yesNo("autoimmuneDisorders", "Autoimmune disorders?"), yesNo("heartConditions", "Heart conditions?"),
-      yesNo("diabetes", "Diabetes?"), yesNo("skinConditions", "Skin conditions such as eczema or psoriasis?"), f("otherConditions", "Other conditions", "textarea"),
+    details([f("occupation", "Occupation", "text")]),
+    { title: "Consultation goals and previous treatment", fields: [
+      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+      yesNo("previousFillers", "Previous dermal filler, cosmetic procedure or implant in the proposed area?"), f("previousFillersDetails", "Previous product, areas, dates, results and complications", "textarea"),
+      yesNo("lidocaineHyaluronicAllergy", "Allergy or reaction to lidocaine, local anaesthetic, hyaluronic acid or dermal filler?"),
+      yesNo("dentalWork", "Recent or planned dental work, dental procedure or oral infection?"),
+      yesNo("specialEvents", "Special event or travel planned in the next 2 weeks?"), f("specialEventDetails", "Event or travel details", "textarea"),
     ]},
-    { title: "Treatment plan and expectations", fields: [
-      yesNo("smokeAlcohol", "Smoke or consume alcohol regularly?"), yesNo("specialEvents", "Special events planned in the next 2 weeks?"),
-      f("specialEventDetails", "Special event details", "textarea"), options("fillerAreas", "Areas considered for filler treatment", ["Lips", "Cheeks", "Nasolabial folds", "Jawline", "Other"], true),
-      f("otherFillerArea", "Other filler area", "text"),
-      yesNo("previousComplications", "Previously experienced complications from cosmetic treatments?"), f("complicationDetails", "Complication details", "textarea"),
-      f("expectations", "Treatment expectations", "textarea", true),
+    comprehensiveMedicalScreen(), lifestyleAndSkin(), referralDecision(),
+    { title: "Dermal filler treatment plan", fields: [
+      options("fillerAreas", "Proposed treatment areas", ["Lips / lip line", "Cheeks / zygomatic area", "Nasolabial folds", "Marionette lines", "Perioral lines", "Chin", "Jawline", "Temples", "Tear trough", "Other"], true),
+      f("otherFillerArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Facial assessment, asymmetry, product/volume plan, expected outcome and limitations", "textarea", true),
+      f("vascularRiskUnderstood", "Specific risks including vascular occlusion, tissue necrosis, visual disturbance/blindness and urgent treatment have been explained", "checkbox", true),
+      f("dissolvingUnderstood", "The possible need for hyaluronidase/dissolving, review or emergency referral has been explained", "checkbox", true),
     ]},
-    { title: "Dermal filler consent", fields: [
-      f("risksUnderstood", "Benefits and risks including bruising, swelling, infection and asymmetry are understood", "checkbox", true),
-      f("temporaryEffects", "Temporary effects, generally lasting 6–18 months, are understood", "checkbox", true),
-      f("questionsAnswered", "Concerns have been discussed and questions answered", "checkbox", true),
-      f("variableResults", "Variable results and possible multiple sessions are understood", "checkbox", true),
-      f("postCare", "Post-treatment care instructions will be followed", "checkbox", true),
-      yesNo("photographyAdvertisingConsent", "Consent to photographs and their use for advertising/social media?"),
-      f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
+    injectableDeclarations(), procedureRecord("filler"), practitioner(),
+  ],
+};
+
+const skinPeelMicroneedling: ConsultationTemplate = {
+  slug: "skin-peel-microneedling", title: "Skin Peel and Microneedling Consultation", description: "Level 5-informed assessment, Fitzpatrick classification, patch testing, consent and procedure record for medium-depth peels and microneedling.",
+  sourceFile: "L5 Consultation Form.pdf", reviewRequired: true,
+  sections: [
+    details([f("occupation", "Occupation", "text")]),
+    { title: "Consultation goals and skincare", fields: [
+      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+      f("morningSkincare", "Morning skincare routine, active ingredients and products", "textarea", true), f("eveningSkincare", "Evening skincare routine, active ingredients and products", "textarea", true),
+      options("treatmentGoals", "Treatment goals", ["General skin rejuvenation", "Improved hydration", "Superficial blemishes", "Improved texture", "Scarring", "Pigmentation", "Other"], true),
+    ]},
+    { title: "Medical history and peel/microneedling contraindications", description: "Answer every question and explain all Yes answers below.", fields: [
+      yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?"), yesNo("hrtContraception", "Using HRT or hormonal contraception?"),
+      yesNo("underMedicalCare", "Under the care of a medical practitioner or healthcare specialist in the last year?"), yesNo("autoimmuneDisease", "Autoimmune disease?"),
+      yesNo("prescriptionMedication", "Using prescription medication, including topical medication or topical steroids?"), yesNo("antibiotics", "Currently taking antibiotics?"),
+      yesNo("anticoagulants", "Taking anticoagulants, aspirin, blood thinners or anti-inflammatory medication?"), yesNo("photosensitisingMedication", "Taking photosensitising medication or St John’s Wort?"),
+      yesNo("retinoidsActives", "Using retinoic acid, Retin-A, isotretinoin/Roaccutane, AHA/BHA, vitamin A derivatives or retinol?"),
+      yesNo("activeInfection", "Active bacterial, fungal, viral or herpetic infection?"), yesNo("bloodDisorder", "Blood disorder, including HIV or hepatitis?"),
+      yesNo("skinCancer", "Current or previous skin cancer, melanoma or suspicious lesion?"), yesNo("dermatitisPsoriasis", "Active atopic dermatitis, eczema, psoriasis or another inflammatory skin condition?"),
+      yesNo("healingScarring", "Impaired healing or history of keloid/hypertrophic scarring?"), yesNo("kidneyOedema", "Kidney disease or medical oedema?"),
+      yesNo("asthma", "Asthma?"), yesNo("mentalHealth", "Severe anxiety or diagnosed nervous/mental-health condition relevant to treatment?"),
+      yesNo("burnsLesions", "Burns, open wounds, moles, tattoos or permanent makeup in the proposed area?"), yesNo("recentTan", "Sunburn, significant sun exposure, sunbed use or fake tan in the previous 14 days?"),
+      f("medicalHistoryDetails", "Details of every Yes answer, medication, supplements, allergies and relevant dates", "textarea", true),
+      options("allergies", "Known allergies", ["Apples", "Aspirin / salicylic acid", "Citrus", "Grapes", "Milk", "Penicillin", "Cosmetic products", "Other", "None known"], true),
+    ]},
+    { title: "Skin classification and assessment", description: "Practitioner use only.", fields: [
+      { id: "fitzpatrickType", label: "Fitzpatrick skin type", type: "select", required: true, options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: `Type ${value}` })) },
+      f("ethnicBackground", "Ethnic background relevant to skin assessment", "text"),
+      options("skinCharacteristics", "Skin characteristics", ["Normal", "Combination", "Oily", "Sensitive", "Dehydrated", "Mature", "Acne", "Hyperpigmentation", "Hypopigmentation", "Broken capillaries", "Open/large pores", "Dark circles", "Erythema"], true),
+      { id: "skinHealing", label: "Observed skin healing response", type: "select", options: ["Brown pigmentation", "Pink / fades to white", "Not yet assessed"].map((value) => ({ value, label: value })) },
+      { id: "epidermalThickness", label: "Epidermal thickness", type: "select", options: ["Thin", "Medium", "Thick"].map((value) => ({ value, label: value })) },
+      f("skinAssessmentNotes", "Skin assessment findings and treatment rationale", "textarea", true),
+    ]},
+    { title: "Patch test and recent procedures", fields: [
+      yesNo("recentInjectables", "Botulinum toxin or dermal filler in the previous 14 days?"), yesNo("recentLaser", "Laser, IPL or light-based therapy in the previous 14 days?"),
+      yesNo("recentDepilation", "Waxing, depilatory treatment or electrolysis in the previous 14 days?"), yesNo("recentMicrodermabrasion", "Microdermabrasion in the previous 14 days?"),
+      yesNo("recentFacialSurgery", "Facial surgery in the previous 14 days?"), yesNo("recentPeelNeedling", "Skin peel or microneedling in the previous 14 days?"),
+      f("patchTestDate", "Patch test date", "date", true), f("patchTestProductArea", "Patch-test product, strength and area", "textarea", true),
+      { id: "patchTestResult", label: "Patch-test result after the required observation period", type: "select", required: true, options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending"].map((value) => ({ value, label: value })) },
+      f("patchTestReaction", "Patch-test reaction or comments", "textarea"),
+    ]},
+    { title: "Pre-treatment declarations and consent", fields: [
+      f("accurateInformation", "I have provided accurate medical and consultation information and disclosed all contraindications", "checkbox", true),
+      f("preTreatmentRestrictions", "I understand the restrictions on injectables, peels, microneedling, laser/IPL, depilation, active skincare and topical medication before treatment", "checkbox", true),
+      f("isotretinoinDeclaration", "I confirm I have not used isotretinoin/Roaccutane in the previous 6 months", "checkbox", true),
+      f("sunProtection", "I will avoid sun/fake tan and use broad-spectrum sunscreen of at least SPF30 as advised", "checkbox", true),
+      f("contraActions", "Expected reactions and risks including discomfort, erythema, peeling, breakout, infection, scarring and pigment change have been explained", "checkbox", true),
+      f("resultsNotGuaranteed", "I understand results vary, are not guaranteed and may require a course of treatment", "checkbox", true),
+      f("questionsAnswered", "Limitations, alternatives and complications have been discussed and my questions answered", "checkbox", true),
+      yesNo("clinicalPhotographyConsent", "Consent to before, during and after photographs for confidential clinical records?"),
+      yesNo("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?"),
+      f("consentToTreatment", "I consent to the agreed peel or microneedling treatment and will follow all aftercare instructions", "checkbox", true),
+    ]},
+    { title: "Procedure record and aftercare", description: "Practitioner use only. Complete at the treatment appointment.", fields: [
+      { id: "procedureType", label: "Procedure", type: "select", options: ["Medium-depth skin peel", "Microneedling", "Combined protocol"].map((value) => ({ value, label: value })) },
+      f("cleanserUsed", "Cleanser used", "text"), f("peelProduct", "Peel product, type and strength", "text"), f("peelApplication", "Application method, layers and treatment area", "textarea"),
+      f("peelTiming", "Peel duration and total treatment time", "text"), f("neutraliser", "Neutralising product, method and time", "textarea"),
+      f("needleDevice", "Microneedling device, needle size/depth and treated area", "textarea"), f("productsUsed", "Post-procedure products used and areas applied", "textarea"),
+      f("skinReaction", "Skin reaction, observations and complications", "textarea"), yesNo("postProcedurePhoto", "Post-procedure photograph taken and uploaded?"),
+      f("aftercareGiven", "Aftercare/home-care programme and products supplied", "textarea"), f("followUpDate", "Follow-up / review date", "date"),
     ]},
     practitioner(),
   ],
@@ -276,5 +400,5 @@ const laserDevice: ConsultationTemplate = {
   ],
 };
 
-export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, ivTherapy, lemonBottle, spmu, laserDevice];
+export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, lemonBottle, spmu, laserDevice];
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
