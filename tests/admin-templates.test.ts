@@ -4,7 +4,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ConsultationForm } from "@/components/admin/consultation-form";
-import { consultationTemplates, getConsultationTemplate } from "@/lib/admin/templates";
+import { consultationTemplates, getConsultationTemplate, validateConsultationAnswers } from "@/lib/admin/templates";
 
 describe("consultation templates", () => {
   it("uses unique field identifiers within every form", () => {
@@ -52,6 +52,72 @@ describe("consultation templates", () => {
       expect(existsSync(sourcePath), template.slug).toBe(true);
       expect(readFileSync(sourcePath).subarray(0, 5).toString(), template.slug).toBe("%PDF-");
     }
+  });
+
+  it("versions every consent template and supports completed-treatment sign-off", () => {
+    for (const template of consultationTemplates) {
+      const fields = template.sections.flatMap((section) => section.fields);
+      expect(template.version, template.slug).toMatch(/^\d{4}-\d{2}-\d{2}/);
+      expect(fields.some((field) => field.completionRequired), template.slug).toBe(true);
+      expect(fields.some((field) => field.id === "practitionerDeclaration" && field.completionRequired), template.slug).toBe(true);
+      expect(fields.some((field) => field.id === "practitionerSignatureName" && field.completionRequired), template.slug).toBe(true);
+    }
+  });
+
+  it.each(["anti-wrinkle", "dermal-fillers", "skin-peel-microneedling", "lemon-bottle", "spmu", "laser-device"])(
+    "%s separates clinical and marketing photography consent",
+    (slug) => {
+      const ids = getConsultationTemplate(slug)?.sections.flatMap((section) => section.fields.map((field) => field.id));
+      const clinicalIds = ["clinicalPhotographyConsent", "internalPhotoConsent"];
+      const marketingIds = ["marketingPhotographyConsent", "marketingPhotoConsent"];
+      expect(ids?.some((id) => clinicalIds.includes(id))).toBe(true);
+      expect(ids?.some((id) => marketingIds.includes(id))).toBe(true);
+    },
+  );
+
+  it("adds the recommended treatment traceability records", () => {
+    const expected: Record<string, string[]> = {
+      "anti-wrinkle": ["diluentDetails", "reconstitutionDateTime", "labelUse"],
+      "dermal-fillers": ["needleCannulaDetails", "anaestheticDetails", "emergencyPlanDiscussed"],
+      "skin-peel-microneedling": ["treatmentProductTraceability", "infectionControlCheck", "needleDevice"],
+      "iv-therapy": ["infusionTiming", "cannulaRecord", "postObservations"],
+      "lemon-bottle": ["supplierProductVerification", "batchNumber", "injectionRecord"],
+      spmu: ["pigmentTraceability", "needleCartridgeTraceability", "infectionControlCheck"],
+      "laser-device": ["deviceDetails", "treatmentAreasSettings", "treatmentEndpoint"],
+    };
+    for (const [slug, requiredIds] of Object.entries(expected)) {
+      const ids = getConsultationTemplate(slug)?.sections.flatMap((section) => section.fields.map((field) => field.id));
+      expect(ids, slug).toEqual(expect.arrayContaining(requiredIds));
+    }
+  });
+
+  it("uses bounded numeric fields for stress and baseline IV observations", () => {
+    const allFields = consultationTemplates.flatMap((template) => template.sections.flatMap((section) => section.fields));
+    for (const id of ["workStress", "homeStress", "systolic", "diastolic", "baselinePulse", "baselineSpO2"]) {
+      const matches = allFields.filter((field) => field.id === id);
+      expect(matches.length, id).toBeGreaterThan(0);
+      expect(matches.every((field) => typeof field.min === "number" && typeof field.max === "number"), id).toBe(true);
+    }
+  });
+
+  it("allows incomplete drafts but rejects unsigned final records", () => {
+    const template = getConsultationTemplate("anti-wrinkle")!;
+    expect(validateConsultationAnswers(template, { recordStatus: "draft" })).toEqual([]);
+    expect(validateConsultationAnswers(template, { recordStatus: "ready-for-treatment" })).toContain("Customer signature is required.");
+  });
+
+  it("blocks treatment completion when a patch test is pending", () => {
+    const template = getConsultationTemplate("laser-device")!;
+    const errors = validateConsultationAnswers(template, { recordStatus: "completed", result: "Pending" });
+    expect(errors).toContain("Laser treatment cannot be completed while the patch test is positive or pending.");
+  });
+
+  it("renders the three record workflow actions", () => {
+    const template = getConsultationTemplate("iv-therapy")!;
+    const html = renderToStaticMarkup(createElement(ConsultationForm, { template, practitionerNames: [], treatmentNames: [] }));
+    expect(html).toContain('value="draft"');
+    expect(html).toContain('value="finalize"');
+    expect(html).toContain('value="complete"');
   });
 
   it.each(["anti-wrinkle", "dermal-fillers"])(

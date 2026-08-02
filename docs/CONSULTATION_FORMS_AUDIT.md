@@ -8,6 +8,21 @@ This review covers all seven digital consultation templates, their 497 configure
 
 This is a product and record-structure audit, not approval to use the wording clinically. Final contraindications, medicine-specific warnings, emergency protocols and consent wording should be approved by the clinic's prescriber or medical lead and insurer.
 
+## Implementation status
+
+The recommendations in this report are implemented on `codex/consultation-form-audit-fixes`:
+
+- draft, ready-for-treatment and completed record states;
+- signature and treatment-completion validation;
+- conditional Yes/Other/referral/emergency-contact validation;
+- consent version, last-updated, finalisation and completion timestamps;
+- separate clinical and marketing photography permissions;
+- practitioner declaration and confirmation name;
+- bounded stress, alcohol and IV observation fields;
+- treatment-specific risk and traceability additions across all seven forms;
+- patch-test blockers for peel/microneedling, SPMU and laser/device treatment;
+- expanded schema, render, source-PDF and traceability regression tests.
+
 ## Automated test result
 
 All tests pass. The automated checks now verify:
