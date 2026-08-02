@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "crypto";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
-import postgres from "postgres";
+import { sql } from "@/lib/database";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 
 export type ConsultationRecord = {
@@ -30,12 +30,6 @@ type ConsultationRow = {
   answers: Record<string, string | boolean | string[]>;
   images?: TreatmentImage[];
 };
-
-const globalDatabase = globalThis as unknown as { consultationSql?: ReturnType<typeof postgres> };
-const sql = databaseUrl
-  ? globalDatabase.consultationSql ?? postgres(databaseUrl, { max: 5, idle_timeout: 20, connect_timeout: 10, ssl: "require" })
-  : undefined;
-if (sql && process.env.NODE_ENV !== "production") globalDatabase.consultationSql = sql;
 
 function fromRow(row: ConsultationRow): ConsultationRecord {
   return {

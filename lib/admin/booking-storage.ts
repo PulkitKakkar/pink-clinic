@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "crypto";
 import { mkdir, readFile, rename, writeFile } from "fs/promises";
 import path from "path";
-import postgres from "postgres";
+import { sql } from "@/lib/database";
 import type {
   Booking,
   CreateBookingInput,
@@ -46,21 +46,6 @@ type BookingRow = {
   images?: Booking["images"];
   created_at: Date;
 };
-
-const globalDatabase = globalThis as unknown as {
-  bookingSql?: ReturnType<typeof postgres>;
-};
-const sql = databaseUrl
-  ? (globalDatabase.bookingSql ??
-    postgres(databaseUrl, {
-      max: 5,
-      idle_timeout: 20,
-      connect_timeout: 10,
-      ssl: "require",
-    }))
-  : undefined;
-if (sql && process.env.NODE_ENV !== "production")
-  globalDatabase.bookingSql = sql;
 
 function assertProductionStorage() {
   if (!sql && process.env.NODE_ENV === "production")

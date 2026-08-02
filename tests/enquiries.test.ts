@@ -16,6 +16,18 @@ function enquiryRequest(branchId: string) {
   });
 }
 
+function enquiryRequestWith(field: string, value: string) {
+  const request = enquiryRequest("reading-west-street");
+  return request.formData().then((form) => {
+    form.set(field, value);
+    return new Request(request.url, {
+      method: "POST",
+      headers: { "x-forwarded-for": "198.51.100.20" },
+      body: form,
+    });
+  });
+}
+
 describe("contact enquiries", () => {
   afterEach(() => {
     vi.unstubAllEnvs();
@@ -63,5 +75,27 @@ describe("contact enquiries", () => {
     expect(response.headers.get("location")).toBe("https://pinkclinic.co.uk/contact?status=error");
     expect(errorSpy).toHaveBeenCalledOnce();
     errorSpy.mockRestore();
+  });
+
+  it("rejects fields that exceed their server-side limit", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await POST(await enquiryRequestWith("firstName", "x".repeat(81)));
+
+    expect(response.headers.get("location")).toBe(
+      "https://pinkclinic.co.uk/contact?status=error",
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects control characters", async () => {
+    const response = await POST(
+      await enquiryRequestWith("message", "Please call me\u0000back"),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      "https://pinkclinic.co.uk/contact?status=error",
+    );
   });
 });
