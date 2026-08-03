@@ -50,6 +50,7 @@ export function CatalogBrowser({
   hideTypeFilters = false,
   collectionEyebrow = "Our services",
   collectionTitle = "Browse collections",
+  resultsColumns = "default",
 }: {
   items: CatalogItem[];
   branchId?: string;
@@ -59,6 +60,7 @@ export function CatalogBrowser({
   hideTypeFilters?: boolean;
   collectionEyebrow?: string;
   collectionTitle?: string;
+  resultsColumns?: "default" | "two";
 }) {
   const { addItem, items: basketItems } = useBasket();
   const collections = useMemo(
@@ -474,7 +476,7 @@ export function CatalogBrowser({
         {filtered.length} result{filtered.length === 1 ? "" : "s"} · showing{" "}
         {Math.min(visibleCount, filtered.length)}
       </p>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className={`grid gap-3 sm:gap-4 ${resultsColumns === "two" ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
         {filtered.slice(0, visibleCount).map((item, index) => {
           const itemHref = combined
             ? `/products-services/item/${item.handle}`
@@ -506,14 +508,14 @@ export function CatalogBrowser({
                   fill
                   priority={index === 0}
                   className="object-cover transition duration-500 group-hover:scale-105"
-                  sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  sizes={resultsColumns === "two" ? "50vw" : "(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"}
                 />
               </Link>
-              <div className="flex flex-1 flex-col p-5">
+              <div className={`flex flex-1 flex-col ${resultsColumns === "two" ? "p-3 sm:p-5" : "p-5"}`}>
                 <p className="text-[9px] font-bold uppercase tracking-[.16em] text-pink">
                   {item.tags[0] || typeLabels[item.kind]}
                 </p>
-                <h2 className="mt-2 font-display text-2xl leading-none">
+                <h2 className={`mt-2 font-display leading-none ${resultsColumns === "two" ? "text-xl sm:text-2xl" : "text-2xl"}`}>
                   <Link href={itemHref} className="transition hover:text-pink">
                     {item.title}
                   </Link>

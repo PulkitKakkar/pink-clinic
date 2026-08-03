@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AppointmentCta } from "@/components/sections/cta";
+import { AcademyShowcase } from "@/components/sections/academy-showcase";
 import { Hero } from "@/components/sections/hero";
 import { LocationComparison } from "@/components/sections/location-comparison";
 import { OffersCarousel } from "@/components/sections/offers-carousel";
@@ -18,9 +19,20 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const catalog = (await getCombinedCatalog()).filter(
+  const fullCatalog = await getCombinedCatalog();
+  const catalog = fullCatalog.filter(
     (item) => item.kind === "service",
   );
+  const courses = fullCatalog.filter((item) => item.kind === "course");
+  const popularHandles = [
+    "hydrafacial",
+    "anti-wrinkle-injections",
+    "skin-rejuvenation-treatment",
+    "full-body-free-face-laser-hair-removal",
+  ];
+  const popularTreatments = popularHandles
+    .map((handle) => catalog.find((item) => item.handle === handle))
+    .filter((item): item is (typeof catalog)[number] => Boolean(item));
   const concerns = treatmentConcerns.map((concern) => ({
     ...concern,
     image: catalog.find(
@@ -58,8 +70,9 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <Hero />
-      <TreatmentConcerns concerns={concerns} />
+      <TreatmentConcerns concerns={concerns} popularTreatments={popularTreatments} />
       <TreatmentFinderPrompt />
+      <AcademyShowcase courses={courses} />
       <Reviews />
       <OffersCarousel offers={offers} />
       <LocationComparison />

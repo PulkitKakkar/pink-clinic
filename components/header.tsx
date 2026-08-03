@@ -11,7 +11,7 @@ import { OfferBanner, type Promotion } from "@/components/offer-banner";
 const links = [
   ["Treatments", "/products-services"],
   ["Find a Treatment", "/treatment-finder"],
-  ["Academy", "/courses"],
+  ["Academy Courses", "/courses"],
   ["Reviews", "/#reviews"],
   ["Locations", "/locations"],
 ];
