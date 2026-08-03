@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { CatalogBrowser } from "@/components/catalog/catalog-browser";
+import { ConcernTreatmentsShortcut } from "@/components/catalog/concern-treatments-shortcut";
 import { getCombinedCatalog } from "@/lib/catalog";
 import {
   concernDecisionGuides,
@@ -114,6 +115,7 @@ export default async function ConcernPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <ConcernTreatmentsShortcut />
       <section className="overflow-hidden bg-cream pb-12 pt-28 sm:pb-20 sm:pt-36">
         <div className="container-site grid gap-8 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:gap-14">
           <div>
@@ -419,6 +421,7 @@ export default async function ConcernPage({ params }: PageProps) {
               combined
               showDiscovery={false}
               hideTypeFilters
+              resultsColumns="two"
               collectionEyebrow="More ways to browse"
               collectionTitle="Treatment collections"
             />
