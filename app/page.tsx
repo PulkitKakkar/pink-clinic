@@ -14,7 +14,7 @@ import { matchesConcern, treatmentConcerns } from "@/lib/concerns";
 export const metadata: Metadata = {
   title: "Skin & aesthetic treatments in Reading",
   description:
-    "Explore anti-wrinkle, pigmentation, skin booster, acne, hair-removal and body treatments at Pink Beauty's two Reading clinics.",
+    "Explore consultation-led skin, pigmentation, skin booster, acne, hair-removal and body treatments at Pink Beauty's two Reading clinics.",
   alternates: { canonical: "/" },
 };
 
@@ -26,7 +26,7 @@ export default async function Home() {
   const courses = fullCatalog.filter((item) => item.kind === "course");
   const popularHandles = [
     "hydrafacial",
-    "anti-wrinkle-injections",
+    "hydrafacial-deluxe",
     "skin-rejuvenation-treatment",
     "full-body-free-face-laser-hair-removal",
   ];

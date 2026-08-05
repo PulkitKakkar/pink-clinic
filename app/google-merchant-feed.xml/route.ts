@@ -1,13 +1,11 @@
-import { getCombinedCatalog } from "@/lib/catalog";
+import { getCombinedCatalog, isGoogleMerchantEligible } from "@/lib/catalog";
 
 export const revalidate = 300;
 
 export async function GET() {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://pinkclinic.co.uk";
-  const products = (await getCombinedCatalog()).filter(
-    (item) => item.kind === "product",
-  );
+  const products = (await getCombinedCatalog()).filter(isGoogleMerchantEligible);
   const entries = products.flatMap((item) =>
     item.branchItems.flatMap(({ branch, item: branchItem }) => {
       if (
@@ -38,6 +36,11 @@ export async function GET() {
       <g:price>${variant.price.toFixed(2)} GBP</g:price>
       <g:condition>${item.merchantCondition}</g:condition>
       <g:brand>${xml(item.brand)}</g:brand>
+      <g:shipping>
+        <g:country>GB</g:country>
+        <g:service>Royal Mail 48</g:service>
+        <g:price>${variant.price >= 75 ? "0.00" : "4.99"} GBP</g:price>
+      </g:shipping>
       ${item.gtin || variant.gtin ? `<g:gtin>${xml(item.gtin || variant.gtin || "")}</g:gtin>` : ""}
       ${item.mpn || variant.mpn ? `<g:mpn>${xml(item.mpn || variant.mpn || "")}</g:mpn>` : ""}
       ${item.googleProductCategory ? `<g:google_product_category>${xml(item.googleProductCategory)}</g:google_product_category>` : ""}

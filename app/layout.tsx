@@ -111,6 +111,8 @@ export default async function RootLayout({
       merchantReturnDays: 14,
       returnMethod: "https://schema.org/ReturnByMail",
       merchantReturnLink: `${siteUrl}/returns`,
+      returnFees: "https://schema.org/ReturnShippingFees",
+      refundType: "https://schema.org/FullRefund",
     },
   };
   return (

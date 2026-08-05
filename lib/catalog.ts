@@ -41,6 +41,59 @@ export type CombinedCatalogItem = CatalogItem & {
   branchItems: BranchCatalogItem[];
 };
 
+const publicConsultationHandles = new Set([
+  "anti-wrinkle-fillers",
+  "anti-wrinkle-injections",
+]);
+
+const ivTherapyContent: Record<string, { title: string; description: string }> = {
+  "anti-ageing": {
+    title: "IV therapy consultation",
+    description: "A clinical consultation to discuss intravenous nutritional therapy. A qualified practitioner will review your health, medicines, suitability, proposed ingredients, risks and alternatives before deciding whether any treatment is appropriate. No health or cosmetic benefit is guaranteed.",
+  },
+  detox: {
+    title: "IV therapy consultation",
+    description: "A clinical consultation to discuss intravenous nutritional therapy. The appointment does not promise detoxification or treatment of a medical condition. Suitability, ingredients, risks, alternatives and any appropriate next step are decided individually by a qualified practitioner.",
+  },
+  "glutathione-and-vitamin-c-iv-drip": {
+    title: "Glutathione and vitamin C IV therapy consultation",
+    description: "A consultation about a proposed intravenous formulation containing glutathione and vitamin C. A qualified practitioner must assess your health, medicines, suitability, ingredients, risks and alternatives before any treatment. No therapeutic, wellness or cosmetic outcome is guaranteed.",
+  },
+  "glutathione-and-vitamin-c-iv-drip-1": {
+    title: "Glutathione and vitamin C IV therapy consultation",
+    description: "A consultation about a proposed intravenous formulation containing glutathione and vitamin C. A qualified practitioner must assess your health, medicines, suitability, ingredients, risks and alternatives before any treatment. No therapeutic, wellness or cosmetic outcome is guaranteed.",
+  },
+  "mega-v": {
+    title: "IV therapy consultation",
+    description: "A clinical consultation to discuss intravenous nutritional therapy. A qualified practitioner will confirm the proposed ingredients and assess your health, medicines, suitability, risks and alternatives. No energy, immunity, recovery or other health outcome is guaranteed.",
+  },
+  "myers-cocktail": {
+    title: "IV therapy consultation",
+    description: "A clinical consultation to discuss intravenous nutritional therapy. A qualified practitioner will confirm the proposed ingredients and assess your health, medicines, suitability, risks and alternatives. This service is not advertised as treating a medical condition and no benefit is guaranteed.",
+  },
+};
+
+const injectionConsultationContent: Record<string, string> = {
+  "vitamin-biotin": "Biotin injection consultation",
+  "glutathione-injection": "Glutathione injection consultation",
+  "vitamin-b12": "Vitamin B12 injection consultation",
+  "vitamin-c": "Vitamin C injection consultation",
+  vita: "Vitamin D injection consultation",
+};
+
+/** Only tangible retail goods may be submitted to Google Merchant Center. */
+export function isGoogleMerchantEligible(item: CatalogItem) {
+  return item.kind === "product";
+}
+
+/**
+ * PayPal requires prior approval for medical services. Until that written
+ * approval is held, Pay Later is deliberately limited to tangible goods.
+ */
+export function isPayPalPayLaterEligible(item: CatalogItem) {
+  return item.kind === "product";
+}
+
 const fallbackByBranch: Record<string, CatalogItem[]> = {
   "reading-west-st": westStreetCatalog as CatalogItem[],
   "reading-watlington-st": watlingtonStreetCatalog as CatalogItem[],
@@ -119,7 +172,7 @@ function normalizeItem(item: CatalogItem): CatalogItem {
     item.handle === "glutathione-and-vitamin-c-iv-drip-1"
       ? "glutathione-and-vitamin-c-iv-drip"
       : item.handle;
-  return {
+  const normalized = {
     ...item,
     handle,
     ...(content?.title && !item.description?.trim() ? { title: content.title } : {}),
@@ -127,6 +180,33 @@ function normalizeItem(item: CatalogItem): CatalogItem {
     ...(content?.brand && !item.brand ? { brand: content.brand } : {}),
     tags: normalizeCollections(item.tags || []),
   };
+  if (publicConsultationHandles.has(item.handle)) {
+    return {
+      ...normalized,
+      title: "Consultation for lines and wrinkles",
+      description: "A face-to-face consultation with an appropriately qualified practitioner to discuss your concerns, medical history, suitability and available options. If a prescription-only treatment may be appropriate, it can be considered only after an individual clinical assessment. No treatment or result is guaranteed.",
+      variants: [],
+      tags: normalized.tags.filter((tag) => !/anti.?wrinkle/i.test(tag)),
+    };
+  }
+  const ivContent = ivTherapyContent[item.handle];
+  if (ivContent) {
+    return {
+      ...normalized,
+      ...ivContent,
+      variants: [],
+    };
+  }
+  const injectionTitle = injectionConsultationContent[item.handle];
+  if (injectionTitle) {
+    return {
+      ...normalized,
+      title: injectionTitle,
+      description: "A clinical consultation with an appropriately qualified practitioner. Your health, medicines, symptoms, suitability, proposed product, risks and alternatives must be assessed before any injection is considered. This service is not advertised as diagnosing or treating a deficiency or medical condition, and no health or cosmetic outcome is guaranteed.",
+      variants: [],
+    };
+  }
+  return normalized;
 }
 
 const lemonBottleAreas: Record<string, string> = {

@@ -93,19 +93,19 @@ export const services: Service[] = [
   {
     id: "anti-wrinkle-treatments",
     slug: "anti-wrinkle-treatments",
-    title: "Anti-Wrinkle Treatments",
+    title: "Lines and Wrinkles Consultation",
     category: "Medical Aesthetics",
-    excerpt: "Subtle, considered treatments designed to refresh, never change, your expression.",
-    description: "A consultation-led approach to natural-looking rejuvenation, focused on balance, movement and results that feel unmistakably you.",
+    excerpt: "A personal consultation to discuss lines, wrinkles, suitability and available options.",
+    description: "An appropriately qualified practitioner will review your concerns, medical history and suitability before discussing possible options. Prescription-only treatments are not promoted or guaranteed.",
     duration: "30 minutes",
     image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1400&q=85",
-    benefits: ["Natural-looking results", "Expert consultation", "Aftercare included"],
+    benefits: ["Individual assessment", "Options discussed", "Suitability first"],
   },
 ];
 
 export const locations = [
   { id: "reading-west-street", treatmentSlug: "reading-west-st", slug: "west-street-reading", name: "West Street", address: "4–5 West Street, Reading RG1 1TT", phone: "0118 996 2711", email: "info@pinkbeautysalons.co.uk", hours: "Monday–Sunday · 9:30 AM–6:30 PM", legalName: "Pink Beauty Salon Ltd T/A Pink Beauty Salon and Academy", companyNumber: "10812181", image: "/images/west-street.jpg", note: "Central Reading salon", instagramHandle: "@pinkbeautysalonreading", instagramUrl: "https://www.instagram.com/pinkbeautysalonreading/" },
-  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 402 8505", secondaryPhone: "07715 277211", email: "info@pinkbeautysalons.co.uk", hours: "Monday–Sunday · 9:30 AM–6:30 PM", legalName: "VB Wholesale UK Ltd T/A Pink", image: "/images/watlington.jpg", note: "Advanced clinic & academy", instagramHandle: "@pink_aesthetics_clinic_reading", instagramUrl: "https://www.instagram.com/pink_aesthetics_clinic_reading/" },
+  { id: "reading-watlington-street", treatmentSlug: "reading-watlington-st", slug: "watlington-street-reading", name: "Watlington Street", address: "25 Watlington Street, Reading RG1 4EN", phone: "0118 402 8505", secondaryPhone: "07715 277211", email: "info@pinkbeautysalons.co.uk", hours: "Monday–Sunday · 9:30 AM–6:30 PM", legalName: "VB Wholesale (UK) Ltd T/A Pink Beauty Clinic", companyNumber: "11470499", image: "/images/watlington.jpg", note: "Advanced clinic & academy", instagramHandle: "@pink_aesthetics_clinic_reading", instagramUrl: "https://www.instagram.com/pink_aesthetics_clinic_reading/" },
 ];
 
 export const reviews = [
