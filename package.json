@@ -26,18 +26,18 @@
     "db:migrate": "node scripts/migrate-database.mjs"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1096.0",
-    "@aws-sdk/s3-request-presigner": "^3.1096.0",
-    "@sanity/client": "^7.25.0",
+    "@aws-sdk/client-s3": "^3.1101.0",
+    "@aws-sdk/s3-request-presigner": "^3.1101.0",
+    "@sanity/client": "^7.26.0",
     "@sanity/image-url": "^2.1.1",
-    "framer-motion": "^12.23.24",
-    "lucide-react": "^1.27.0",
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.28.0",
     "next": "^16.2.12",
-    "next-sanity": "^13.2.2",
+    "next-sanity": "^13.2.3",
     "postgres": "^3.4.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "sanity": "^6.6.0",
+    "sanity": "^6.8.0",
     "styled-components": "^6.4.4"
   },
   "devDependencies": {
