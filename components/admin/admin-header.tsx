@@ -2,8 +2,72 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, LayoutDashboard, LogOut, ShieldCheck, Users } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  LayoutDashboard,
+  LogOut,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 
 export function AdminHeader() {
-  return <header className="border-b border-black/5 bg-white"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:flex-nowrap sm:gap-4 sm:px-8"><Link href="/admin" className="flex shrink-0 items-center gap-3"><Image src="/images/pink-logo.jpeg" alt="Pink Beauty" width={80} height={40} className="h-10 w-20 rounded-md object-cover" priority /><span className="hidden sm:block"><strong className="block text-sm">Pink Admin</strong><small className="flex items-center gap-1 text-[9px] uppercase tracking-[.16em] text-black/40"><ShieldCheck size={11} /> Staff only</small></span></Link><nav className="order-3 flex w-full items-center justify-center gap-1 rounded-full bg-cream p-1 text-[10px] font-bold sm:order-none sm:w-auto sm:text-xs"><Link href="/admin" className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"><LayoutDashboard size={13} /> Dashboard</Link><Link href="/admin/bookings" className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"><CalendarDays size={13} /> Bookings</Link><Link href="/admin/customers" className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"><Users size={13} /> Customers</Link></nav><form action="/api/admin/logout" method="post"><button aria-label="Sign out" className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-black/10 px-3 py-2 text-xs font-bold sm:px-4" type="submit"><LogOut size={14} /><span className="hidden sm:inline">Sign out</span></button></form></div></header>;
+  return (
+    <header className="border-b border-black/5 bg-white">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:flex-nowrap sm:gap-4 sm:px-8">
+        <Link href="/admin" className="flex shrink-0 items-center gap-3">
+          <Image
+            src="/images/pink-logo.jpeg"
+            alt="Pink Beauty"
+            width={80}
+            height={40}
+            className="h-10 w-20 rounded-md object-cover"
+            priority
+          />
+          <span className="hidden sm:block">
+            <strong className="block text-sm">Pink Admin</strong>
+            <small className="flex items-center gap-1 text-[9px] uppercase tracking-[.16em] text-black/40">
+              <ShieldCheck size={11} /> Staff only
+            </small>
+          </span>
+        </Link>
+        <nav className="order-3 flex w-full items-center justify-center gap-1 rounded-full bg-cream p-1 text-[10px] font-bold sm:order-none sm:w-auto sm:text-xs">
+          <Link
+            href="/admin"
+            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
+          >
+            <LayoutDashboard size={13} /> Dashboard
+          </Link>
+          <Link
+            href="/admin/bookings"
+            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
+          >
+            <CalendarDays size={13} /> Bookings
+          </Link>
+          <Link
+            href="/admin/customers"
+            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
+          >
+            <Users size={13} /> Customers
+          </Link>
+          <Link
+            href="/admin/learners"
+            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
+          >
+            <BookOpen size={13} /> Learners
+          </Link>
+        </nav>
+        <form action="/api/admin/logout" method="post">
+          <button
+            aria-label="Sign out"
+            className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-black/10 px-3 py-2 text-xs font-bold sm:px-4"
+            type="submit"
+          >
+            <LogOut size={14} />
+            <span className="hidden sm:inline">Sign out</span>
+          </button>
+        </form>
+      </div>
+    </header>
+  );
 }

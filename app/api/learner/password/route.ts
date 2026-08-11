@@ -1,0 +1,5 @@
+import { NextResponse } from "next/server";
+import { createLearnerSession, getCurrentLearner, LEARNER_COOKIE, validatePassword } from "@/lib/learner/auth";
+import { changeLearnerPassword } from "@/lib/learner/storage";
+import { getPublicOrigin } from "@/lib/public-origin";
+export async function POST(request:Request){const learner=await getCurrentLearner();if(!learner)return NextResponse.json({error:"Unauthorised"},{status:401});const form=await request.formData();const password=String(form.get("password")||"");const confirmation=String(form.get("confirmation")||"");if(password!==confirmation||!validatePassword(password))return NextResponse.redirect(new URL("/learners/change-password?error=invalid",getPublicOrigin(request)),303);await changeLearnerPassword(learner.id,password);const session=await createLearnerSession(learner.id);const response=NextResponse.redirect(new URL("/learners",getPublicOrigin(request)),303);response.cookies.set(LEARNER_COOKIE,session.token,{httpOnly:true,sameSite:"strict",secure:process.env.NODE_ENV==="production",path:"/",expires:session.expiresAt});return response;}
