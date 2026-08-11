@@ -63,7 +63,7 @@ export const treatmentConcerns: TreatmentConcern[] = [
     shortName: "Pigmentation",
     description:
       "Personalised skin plans for uneven tone, visible sun damage and areas of pigmentation.",
-    terms: ["pigment", "cosmelan", "dermamelan", "carbon peel"],
+    terms: ["pigment", "cosmelan", "dermamelan"],
     goals: [
       "More even-looking tone",
       "Brighter complexion",
@@ -353,7 +353,7 @@ export function matchesConcern(
         )
       : concern;
   if (!selected) return false;
-  if (item.concerns?.includes(selected.slug)) return true;
+  if (item.concerns) return item.concerns.includes(selected.slug);
   const searchable = `${item.title} ${item.tags.join(" ")}`.toLowerCase();
   return selected.terms.some((term) => searchable.includes(term));
 }

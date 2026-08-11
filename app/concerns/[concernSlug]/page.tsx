@@ -134,14 +134,14 @@ export default async function ConcernPage({ params }: PageProps) {
               {concern.description}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#understanding" className="button-primary">
-                Understand the concern
+              <a href="#treatments" className="button-primary">
+                View treatments
               </a>
               <a
-                href="#treatments"
+                href="#understanding"
                 className="inline-flex min-h-12 items-center gap-2 px-3 text-xs font-bold text-pink"
               >
-                View treatments <ArrowRight size={15} />
+                Understand the concern <ArrowRight size={15} />
               </a>
             </div>
           </div>
@@ -164,6 +164,28 @@ export default async function ConcernPage({ params }: PageProps) {
                 Assessment before treatment.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="treatments" className="section-shell scroll-mt-12 bg-cream">
+        <div className="container-site">
+          <p className="eyebrow">Relevant treatments</p>
+          <h2 className="section-title">Options to discuss with Pink.</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-black/50">
+            Browse without choosing a branch. Open a treatment to compare
+            availability and prices at both Pink locations.
+          </p>
+          <div className="mt-8">
+            <CatalogBrowser
+              items={items}
+              combined
+              showDiscovery={false}
+              hideTypeFilters
+              resultsColumns="two"
+              collectionEyebrow="More ways to browse"
+              collectionTitle="Treatment collections"
+            />
           </div>
         </div>
       </section>
@@ -404,28 +426,6 @@ export default async function ConcernPage({ params }: PageProps) {
               ))}
             </div>
           </aside>
-        </div>
-      </section>
-
-      <section id="treatments" className="section-shell scroll-mt-12 bg-cream">
-        <div className="container-site">
-          <p className="eyebrow">Relevant treatments</p>
-          <h2 className="section-title">Options to discuss with Pink.</h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-black/50">
-            Browse without choosing a branch. Open a treatment to compare
-            availability and prices at both Pink locations.
-          </p>
-          <div className="mt-8">
-            <CatalogBrowser
-              items={items}
-              combined
-              showDiscovery={false}
-              hideTypeFilters
-              resultsColumns="two"
-              collectionEyebrow="More ways to browse"
-              collectionTitle="Treatment collections"
-            />
-          </div>
         </div>
       </section>
 

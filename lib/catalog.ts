@@ -41,9 +41,92 @@ export type CombinedCatalogItem = CatalogItem & {
   branchItems: BranchCatalogItem[];
 };
 
+const pinkCatalogueUpdates: CatalogItem[] = [
+  {
+    handle: "small-tattoo-removal",
+    title: "Small Tattoo Removal",
+    description: "Consultation-led laser tattoo removal for a small tattoo. Suitability, expected clearance, risks and the treatment schedule are confirmed before treatment.",
+    kind: "service",
+    tags: ["Tattoo Removal", "Aesthetic Treatments", "Clinic Services"],
+    images: [],
+    variants: [
+      { name: "1 Session", price: 75 },
+      { name: "6 Sessions", price: 375 },
+    ],
+  },
+  {
+    handle: "medium-tattoo-removal",
+    title: "Medium Tattoo Removal",
+    description: "Consultation-led laser tattoo removal for a medium tattoo. Suitability, expected clearance, risks and the treatment schedule are confirmed before treatment.",
+    kind: "service",
+    tags: ["Tattoo Removal", "Aesthetic Treatments", "Clinic Services"],
+    images: [],
+    variants: [
+      { name: "1 Session", price: 100 },
+      { name: "6 Sessions", price: 500 },
+    ],
+  },
+  {
+    handle: "large-tattoo-removal",
+    title: "Large Tattoo Removal",
+    description: "Consultation-led laser tattoo removal for a large tattoo. Suitability, expected clearance, risks and the treatment schedule are confirmed before treatment.",
+    kind: "service",
+    tags: ["Tattoo Removal", "Aesthetic Treatments", "Clinic Services"],
+    images: [],
+    variants: [
+      { name: "1 Session", price: 150 },
+      { name: "6 Sessions", price: 750 },
+    ],
+  },
+  ...[
+    ["jalupro-hydro", "Jalupro Hydro", 200],
+    ["plinest", "Plinest", 200],
+    ["seventy-hyal", "Seventy Hyal", 200],
+    ["profhilo", "Profhilo", 250],
+  ].map(([handle, title, price]) => ({
+    handle: handle as string,
+    title: title as string,
+    description: `${title} is a consultation-led injectable skin booster intended to support skin hydration and quality. Suitability, risks, aftercare and the treatment plan are discussed before treatment.`,
+    kind: "service" as const,
+    tags: ["Skin Boosters", "Aesthetic Treatments", "Clinic Services"],
+    images: [],
+    variants: [{ name: "1 Session", price: price as number }],
+  })),
+  ...[
+    ["jalupro-young-eye", "Jalupro Young Eye", 180],
+    ["lumi-eyes", "Lumi Eyes", 150],
+    ["plinest-eye", "Plinest Eye", 180],
+  ].map(([handle, title, price]) => ({
+    handle: handle as string,
+    title: title as string,
+    description: `${title} is a consultation-led injectable treatment for the eye area. Suitability, realistic outcomes, risks and aftercare are discussed before treatment.`,
+    kind: "service" as const,
+    tags: ["Skin Boosters", "Eye Treatments", "Aesthetic Treatments", "Clinic Services"],
+    images: [],
+    variants: [{ name: "1 Session", price: price as number }],
+  })),
+];
+
+function withPinkCatalogueUpdates(items: CatalogItem[]): CatalogItem[] {
+  const updatesByHandle = new Map(
+    pinkCatalogueUpdates.map((item) => [item.handle, item]),
+  );
+  return [
+    ...items.map((item) => {
+      if (item.handle !== "jalupro") return item;
+      return {
+        ...item,
+        tags: ["Skin Boosters", "Aesthetic Treatments", "Clinic Services"],
+        variants: [{ name: "1 Session", price: 150 }],
+      };
+    }),
+    ...updatesByHandle.values(),
+  ];
+}
+
 const fallbackByBranch: Record<string, CatalogItem[]> = {
-  "reading-west-st": westStreetCatalog as CatalogItem[],
-  "reading-watlington-st": watlingtonStreetCatalog as CatalogItem[],
+  "reading-west-st": withPinkCatalogueUpdates(westStreetCatalog as CatalogItem[]),
+  "reading-watlington-st": withPinkCatalogueUpdates(watlingtonStreetCatalog as CatalogItem[]),
 };
 
 type SanityCatalogItem = {
@@ -113,6 +196,67 @@ for (const [handle, description] of Object.entries(dermalogicaDescriptions)) {
 catalogueContent["pink-beauty-salon-and-academy-gift-card"] = { title: "Pink Beauty Salon and Academy Gift Card", description: "A Pink Beauty gift card for eligible salon or academy purchases. Confirm redemption, expiry and location terms before purchasing.", brand: "Pink Beauty" };
 catalogueContent["pink-beauty-aesthetic-clinic-and-academy-gift-card"] = { title: "Pink Beauty Aesthetic Clinic and Academy Gift Card", description: "A Pink Beauty gift card for eligible clinic or academy purchases. Confirm redemption, expiry, treatment suitability and location terms before purchasing.", brand: "Pink Beauty" };
 
+const catalogueConcernAssignments: Record<string, string[]> = {
+  "anti-wrinkle-fillers": ["lines-wrinkles"],
+  "anti-wrinkle-injections": ["lines-wrinkles"],
+  jalupro: ["lines-wrinkles", "skin-boosters"],
+  "jalupro-hydro": ["lines-wrinkles", "skin-boosters"],
+  plinest: ["lines-wrinkles", "skin-boosters"],
+  "seventy-hyal": ["lines-wrinkles", "skin-boosters"],
+  profhilo: ["lines-wrinkles", "skin-boosters"],
+  "jalupro-young-eye": ["lines-wrinkles", "skin-boosters"],
+  "lumi-eyes": ["lines-wrinkles", "skin-boosters"],
+  "plinest-eye": ["lines-wrinkles", "skin-boosters"],
+  "cosmelan-pigmentation-peel": ["pigmentation"],
+  "dermamelan-intimate-area": ["pigmentation"],
+  "skin-brightening-facial": ["pigmentation", "skin-boosters"],
+  "chemical-peel": ["pigmentation", "skin-boosters", "acne-texture"],
+  hydrafacial: ["skin-boosters", "acne-texture"],
+  "luxury-hydrafacial-buy-1-get-2nd-half-price": ["skin-boosters"],
+  "luxury-dermaplaning": ["skin-boosters"],
+  "micro-needling": ["skin-boosters", "acne-texture"],
+  "micro-needling-with-prp": ["skin-boosters", "acne-texture"],
+  microdermabrasion: ["skin-boosters", "acne-texture"],
+  "eyes-morpheus8": ["lines-wrinkles", "skin-boosters"],
+  "full-face-neck-morpheus8": [
+    "lines-wrinkles",
+    "skin-boosters",
+    "acne-texture",
+  ],
+  "skin-rejuvenation-treatment": ["skin-boosters", "acne-texture"],
+  "medibac-facial": ["acne-texture"],
+  "carbon-peel-facial": ["acne-texture"],
+  "body-morpheus8": ["body-contouring"],
+};
+
+function assignedConcerns(item: CatalogItem): string[] {
+  if (item.concerns) return item.concerns;
+  const assigned = catalogueConcernAssignments[item.handle];
+  if (assigned) return assigned;
+  if (
+    item.tags.some((tag) =>
+      [
+        "Laser Hair Removal",
+        "Laser Hair Removal Men",
+        "Laser Hair Removal Women",
+        "Waxing",
+        "Hot Waxing",
+        "Threading",
+      ].includes(tag),
+    )
+  ) {
+    return ["unwanted-hair"];
+  }
+  if (
+    item.tags.some((tag) =>
+      ["IV Drips", "Vitamin IM Injections"].includes(tag),
+    )
+  ) {
+    return ["wellness-vitamins"];
+  }
+  return [];
+}
+
 function normalizeItem(item: CatalogItem): CatalogItem {
   const content = catalogueContent[item.handle];
   const handle =
@@ -126,6 +270,7 @@ function normalizeItem(item: CatalogItem): CatalogItem {
     ...(content?.description && !item.description?.trim() ? { description: content.description } : {}),
     ...(content?.brand && !item.brand ? { brand: content.brand } : {}),
     tags: normalizeCollections(item.tags || []),
+    concerns: assignedConcerns(item),
   };
 }
 
