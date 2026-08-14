@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import "@fontsource-variable/cormorant-garamond";
+import "@fontsource-variable/manrope";
 import { BranchProvider } from "@/components/providers/branch-provider";
 import { BasketProvider } from "@/components/providers/basket-provider";
 import { PublicChrome } from "@/components/public-chrome";
 import { getCombinedCatalog } from "@/lib/catalog";
 import "./globals.css";
-
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
-const sans = Manrope({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -117,7 +106,7 @@ export default async function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <body
         suppressHydrationWarning
-        className={`${display.variable} ${sans.variable} font-sans antialiased`}
+        className="font-sans antialiased"
       >
         <script
           type="application/ld+json"

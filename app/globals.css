@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  --font-sans: "Manrope Variable", sans-serif;
+  --font-display: "Cormorant Garamond Variable", serif;
   --pink: #e4017f;
   --pink-dark: #a8005d;
   --pink-light: #fce4f1;

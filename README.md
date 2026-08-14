@@ -1,6 +1,6 @@
 # Pink Beauty Salon & Academy
 
-Production Next.js 15 website for Pink Beauty Salon, Clinic and Academy.
+Production Next.js 16 website for Pink Beauty Salon, Clinic and Academy.
 
 ## Architecture
 
@@ -13,6 +13,9 @@ Production Next.js 15 website for Pink Beauty Salon, Clinic and Academy.
 - `lib/sanity/` — CMS client
 - `sanity/schemas/` — Services, courses, team, testimonials, offers, gallery and blog schemas
 - `lib/content.ts` — typed fallback content used before Sanity is populated
+- `lib/admin/` — bookings, customers and consultation records
+- `lib/learner/` — Academy accounts, courses, submissions and private files
+- `db/migrations/` — ordered PostgreSQL migrations applied by `npm run db:migrate`
 
 ## Setup
 
@@ -22,25 +25,29 @@ npm install
 npm run dev
 ```
 
-Booking buttons route to the website's own contact form and preserve the selected branch and treatment. For direct email delivery, set `RESEND_API_KEY` and `ENQUIRY_FROM_EMAIL` after verifying the sending domain with Resend. Submissions for both branches are emailed to `info@pinkbeautysalons.co.uk`, with the customer's address as Reply-To. Alternatively, set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler.
+Copying `.env.example` creates a development template; replace only the values needed for the feature you are testing. Do not commit `.env.local`.
+
+Booking buttons route to the website's own contact form and preserve the selected branch and treatment. For direct email delivery, set `RESEND_API_KEY` and `ENQUIRY_FROM_EMAIL` after verifying the sending domain with Resend. Submissions for both branches are emailed to `info@pinkbeautysalons.co.uk`, with the customer's address as Reply-To. Alternatively, set `ENQUIRY_WEBHOOK_URL` to a CRM, email automation or serverless lead handler. Set `GETADDRESS_API_KEY` to enable postcode address lookup in staff forms.
 
 ## Products, services and images
 
-The West Street fallback catalogue is generated from the Shopify CSV export:
+The fallback catalogues for both branches are generated from their public Shopify JSON feeds:
 
 ```bash
-npm run catalog:import:west-street -- "/path/to/West street products.csv" data/west-street-catalog.json
+npm run catalog:import
 ```
 
-Day-to-day changes should be made by staff at `/studio` under **Catalogue**. **Products & Services** supports images, descriptions, collection assignment and a separate price configuration for each branch within one catalogue entry. Each branch can have either one current/original price pair or its own priced variants. When an original price is higher than the current price, the website presents it as a crossed-out discount. **Collections** supports adding existing products, manual ordering, collection images, descriptions, branch visibility and featured/hidden states. A published Studio entry with the same slug overrides the imported CSV entry; this keeps the original import as a safe fallback. Watlington items and prices can be added to the same product by adding Watlington under **Available at**.
+This overwrites `data/west-street-catalog.json` and `data/watlington-street-catalog.json` with the current live catalogue data, so review the diff before committing it. `catalog:import:west-street` is retained as an alias for the same two-branch import.
 
-After creating the West Street branch document in Studio, a developer can perform the one-time catalogue seed with a Sanity editor token in `SANITY_WRITE_TOKEN`:
+Day-to-day changes should be made by staff at `/studio` under **Catalogue**. **Products & Services** supports images, descriptions, collection assignment and a separate price configuration for each branch within one catalogue entry. Each branch can have either one current/original price pair or its own priced variants. When an original price is higher than the current price, the website presents it as a crossed-out discount. **Collections** supports adding existing products, manual ordering, collection images, descriptions, branch visibility and featured/hidden states. A published Studio entry with the same slug overrides the imported fallback entry; this keeps the latest reviewed import as a safe fallback. Watlington items and prices can be added to the same product by adding Watlington under **Available at**.
+
+After reviewing both imported catalogues, a developer can perform the one-time Sanity seed with `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` and a Sanity editor token in `SANITY_WRITE_TOKEN`:
 
 ```bash
 npm run catalog:seed:sanity
 ```
 
-The seed converts the Shopify tags into Studio collections and creates missing editor records without overwriting later staff changes. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader.
+The seed creates both branch documents, converts Shopify collections into Studio collections and creates or updates catalogue editor records while retaining existing Studio images and featured flags. Existing Shopify images remain visible as fallbacks until staff replace them through Studio's image uploader. To copy remote catalogue images into Sanity after reviewing the import, run `npm run catalog:images:sanity` with the same Sanity credentials.
 
 Studio uses a separate administrator login from the staff `/admin` area. Configure `STUDIO_ADMIN_EMAIL`, `STUDIO_ADMIN_PASSWORD` and `STUDIO_ADMIN_SESSION_TOKEN` in the hosting environment. The Studio session lasts four hours and is followed by Sanity's own project authentication. Do not reuse the staff password or either session token.
 
@@ -74,16 +81,18 @@ The PostgreSQL exclusion constraint prevents the same configured or manually ent
 
 ## Booking notifications
 
-Customers receive a confirmation when a booking is created and reminders approximately 48 and 24 hours before confirmed appointments. Booking changes and cancellations also trigger a customer notification. Delivery is provider-agnostic:
+Customers receive a confirmation when a booking is created. The hourly workflow sends one reminder for each confirmed appointment once it enters the 24-to-48-hour window. Booking changes and cancellations also trigger a customer notification. Delivery is provider-agnostic:
 
 - Set `NOTIFICATION_WEBHOOK_URL` to an SMS/email automation endpoint.
 - Optionally set `NOTIFICATION_WEBHOOK_SECRET`; it is sent as a Bearer token.
 - Or, for direct SMS confirmations and reminders, set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER`.
 - Set a long random `CRON_SECRET` in Amplify environment variables.
-- Configure an external hourly scheduler, such as Amazon EventBridge Scheduler, to call `/api/cron/booking-reminders` with the cron secret.
+- Configure the repository's `CRON_SECRET` and `BOOKING_REMINDER_URL` GitHub Actions secrets. `CRON_SECRET` must exactly match the value configured in Amplify, and `BOOKING_REMINDER_URL` must be the full production URL ending in `/api/cron/booking-reminders`.
 - Re-run `npm run db:migrate` after pulling notification changes to create the idempotent notification delivery ledger.
 
-The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. When the Twilio environment variables are used without a webhook, the app sends SMS directly and does not send email notifications. Delivery records prevent duplicate reminders across concurrent production instances and retry failed provider requests. Local development logs notifications instead of contacting customers.
+The included `.github/workflows/booking-reminders.yml` calls the reminder endpoint hourly at minute 7 and can also be run manually. GitHub Actions is the production scheduler; Amazon EventBridge Scheduler is not required. Do not enable a second scheduler unless failover is deliberately designed and monitored.
+
+The webhook receives the notification type, subject, message, requested channels, and booking details. The provider is responsible for delivering SMS and/or email. When the Twilio environment variables are used without a webhook, the app sends SMS directly and does not send email notifications. Delivery records prevent duplicate reminders across concurrent production instances and allow failed deliveries to be retried. Local development logs notifications instead of contacting customers.
 
 Configure the Twilio number's incoming-message webhook to send `POST` requests
 to `/api/notifications/sms/incoming`. Standard STOP keywords are recorded and
@@ -99,21 +108,28 @@ Original supplied consultation PDFs are stored in `private/admin-forms/` and ser
 
 Pink Academy learners sign in at `/learner-login`; public registration and self-service password resets are intentionally unavailable. Academy administrators use the separate `/academy-admin/login` area to create or reset credentials, enrol learners on individual VTCT courses, and review versioned assignment submissions. Configure unique `ACADEMY_ADMIN_EMAIL`, `ACADEMY_ADMIN_PASSWORD`, and `ACADEMY_ADMIN_SESSION_TOKEN` values; do not reuse salon staff credentials. Every generated learner credential requires a password change on first sign-in.
 
-Approved course books and assignments are fixed in `lib/learner/courses.ts`. When Pink supplies them, store the documents privately and add their object keys to that manifest. Learners can submit online answers and up to five PDF or Word files of 10 MB each per attempt. Configure `LEARNER_FILES_BUCKET` and `LEARNER_FILES_REGION`; the existing private treatment-images bucket is used as a fallback. Apply `003_learner_portal.sql` before enabling access.
+Approved course books and assignments are fixed in `lib/learner/courses.ts`. When Pink supplies them, store the documents privately and add their object keys to that manifest. Learners can submit online answers and up to five PDF or Word files of 10 MB each per attempt. Configure `LEARNER_FILES_BUCKET` and `LEARNER_FILES_REGION`; the existing private treatment-images bucket is used as a fallback when a separate learner bucket is not configured. Run `npm run db:migrate` before enabling the portal; it applies `003_learner_portal.sql` and any other unapplied migrations in order.
 
 ## Amplify deployment
 
-Deploy with AWS Amplify Hosting using the included `amplify.yml`. Add all required `.env.example` variables in Amplify environment variables. The build copies server-side and `NEXT_PUBLIC_` variables into `.env.production` before `npm run build`.
+Deploy with AWS Amplify Hosting using the included `amplify.yml`. Add the production values needed by the enabled features from `.env.example` to Amplify environment variables. The build allowlists the supported server-side variables and all `NEXT_PUBLIC_` variables into `.env.production` before `npm run build`; when adding a new server-only variable, update the allowlist in `amplify.yml` too.
 
 Amplify Hosting does not create the PostgreSQL database for bookings. Create a production PostgreSQL database separately, for example Amazon RDS PostgreSQL, Aurora PostgreSQL, Neon, Supabase, or another managed Postgres provider, then set its connection string as `DATABASE_URL` in Amplify. Run `npm run db:migrate` against that database before using admin bookings.
 
-Booking reminders are not scheduled by Amplify automatically. Use Amazon EventBridge Scheduler, a Lambda cron, or another scheduler to request:
+Booking reminders are not scheduled by Amplify. The included GitHub Actions workflow calls:
 
 ```text
 https://your-domain.com/api/cron/booking-reminders
 ```
 
-Include the configured `CRON_SECRET` according to the API route requirements. Images use Next Image, pages are statically generated where possible, and treatment/location routes include structured data and generated metadata.
+Configure these GitHub Actions repository secrets:
+
+- `BOOKING_REMINDER_URL` — the complete endpoint URL shown above.
+- `CRON_SECRET` — the same long random secret configured in Amplify; the workflow sends it as a Bearer token.
+
+The separate production monitor workflow runs every 15 minutes and requires `MONITOR_URL`, set to the production origin without a trailing path. Enable GitHub Actions failure notifications for the repository owner.
+
+Images use Next Image, pages are statically generated where possible, and treatment/location routes include structured data and generated metadata.
 
 ## Releases
 
