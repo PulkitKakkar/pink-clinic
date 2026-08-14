@@ -59,6 +59,12 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
             ))}
           </nav>
           <div className="flex shrink-0 items-center gap-3">
+            <Link
+              href="/learner-login"
+              className="rounded-full border border-white/35 px-4 py-2 text-[10px] font-bold uppercase tracking-[.14em] text-white transition hover:border-white hover:bg-white hover:text-ink"
+            >
+              Learner portal
+            </Link>
             <SiteSearch />
             <BasketLink />
           </div>
@@ -93,6 +99,13 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
               {label}
             </Link>
           ))}
+          <Link
+            onClick={() => setOpen(false)}
+            href="/learner-login"
+            className="mt-4 block rounded-full bg-[#210013] px-5 py-3 text-center text-xs font-bold uppercase tracking-[.14em] text-white"
+          >
+            Learner portal
+          </Link>
           <BasketLink mobile onNavigate={() => setOpen(false)} />
         </nav>
       )}
