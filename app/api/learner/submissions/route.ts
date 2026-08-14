@@ -10,6 +10,7 @@ import {
 import { getPublicOrigin } from "@/lib/public-origin";
 import { verifySubmissionFiles } from "@/lib/learner/file-storage";
 export async function POST(request: Request) {
+  const isInline = request.headers.get("x-requested-with") === "learner-submission-form";
   const learner = await getCurrentLearner();
   if (!learner)
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
@@ -50,8 +51,8 @@ export async function POST(request: Request) {
     writtenAnswer,
     files,
   });
-  return NextResponse.redirect(
-    new URL(`/learners/assignments/${assignmentId}`, getPublicOrigin(request)),
-    303,
-  );
+  const redirectTo = `/learners/assignments/${assignmentId}?submitted=1`;
+  return isInline
+    ? NextResponse.json({ redirectTo })
+    : NextResponse.redirect(new URL(redirectTo, getPublicOrigin(request)), 303);
 }
