@@ -43,7 +43,7 @@ serves Shopify, so preserve its DNS records for rollback before replacing them.
 
 ## Secret verification
 
-- Admin and Studio emails/passwords must differ. Passwords must be unique and at least 16 characters; session tokens and `CRON_SECRET` must be independently generated values of at least 32 characters.
+- Staff Admin, Academy Admin and Studio credentials must be different. Passwords must be unique and at least 12 characters; session tokens and `CRON_SECRET` must be independently generated values of at least 32 characters.
 - Store secrets only in Amplify/GitHub. Rotate them after staff changes or suspected exposure.
 - Never paste secret values into a ticket, pull request, screenshot or launch report.
 
