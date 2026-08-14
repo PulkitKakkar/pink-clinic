@@ -1,4 +1,5 @@
 import { AcademyHeader } from "@/components/academy/academy-header";
+import { LearnerCredentialForm } from "@/components/academy/learner-credential-form";
 import { learnerCourses } from "@/lib/learner/courses";
 import { listLearners, listSubmissions } from "@/lib/learner/storage";
 export const dynamic = "force-dynamic";
@@ -19,37 +20,9 @@ export default async function LearnersAdmin() {
         </p>
         <section className="mt-8 rounded-2xl bg-white p-6 shadow-soft">
           <h2 className="font-display text-3xl">Create learner</h2>
-          <form
-            action="/api/academy-admin/learners"
-            method="post"
-            className="mt-5 grid gap-4"
-          >
-            <div className="grid gap-3 sm:grid-cols-3">
-              <input
-                name="name"
-                required
-                placeholder="Full name"
-                className="rounded-xl border border-black/10 p-3"
-              />
-              <input
-                name="email"
-                type="email"
-                required
-                placeholder="Email"
-                className="rounded-xl border border-black/10 p-3"
-              />
-              <input
-                name="password"
-                type="password"
-                required
-                autoComplete="new-password"
-                placeholder="Initial secure password"
-                className="rounded-xl border border-black/10 p-3"
-              />
-            </div>
+          <LearnerCredentialForm mode="create">
             <CourseChecks />
-            <button className="button-primary w-fit">Create learner</button>
-          </form>
+          </LearnerCredentialForm>
         </section>
         <section className="mt-8 grid gap-4">
           {learners.map((l) => (
@@ -71,25 +44,7 @@ export default async function LearnersAdmin() {
                     Save courses
                   </button>
                 </form>
-                <form
-                  action="/api/academy-admin/learners"
-                  method="post"
-                  className="flex items-end gap-2"
-                >
-                  <input type="hidden" name="action" value="reset" />
-                  <input type="hidden" name="learnerId" value={l.id} />
-                  <input
-                    name="password"
-                    type="password"
-                    required
-                    autoComplete="new-password"
-                    placeholder="New secure password"
-                    className="rounded-xl border border-black/10 p-3 text-xs"
-                  />
-                  <button className="rounded-full bg-[#210013] px-4 py-3 text-xs font-bold text-white">
-                    Reset password
-                  </button>
-                </form>
+                <LearnerCredentialForm mode="reset" learnerId={l.id} learnerName={l.name} />
               </div>
             </article>
           ))}

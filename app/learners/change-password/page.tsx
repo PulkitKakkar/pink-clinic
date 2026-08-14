@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { PasswordChangeForm } from "@/components/learner/password-change-form";
 import { getCurrentLearner } from "@/lib/learner/auth";
 export default async function ChangePassword({
   searchParams,
@@ -22,29 +23,7 @@ export default async function ChangePassword({
             The passwords did not match or were not strong enough.
           </p>
         )}
-        <form
-          action="/api/learner/password"
-          method="post"
-          className="mt-6 grid gap-4"
-        >
-          <input
-            name="password"
-            type="password"
-            required
-            autoComplete="new-password"
-            className="rounded-xl border border-black/10 p-3"
-            placeholder="New password"
-          />
-          <input
-            name="confirmation"
-            type="password"
-            required
-            autoComplete="new-password"
-            className="rounded-xl border border-black/10 p-3"
-            placeholder="Confirm password"
-          />
-          <button className="button-primary">Save password</button>
-        </form>
+        <PasswordChangeForm />
       </div>
     </main>
   );

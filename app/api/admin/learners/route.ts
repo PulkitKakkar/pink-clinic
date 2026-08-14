@@ -9,6 +9,8 @@ import {
 } from "@/lib/learner/storage";
 import { getPublicOrigin } from "@/lib/public-origin";
 export async function POST(request: Request) {
+  const requestedWithJavaScript =
+    request.headers.get("x-requested-with") === "learner-credential-form";
   try {
     const form = await request.formData();
     const action = String(form.get("action") || "create");
@@ -43,6 +45,9 @@ export async function POST(request: Request) {
       );
     }
     const password = String(form.get("password") || "");
+    const confirmation = String(form.get("confirmation") || "");
+    if (password !== confirmation)
+      throw new Error("The passwords do not match.");
     if (!validatePassword(password))
       throw new Error(
         "Password must be at least 12 characters and include upper/lowercase, a number and a symbol.",
@@ -52,7 +57,7 @@ export async function POST(request: Request) {
       const name = String(form.get("name") || "").trim();
       const email = String(form.get("email") || "").trim().toLowerCase();
       const validCourseIds = new Set(learnerCourses.map((course) => course.id));
-      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
         throw new Error("A learner name and valid email are required.");
       await createLearner({
         name,
@@ -64,17 +69,18 @@ export async function POST(request: Request) {
           .filter((id) => validCourseIds.has(id)),
       });
     }
-    return NextResponse.redirect(
-      new URL("/academy-admin?updated=credentials", origin),
-      303,
-    );
+    const redirectTo = "/academy-admin?updated=credentials";
+    return requestedWithJavaScript
+      ? NextResponse.json({ redirectTo })
+      : NextResponse.redirect(new URL(redirectTo, origin), 303);
   } catch (error) {
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Could not update learner.",
-      },
-      { status: 400 },
+    const message =
+      error instanceof Error ? error.message : "Could not update learner.";
+    if (requestedWithJavaScript)
+      return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.redirect(
+      new URL(`/academy-admin?error=${encodeURIComponent(message)}`, getPublicOrigin(request)),
+      303,
     );
   }
 }

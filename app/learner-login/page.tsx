@@ -66,6 +66,13 @@ export default async function LearnerLogin({
           </label>
           <button className="button-primary mt-2 w-full">Sign in</button>
         </form>
+        <div className="mt-6 border-t border-black/5 pt-5 text-center text-xs leading-5 text-black/50">
+          <p className="font-bold text-black/70">Can&apos;t access your account?</p>
+          <p>Password resets are handled securely by Pink Academy.</p>
+          <a href="mailto:info@pinkbeautysalons.co.uk?subject=Pink%20Academy%20account%20help" className="mt-2 inline-block font-bold text-pink">Email learner support</a>
+          <span className="mx-2">·</span>
+          <a href="tel:+441189962711" className="font-bold text-pink">0118 996 2711</a>
+        </div>
       </div>
     </main>
   );
