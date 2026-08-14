@@ -34,14 +34,6 @@ export default async function AdminDashboard() {
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-4">
           <Link
-            href="/admin/learners"
-            className="rounded-2xl bg-[#210013] p-5 text-white shadow-soft transition hover:-translate-y-1"
-          >
-            <Users size={20} />
-            <strong className="mt-5 block text-3xl">Learners</strong>
-            <span className="text-xs text-white/70">Accounts, courses and marking</span>
-          </Link>
-          <Link
             href="/admin/bookings"
             className="rounded-2xl bg-pink p-5 text-white shadow-soft transition hover:-translate-y-1"
           >

@@ -11,6 +11,7 @@ export async function GET() {
   const configuration = {
     database: configured(process.env.DATABASE_URL),
     admin: configured(process.env.ADMIN_EMAIL) && configured(process.env.ADMIN_PASSWORD, 16) && configured(process.env.ADMIN_SESSION_TOKEN, 32),
+    academy: configured(process.env.ACADEMY_ADMIN_EMAIL) && configured(process.env.ACADEMY_ADMIN_PASSWORD, 16) && configured(process.env.ACADEMY_ADMIN_SESSION_TOKEN, 32),
     studio: configured(process.env.STUDIO_ADMIN_EMAIL) && configured(process.env.STUDIO_ADMIN_PASSWORD, 16) && configured(process.env.STUDIO_ADMIN_SESSION_TOKEN, 32),
     images: configured(process.env.TREATMENT_IMAGES_BUCKET),
     enquiries: (

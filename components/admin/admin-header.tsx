@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  BookOpen,
   CalendarDays,
   LayoutDashboard,
   LogOut,
@@ -49,12 +48,6 @@ export function AdminHeader() {
             className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
           >
             <Users size={13} /> Customers
-          </Link>
-          <Link
-            href="/admin/learners"
-            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
-          >
-            <BookOpen size={13} /> Learners
           </Link>
         </nav>
         <form action="/api/admin/logout" method="post">

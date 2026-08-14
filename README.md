@@ -97,7 +97,7 @@ Original supplied consultation PDFs are stored in `private/admin-forms/` and ser
 
 ## Learner portal
 
-Pink Academy learners sign in at `/learner-login`; public registration and self-service password resets are intentionally unavailable. Root administrators use `/admin/learners` to create or reset credentials, enrol learners on individual VTCT courses, and review versioned assignment submissions. Every generated credential requires a password change on first sign-in.
+Pink Academy learners sign in at `/learner-login`; public registration and self-service password resets are intentionally unavailable. Academy administrators use the separate `/academy-admin/login` area to create or reset credentials, enrol learners on individual VTCT courses, and review versioned assignment submissions. Configure unique `ACADEMY_ADMIN_EMAIL`, `ACADEMY_ADMIN_PASSWORD`, and `ACADEMY_ADMIN_SESSION_TOKEN` values; do not reuse salon staff credentials. Every generated learner credential requires a password change on first sign-in.
 
 Approved course books and assignments are fixed in `lib/learner/courses.ts`. When Pink supplies them, store the documents privately and add their object keys to that manifest. Learners can submit online answers and up to five PDF or Word files of 10 MB each per attempt. Configure `LEARNER_FILES_BUCKET` and `LEARNER_FILES_REGION`; the existing private treatment-images bucket is used as a fallback. Apply `003_learner_portal.sql` before enabling access.
 

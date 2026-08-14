@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
 
-describe("admin and Studio access control", () => {
+describe("admin, Academy and Studio access control", () => {
   it("rejects an unauthenticated admin API request", () => {
     const response = proxy(
       new NextRequest("http://localhost:3000/api/admin/bookings"),
@@ -46,5 +46,47 @@ describe("admin and Studio access control", () => {
     expect(proxy(studioRequest).headers.get("location")).toBe(
       "http://localhost:3000/studio-login",
     );
+  });
+
+  it("keeps Academy administration separate from salon staff", () => {
+    const staffRequest = new NextRequest(
+      "http://localhost:3000/academy-admin",
+      { headers: { cookie: "pink-admin-session=pink-local-admin-test-session" } },
+    );
+    expect(proxy(staffRequest).headers.get("location")).toBe(
+      "http://localhost:3000/academy-admin/login?next=%2Facademy-admin",
+    );
+
+    const academyRequest = new NextRequest(
+      "http://localhost:3000/academy-admin",
+      {
+        headers: {
+          cookie:
+            "pink-academy-admin-session=pink-local-academy-admin-session",
+        },
+      },
+    );
+    expect(proxy(academyRequest).headers.get("x-middleware-next")).toBe("1");
+    expect(
+      proxy(
+        new NextRequest("http://localhost:3000/admin", {
+          headers: {
+            cookie:
+              "pink-academy-admin-session=pink-local-academy-admin-session",
+          },
+        }),
+      ).headers.get("location"),
+    ).toBe("http://localhost:3000/admin/login?next=%2Fadmin");
+  });
+
+  it("retires the learner routes from the salon admin", () => {
+    expect(
+      proxy(new NextRequest("http://localhost:3000/admin/learners")).headers.get(
+        "location",
+      ),
+    ).toBe("http://localhost:3000/academy-admin");
+    expect(
+      proxy(new NextRequest("http://localhost:3000/api/admin/learners")).status,
+    ).toBe(404);
   });
 });

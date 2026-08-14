@@ -1,4 +1,4 @@
-import { AdminHeader } from "@/components/admin/admin-header";
+import { AcademyHeader } from "@/components/academy/academy-header";
 import { learnerCourses } from "@/lib/learner/courses";
 import { listLearners, listSubmissions } from "@/lib/learner/storage";
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export default async function LearnersAdmin() {
   ]);
   return (
     <>
-      <AdminHeader />
+      <AcademyHeader />
       <main className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
         <p className="eyebrow">Pink Academy</p>
         <h1 className="mt-2 font-display text-5xl">Learners</h1>
@@ -20,7 +20,7 @@ export default async function LearnersAdmin() {
         <section className="mt-8 rounded-2xl bg-white p-6 shadow-soft">
           <h2 className="font-display text-3xl">Create learner</h2>
           <form
-            action="/api/admin/learners"
+            action="/api/academy-admin/learners"
             method="post"
             className="mt-5 grid gap-4"
           >
@@ -63,7 +63,7 @@ export default async function LearnersAdmin() {
                 {l.mustChangePassword ? " · Password change required" : ""}
               </p>
               <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto]">
-                <form action="/api/admin/learners" method="post">
+                <form action="/api/academy-admin/learners" method="post">
                   <input type="hidden" name="action" value="courses" />
                   <input type="hidden" name="learnerId" value={l.id} />
                   <CourseChecks selected={l.courseIds} />
@@ -72,7 +72,7 @@ export default async function LearnersAdmin() {
                   </button>
                 </form>
                 <form
-                  action="/api/admin/learners"
+                  action="/api/academy-admin/learners"
                   method="post"
                   className="flex items-end gap-2"
                 >
@@ -115,7 +115,7 @@ export default async function LearnersAdmin() {
                   </span>
                 ))}
                 <form
-                  action="/api/admin/learners"
+                  action="/api/academy-admin/learners"
                   method="post"
                   className="mt-5 grid gap-3 sm:grid-cols-[180px_1fr_auto]"
                 >
