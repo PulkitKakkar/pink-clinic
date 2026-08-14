@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         String(form.get("feedback") || ""),
       );
       return NextResponse.redirect(
-        new URL("/admin/learners?updated=review", origin),
+        new URL("/academy-admin?updated=review", origin),
         303,
       );
     }
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
           .filter((id) => valid.has(id)),
       );
       return NextResponse.redirect(
-        new URL("/admin/learners?updated=courses", origin),
+        new URL("/academy-admin?updated=courses", origin),
         303,
       );
     }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       });
     }
     return NextResponse.redirect(
-      new URL("/admin/learners?updated=credentials", origin),
+      new URL("/academy-admin?updated=credentials", origin),
       303,
     );
   } catch (error) {
