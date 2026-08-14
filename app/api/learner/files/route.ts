@@ -64,8 +64,11 @@ export async function GET(request: Request) {
   const courseIds = await getLearnerCourseIds(learner.id);
   const materialAllowed = learnerCourses
     .filter((c) => courseIds.includes(c.id))
-    .flatMap((c) => c.materials)
-    .some((m) => m.storageKey === key);
+    .some(
+      (c) =>
+        c.materials.some((m) => m.storageKey === key) ||
+        c.assignments.some((a) => a.briefStorageKey === key),
+    );
   const submissionAllowed = (await getLearnerSubmissions(learner.id)).some(
     (s) => s.files.some((f) => f.key === key),
   );

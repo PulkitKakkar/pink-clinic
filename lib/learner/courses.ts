@@ -13,8 +13,9 @@ export type LearnerCourse = {
   assignments: LearnerAssignment[];
 };
 
-// Course books and assignment briefs are deliberately fixed in code. Add their
-// private S3 keys here when Pink supplies the approved VTCT documents.
+// Course books and assignment briefs are deliberately fixed in code. The
+// current facial materials are clearly labelled demonstrations and must be
+// replaced when Pink supplies the approved VTCT documents.
 export const learnerCourses: LearnerCourse[] = [
   [
     "level-2-nvq-diploma-in-beauty-therapy-general",
@@ -46,13 +47,42 @@ export const learnerCourses: LearnerCourse[] = [
     "VTCT Skills Level 4 Certificate in Laser and Intense Pulsed Light (IPL) Treatments",
     "Level 4",
   ],
-].map(([id, title, level]) => ({
-  id,
-  title,
-  level,
-  materials: [],
-  assignments: [],
-}));
+].map(([id, title, level]) => {
+  if (id === "vtct-skills-level-2-award-in-facial-massage-and-skin-care") {
+    return {
+      id,
+      title,
+      level,
+      materials: [
+        {
+          id: "demo-level-2-facial-course-book",
+          title: "Demo Course Workbook",
+          storageKey:
+            "learner-materials/demo/demo-level-2-facial-course-book.pdf",
+        },
+      ],
+      assignments: [
+        {
+          id: "demo-facial-consultation-plan",
+          title: "Demo Assignment 1: Consultation and Treatment Plan",
+          instructions:
+            "Demonstration only — not official VTCT material. Download the brief, then submit your written answer and/or PDF or Word evidence through the portal.",
+          briefStorageKey:
+            "learner-materials/demo/demo-assignment-consultation-plan.pdf",
+        },
+        {
+          id: "demo-facial-hygiene-safety",
+          title: "Demo Assignment 2: Hygiene and Safety",
+          instructions:
+            "Demonstration only — not official VTCT material. Download the brief, then submit your written answer and/or PDF or Word evidence through the portal.",
+          briefStorageKey:
+            "learner-materials/demo/demo-assignment-hygiene-safety.pdf",
+        },
+      ],
+    };
+  }
+  return { id, title, level, materials: [], assignments: [] };
+});
 
 export function getLearnerCourse(id: string) {
   return learnerCourses.find((course) => course.id === id);

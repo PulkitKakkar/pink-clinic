@@ -33,6 +33,14 @@ export default async function AssignmentPage({
       <p className="mt-5 whitespace-pre-wrap text-sm leading-7 text-black/60">
         {entry.assignment.instructions}
       </p>
+      {entry.assignment.briefStorageKey && (
+        <a
+          href={`/api/learner/files?key=${encodeURIComponent(entry.assignment.briefStorageKey)}`}
+          className="mt-5 inline-flex rounded-full bg-pink px-5 py-3 text-xs font-bold text-white"
+        >
+          Download assignment brief
+        </a>
+      )}
       {latest && (
         <section className="mt-8 rounded-2xl bg-white p-6">
           <strong>Status: {latest.status.replaceAll("-", " ")}</strong>
