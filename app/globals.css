@@ -34,7 +34,19 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
 }
 
 #main-content > main > section:first-of-type {
-  border-top: 2rem solid transparent;
+  padding-top: 9rem;
+}
+
+@media (min-width: 640px) {
+  #main-content > main > section:first-of-type {
+    padding-top: 10rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  #main-content > main > section:first-of-type {
+    padding-top: 13rem;
+  }
 }
 
 @layer components {

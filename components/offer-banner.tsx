@@ -14,7 +14,7 @@ export function OfferBanner({ offers }: { offers: Promotion[] }) {
       aria-label="Current Pink Beauty offers"
       className="offer-ticker relative overflow-hidden border-y border-white/15 bg-pink pr-10 text-white sm:pr-11"
     >
-      <div className={`offer-ticker-track flex h-8 w-max items-center sm:h-9 ${paused ? "[animation-play-state:paused]" : ""}`}>
+      <div className={`offer-ticker-track flex h-11 w-max items-center ${paused ? "[animation-play-state:paused]" : ""}`}>
         <OfferSequence offers={offers} />
         <div aria-hidden="true">
           <OfferSequence offers={offers} duplicate />
