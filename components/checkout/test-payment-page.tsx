@@ -3,6 +3,7 @@
 import { Check, CreditCard, Lock, RotateCcw, ShieldCheck } from "lucide-react";
 import { FormEvent, useState } from "react";
 import type { BranchPaymentConfig } from "@/lib/payments/providers";
+import { AppointmentCalendar, type AppointmentDetails } from "@/components/checkout/appointment-calendar";
 
 type PaymentItem = { label: string; detail?: string; amount: number };
 
@@ -11,11 +12,13 @@ export function TestPaymentPage({
   items,
   total,
   onBack,
+  appointment,
 }: {
   payment: BranchPaymentConfig;
   items: PaymentItem[];
   total: number;
   onBack: () => void;
+  appointment?: Omit<AppointmentDetails, "paymentReference">;
 }) {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -54,6 +57,8 @@ export function TestPaymentPage({
   }
 
   if (status === "paid") {
+    if (appointment)
+      return <section className="mx-auto max-w-2xl px-5 py-12 sm:py-20"><AppointmentCalendar details={{ ...appointment, paymentReference: reference }} /></section>;
     return (
       <section className="mx-auto max-w-xl px-5 py-12 sm:py-20">
         <div className="overflow-hidden rounded-[2rem] border border-emerald-200 bg-white shadow-luxe">
