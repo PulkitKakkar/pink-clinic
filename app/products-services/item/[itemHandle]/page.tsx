@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { CatalogItemPurchase } from "@/components/catalog/catalog-item-purchase";
+import { getCatalogImage } from "@/lib/catalog-images";
 import { getCatalogGuidance } from "@/lib/catalog-guidance";
 import { getCombinedCatalog } from "@/lib/catalog";
 import { reviews } from "@/lib/content";
@@ -202,16 +203,14 @@ export default async function CombinedCatalogItemPage({ params }: PageProps) {
             </p>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-pink-light sm:rounded-[2rem]">
-            {item.images[0] && (
-              <Image
-                src={item.images[0]}
-                alt={item.title}
-                fill
-                priority
-                className="object-cover"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
-            )}
+            <Image
+              src={getCatalogImage(item.images)}
+              alt={item.title}
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+            />
           </div>
         </div>
       </section>

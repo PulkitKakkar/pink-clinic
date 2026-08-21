@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SiteSearch } from "@/components/site-search";
 import { BasketLink } from "@/components/basket-link";
@@ -16,7 +17,15 @@ const links = [
   ["Locations", "/locations"],
 ];
 
+const lightHeaderRoutes = ["/concerns/", "/checkout/"];
+
+export function usesLightHeader(pathname: string) {
+  return lightHeaderRoutes.some((route) => pathname.startsWith(route));
+}
+
 export function Header({ offers = [] }: { offers?: Promotion[] }) {
+  const pathname = usePathname();
+  const lightHeader = usesLightHeader(pathname);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open) return;
@@ -28,12 +37,12 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
   }, [open]);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 border-b border-white/15 text-white">
+    <header className={`absolute inset-x-0 top-0 z-50 border-b ${lightHeader ? "border-black/10 text-ink" : "border-white/15 text-white"}`}>
       <div className="container-site relative flex h-20 items-center justify-center xl:h-32 xl:flex-col">
         <div className="flex h-full items-center justify-center xl:h-[72px] xl:w-full">
           <Link
             href="/"
-            className="flex items-center justify-center transition hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className={`flex items-center justify-center transition hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${lightHeader ? "focus-visible:outline-pink" : "focus-visible:outline-white"}`}
             aria-label="Pink Beauty home"
           >
             <Image
@@ -46,13 +55,13 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
             />
           </Link>
         </div>
-        <div className="hidden h-14 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-5 border-t border-white/10 xl:grid">
+        <div className={`hidden h-14 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-5 border-t xl:grid ${lightHeader ? "border-black/10" : "border-white/10"}`}>
           <nav className="flex min-w-0 items-center justify-between gap-4 pr-2">
             {links.map(([label, href]) => (
               <Link
                 key={label}
                 href={href}
-                className="text-[10px] font-bold uppercase tracking-[.14em] text-white/80 transition hover:text-white 2xl:text-xs 2xl:tracking-[.16em]"
+                className={`inline-flex min-h-11 items-center text-[10px] font-bold uppercase tracking-[.14em] transition 2xl:text-xs 2xl:tracking-[.16em] ${lightHeader ? "text-ink/70 hover:text-pink" : "text-white/80 hover:text-white"}`}
               >
                 {label}
               </Link>
@@ -61,20 +70,20 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
           <div className="flex shrink-0 items-center gap-3">
             <Link
               href="/learner-login"
-              className="rounded-full border border-white/35 px-4 py-2 text-[10px] font-bold uppercase tracking-[.14em] text-white transition hover:border-white hover:bg-white hover:text-ink"
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[.14em] transition ${lightHeader ? "border-black/15 text-ink hover:border-pink hover:text-pink" : "border-white/35 text-white hover:border-white hover:bg-white hover:text-ink"}`}
             >
               Learner portal
             </Link>
-            <SiteSearch />
+            <SiteSearch lightHeader={lightHeader} />
             <BasketLink />
           </div>
         </div>
         <div className="absolute right-[4.5rem] sm:right-[5.25rem] xl:hidden">
-          <BasketLink mobileHeader onNavigate={() => setOpen(false)} />
+          <BasketLink mobileHeader lightHeader={lightHeader} onNavigate={() => setOpen(false)} />
         </div>
         <button
           onClick={() => setOpen(!open)}
-          className="absolute right-5 rounded-full border border-white/30 p-2 sm:right-8 xl:hidden"
+          className={`absolute right-5 grid h-11 w-11 place-items-center rounded-full border sm:right-8 xl:hidden ${lightHeader ? "border-black/20" : "border-white/30"}`}
           aria-label="Toggle navigation"
           aria-expanded={open}
           aria-controls="mobile-navigation"

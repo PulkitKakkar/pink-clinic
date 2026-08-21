@@ -46,7 +46,7 @@ function OfferSequence({
           key={`${duplicate ? "duplicate-" : ""}${offer.href}`}
           href={offer.href}
           tabIndex={duplicate ? -1 : undefined}
-          className="inline-flex items-center gap-2 whitespace-nowrap text-[9px] font-bold uppercase tracking-[.14em] sm:text-[10px]"
+          className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap px-1 text-[9px] font-bold uppercase tracking-[.14em] sm:text-[10px]"
         >
           <Sparkles size={12} aria-hidden="true" />
           {offer.label}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 import { CatalogItemPurchase } from "@/components/catalog/catalog-item-purchase";
+import { getCatalogImage } from "@/lib/catalog-images";
 import { getBranchBySlug } from "@/lib/branches";
 import { getBranchCatalog } from "@/lib/catalog";
 import { getCatalogGuidance } from "@/lib/catalog-guidance";
@@ -174,16 +175,14 @@ export default async function CatalogItemPage({ params }: PageProps) {
             <CatalogItemPurchase item={item} branch={branch} />
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-pink-light sm:rounded-[2rem]">
-            {item.images[0] && (
-              <Image
-                src={item.images[0]}
-                alt={`${item.title} at ${branch.name}`}
-                fill
-                priority
-                className="object-cover"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
-            )}
+            <Image
+              src={getCatalogImage(item.images)}
+              alt={`${item.title} at ${branch.name}`}
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+            />
           </div>
         </div>
       </section>

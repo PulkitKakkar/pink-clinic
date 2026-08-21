@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBranch } from "@/components/providers/branch-provider";
 import { searchSite, type SearchItem } from "@/lib/search";
 
-export function SiteSearch({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
+export function SiteSearch({ mobile = false, lightHeader = false, onNavigate }: { mobile?: boolean; lightHeader?: boolean; onNavigate?: () => void }) {
   const { selectedBranch } = useBranch();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -58,7 +58,7 @@ export function SiteSearch({ mobile = false, onNavigate }: { mobile?: boolean; o
 
   return (
     <>
-      <button ref={triggerRef} onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : "grid h-11 w-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white hover:text-ink"} aria-label="Search Pink Beauty" aria-expanded={open}>
+      <button ref={triggerRef} onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : `grid h-11 w-11 place-items-center rounded-full border transition ${lightHeader ? "border-black/15 text-ink hover:border-pink hover:text-pink" : "border-white/30 text-white hover:bg-white hover:text-ink"}`} aria-label="Search Pink Beauty" aria-expanded={open}>
         <Search size={mobile ? 18 : 16} />{mobile && "Search"}
       </button>
       {open && <div role="dialog" aria-modal="true" aria-label="Search Pink Beauty" className="fixed inset-0 z-[100] bg-[#16010d]/75 p-3 text-ink backdrop-blur-md sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
