@@ -5,6 +5,7 @@ import { ArrowLeft, Check, CreditCard, Lock, MapPin, ShieldCheck } from "lucide-
 import Link from "next/link";
 import type { BranchPaymentConfig } from "@/lib/payments/providers";
 import { CheckoutAgreements } from "@/components/checkout/checkout-agreements";
+import { TestPaymentPage } from "@/components/checkout/test-payment-page";
 
 type Props = {
   branch: { name: string; address: string; slug: string };
@@ -23,29 +24,7 @@ export function PaymentCheckoutMockup({ branch, service, price, payment, variant
   const total = chosenVariant?.price ?? price;
 
   if (showProvider) {
-    return (
-      <section className="mx-auto max-w-xl px-5 py-12 sm:py-20">
-        <div className="overflow-hidden rounded-[2rem] border border-black/5 bg-white shadow-soft">
-          <div className={`h-2 ${payment.provider === "lopay" ? "bg-[#6657ff]" : "bg-[#00a98f]"}`} />
-          <div className="p-6 text-center sm:p-10">
-            <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-pink-light text-pink"><Lock size={23} /></span>
-            <p className="mt-6 text-[10px] font-bold uppercase tracking-[.25em] text-black/40">Provider preview</p>
-            <h1 className="mt-2 font-display text-5xl">{payment.providerName}</h1>
-            <p className="mt-2 text-sm font-bold">{payment.businessName}</p>
-            <div className="mt-7 rounded-2xl bg-cream p-5 text-left">
-              <div className="flex justify-between gap-4 text-sm"><span className="text-black/50">Payment for</span><span className="text-right font-bold">{service.title}</span></div>
-              {chosenVariant && <div className="mt-3 flex justify-between gap-4 border-t border-black/5 pt-3 text-sm"><span className="text-black/50">Option</span><span className="font-bold">{chosenVariant.name}</span></div>}
-              <div className="mt-3 flex justify-between gap-4 border-t border-black/5 pt-3"><span className="text-sm text-black/50">Total</span><span className="text-xl font-bold">£{total.toFixed(2)}</span></div>
-            </div>
-            <div className="mt-5 rounded-2xl border border-dashed border-black/15 p-6 text-sm leading-6 text-black/45">
-              The real {payment.providerName} secure card form will appear here. This mock-up never asks for or stores card details.
-            </div>
-            <button type="button" disabled className="mt-6 flex min-h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-black/15 px-6 text-sm font-bold text-white"><Lock size={15} /> Pay £{total.toFixed(2)} · Demo only</button>
-            <button type="button" onClick={() => setShowProvider(false)} className="mt-5 text-xs font-bold text-pink underline underline-offset-4">Return to Pink Beauty checkout</button>
-          </div>
-        </div>
-      </section>
-    );
+    return <TestPaymentPage payment={payment} items={[{ label: service.title, detail: chosenVariant?.name || service.duration, amount: total }]} total={total} onBack={() => setShowProvider(false)} />;
   }
 
   return (

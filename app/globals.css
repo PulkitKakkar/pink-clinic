@@ -18,6 +18,21 @@ html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--cream); }
 ::selection { background: var(--pink); color: white; }
 
+/* Keep supporting copy readable at the small sizes used throughout the UI. */
+.text-black\/35,
+.text-black\/40,
+.text-black\/45 { color: rgb(0 0 0 / .62); }
+.text-white\/40,
+.text-white\/45 { color: rgb(255 255 255 / .68); }
+
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 #main-content > main > section:first-of-type {
   border-top: 2rem solid transparent;
 }

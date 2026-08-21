@@ -6,6 +6,7 @@ import { Check, Search, ShoppingBag } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBasket } from "@/components/providers/basket-provider";
 import type { CatalogItem } from "@/lib/catalog";
+import { getCatalogImage } from "@/lib/catalog-images";
 import {
   beautyServiceAreas,
   matchesBeautyServiceArea,
@@ -283,9 +284,9 @@ export function CatalogBrowser({
                   })}
                   className={`group relative min-h-36 overflow-hidden rounded-2xl bg-[#210013] p-4 text-left text-white ring-offset-2 transition ${concern === slug ? "ring-2 ring-pink" : ""}`}
                 >
-                  {item?.images[0] && (
+                  {item && (
                     <Image
-                      src={item.images[0]}
+                      src={getCatalogImage(item.images)}
                       alt=""
                       fill
                       priority={index === 0}
@@ -353,9 +354,9 @@ export function CatalogBrowser({
                 className={`group grid min-h-28 grid-cols-[88px_1fr] overflow-hidden rounded-2xl border text-left transition ${serviceArea === slug ? "border-pink bg-pink-light/40" : "border-black/5 bg-cream hover:border-pink/30"}`}
               >
                 <span className="relative bg-pink-light">
-                  {item?.images[0] && (
+                  {item && (
                     <Image
-                      src={item.images[0]}
+                      src={getCatalogImage(item.images)}
                       alt=""
                       fill
                       className="object-cover transition group-hover:scale-105"
@@ -415,9 +416,9 @@ export function CatalogBrowser({
                   })}
                   className="group relative min-h-32 overflow-hidden rounded-2xl bg-[#210013] p-4 text-left text-white"
                 >
-                  {item?.images[0] && (
+                  {item && (
                     <Image
-                      src={item.images[0]}
+                      src={getCatalogImage(item.images)}
                       alt=""
                       fill
                       priority={index === 0}
@@ -503,7 +504,7 @@ export function CatalogBrowser({
                 className="relative block aspect-[4/3] overflow-hidden bg-pink-light"
               >
                 <Image
-                  src={item.images[0]}
+                  src={getCatalogImage(item.images)}
                   alt={item.title}
                   fill
                   priority={index === 0}
