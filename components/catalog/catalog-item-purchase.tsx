@@ -17,7 +17,7 @@ export function CatalogItemPurchase({ item, branch, appearance = "dark" }: { ite
   if (!variant) return <a href={`/contact?branchId=${branch.id}&catalogItem=${encodeURIComponent(item.handle)}`} className="button-primary mt-6">Enquire about this {item.kind === "product" ? "product" : "service"}</a>;
 
   function add() {
-    const success = addItem({ branchId: branch.id, branchSlug: branch.slug, handle: item.handle, title: item.title, variantName: variant.name, unitPrice: variant.price, image: item.images[0] || "" });
+    const success = addItem({ branchId: branch.id, branchSlug: branch.slug, handle: item.handle, title: item.title, variantName: variant.name, unitPrice: variant.price, image: item.images[0] || "", kind: item.kind, duration: item.duration });
     if (success) {
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1800);

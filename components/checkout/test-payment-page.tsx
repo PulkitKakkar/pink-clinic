@@ -13,12 +13,16 @@ export function TestPaymentPage({
   total,
   onBack,
   appointment,
+  appointments,
+  onPaid,
 }: {
   payment: BranchPaymentConfig;
   items: PaymentItem[];
   total: number;
   onBack: () => void;
   appointment?: Omit<AppointmentDetails, "paymentReference">;
+  appointments?: Omit<AppointmentDetails, "paymentReference">[];
+  onPaid?: (reference: string) => void;
 }) {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -28,6 +32,7 @@ export function TestPaymentPage({
   const [status, setStatus] = useState<"ready" | "processing" | "declined" | "paid">("ready");
   const [reference, setReference] = useState("");
   const [error, setError] = useState("");
+  const [appointmentIndex, setAppointmentIndex] = useState(0);
 
   const digits = cardNumber.replace(/\D/g, "");
 
@@ -51,14 +56,18 @@ export function TestPaymentPage({
         setStatus("declined");
         return;
       }
-      setReference(`TEST-${Date.now().toString(36).toUpperCase()}`);
+      const nextReference = `TEST-${Date.now().toString(36).toUpperCase()}`;
+      setReference(nextReference);
+      onPaid?.(nextReference);
       setStatus("paid");
     }, 900);
   }
 
   if (status === "paid") {
-    if (appointment)
-      return <section className="mx-auto max-w-2xl px-5 py-12 sm:py-20"><AppointmentCalendar details={{ ...appointment, paymentReference: reference }} /></section>;
+    const bookingSteps = appointments || (appointment ? [appointment] : []);
+    const bookingStep = bookingSteps[appointmentIndex];
+    if (bookingStep)
+      return <section className="mx-auto max-w-2xl px-5 py-12 sm:py-20">{bookingSteps.length > 1 && <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[.2em] text-pink">Appointment {appointmentIndex + 1} of {bookingSteps.length}</p>}<AppointmentCalendar key={`${bookingStep.serviceId}-${appointmentIndex}`} details={{ ...bookingStep, paymentReference: reference }} onContinue={appointmentIndex < bookingSteps.length - 1 ? () => setAppointmentIndex((index) => index + 1) : undefined} /></section>;
     return (
       <section className="mx-auto max-w-xl px-5 py-12 sm:py-20">
         <div className="overflow-hidden rounded-[2rem] border border-emerald-200 bg-white shadow-luxe">
