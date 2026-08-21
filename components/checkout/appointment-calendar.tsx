@@ -35,7 +35,7 @@ const localDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export function AppointmentCalendar({ details }: { details: AppointmentDetails }) {
+export function AppointmentCalendar({ details, onContinue, continueLabel = "Book next treatment" }: { details: AppointmentDetails; onContinue?: () => void; continueLabel?: string }) {
   const tomorrow = useMemo(() => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
@@ -128,6 +128,7 @@ export function AppointmentCalendar({ details }: { details: AppointmentDetails }
           <p><strong className="block">Location</strong><span className="text-black/60">{details.branchName}</span></p>
         </div>
         <p className="mt-5 text-xs leading-5 text-black/55">Pink will assign the right practitioner. Your appointment is already visible in the admin calendar, and confirmation will be sent using the contact details provided.</p>
+        {onContinue && <button type="button" onClick={onContinue} className="button-primary mt-6 w-full">{continueLabel}</button>}
       </div>
     );
   }

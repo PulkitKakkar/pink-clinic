@@ -190,6 +190,8 @@ export function CatalogBrowser({
         variantName: variant.name,
         unitPrice: variant.price,
         image: item.images[0] || "",
+        kind: item.kind,
+        duration: item.duration,
       })
     ) {
       setAddedItem(`${item.handle}:${variant.name}`);

@@ -8,4 +8,6 @@ export type BasketItem = {
   unitPrice: number;
   quantity: number;
   image: string;
+  kind?: "service" | "product" | "course";
+  duration?: string;
 };
