@@ -285,6 +285,61 @@ export const concernDecisionGuides: Record<string, ConcernDecisionGuide> = {
     ],
     sources: cosmeticSources,
   },
+  "hair-loss": {
+    causes: [
+      "Hereditary male or female pattern hair loss",
+      "Temporary shedding associated with illness, stress, weight loss or iron deficiency",
+      "Medicines, hormonal changes and medical or scalp conditions",
+    ],
+    maySuit: [
+      "People seeking gentle, supportive care for the condition and appearance of their hair",
+      "Clients who understand that salon care does not diagnose hair loss or guarantee regrowth",
+      "People who have sought medical advice about unexplained or concerning changes",
+    ],
+    discussFirst: [
+      "Sudden, rapid or patchy hair loss",
+      "Pain, itching, redness, scaling, sores or another significant scalp change",
+      "Recent illness, major weight change, pregnancy, medicines or symptoms of an underlying health condition",
+    ],
+    treatmentCourse:
+      "The right next step depends on the cause. Supportive salon hair and scalp care may improve condition and comfort, but it is not a treatment for an underlying medical cause and cannot promise new growth. The NHS advises seeing a GP to understand the cause before considering a commercial hair clinic.",
+    commonEffects: [
+      "Hair and scalp products can sometimes cause irritation or an allergic reaction",
+      "Massage or product-led services may be unsuitable for an inflamed, infected or painful scalp",
+      "Cosmetic improvement in feel or appearance does not mean the cause of hair loss has been treated",
+    ],
+    preparation: [
+      "Note when the loss began, its pattern and any recent health or medicine changes",
+      "Tell the practitioner about allergies, scalp conditions and products already in use",
+      "Seek GP advice before commercial treatment when the cause is unknown",
+    ],
+    aftercare: [
+      "Use products only as directed and stop if irritation develops",
+      "Avoid tight or damaging styling while the hair or scalp is vulnerable",
+      "Return to your GP if loss progresses or new symptoms appear",
+    ],
+    medicalAdvice:
+      "See a GP if you are worried about hair loss and before approaching a commercial hair clinic to understand what may be causing it. Seek prompt medical advice for sudden or patchy loss, scalp pain, inflammation, sores or other concerning symptoms.",
+    faqs: [
+      {
+        question: "Can a hair spa make lost hair grow back?",
+        answer:
+          "It should not be presented as a regrowth treatment. It may support the feel and condition of the existing hair and scalp, but hair loss has different causes that may need medical assessment.",
+      },
+      {
+        question: "Should I see my GP first?",
+        answer:
+          "Yes if you are worried or the cause is unclear. NHS guidance recommends finding out what may be causing hair loss before considering a commercial hair clinic.",
+      },
+    ],
+    sources: [
+      ...cosmeticSources,
+      {
+        label: "NHS: Hair loss",
+        url: "https://www.nhs.uk/conditions/hair-loss/",
+      },
+    ],
+  },
   "body-contouring": {
     causes: [
       "Body shape and fat distribution vary naturally between people",

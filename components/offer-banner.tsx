@@ -14,7 +14,7 @@ export function OfferBanner({ offers }: { offers: Promotion[] }) {
       aria-label="Current Pink Beauty offers"
       className="offer-ticker relative overflow-hidden border-y border-white/15 bg-pink pr-10 text-white sm:pr-11"
     >
-      <div className={`offer-ticker-track flex h-11 w-max items-center ${paused ? "[animation-play-state:paused]" : ""}`}>
+      <div className={`offer-ticker-track flex h-14 w-max items-center ${paused ? "[animation-play-state:paused]" : ""}`}>
         <OfferSequence offers={offers} />
         <div aria-hidden="true">
           <OfferSequence offers={offers} duplicate />
@@ -46,7 +46,7 @@ function OfferSequence({
           key={`${duplicate ? "duplicate-" : ""}${offer.href}`}
           href={offer.href}
           tabIndex={duplicate ? -1 : undefined}
-          className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap px-1 text-[9px] font-bold uppercase tracking-[.14em] sm:text-[10px]"
+          className="inline-flex min-h-14 items-center gap-2 whitespace-nowrap px-1 text-[10px] font-bold uppercase tracking-[.14em] sm:text-[11px]"
         >
           <Sparkles size={12} aria-hidden="true" />
           {offer.label}

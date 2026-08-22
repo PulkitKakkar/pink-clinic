@@ -34,7 +34,7 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
 }
 
 #main-content > main > section:first-of-type {
-  padding-top: 9rem;
+  padding-top: 10rem;
 }
 
 @media (min-width: 640px) {

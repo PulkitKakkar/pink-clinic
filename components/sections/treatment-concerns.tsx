@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import {
+  ConcernCardContent,
+  concernCardClassName,
+} from "@/components/catalog/concern-card-content";
 import type { CombinedCatalogItem } from "@/lib/catalog";
 import type { TreatmentConcern } from "@/lib/concerns";
 
@@ -45,37 +49,13 @@ export function TreatmentConcerns({
             <Link
               key={concern.slug}
               href={`/concerns/${concern.slug}`}
-              className="group relative min-h-[220px] overflow-hidden rounded-2xl bg-pink-berry text-white shadow-soft sm:min-h-[360px] sm:rounded-[1.5rem]"
+              className={concernCardClassName}
             >
-              {concern.image && (
-                <Image
-                  src={concern.image}
-                  alt=""
-                  fill
-                  priority={index === 0}
-                  className="object-cover opacity-65 transition duration-700 group-hover:scale-105"
-                  sizes="(min-width: 1024px) 33vw, 50vw"
-                />
-              )}
-              <span className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent" />
-              <span className="absolute inset-x-0 bottom-0 p-4 sm:p-7">
-                <span className="block text-[8px] font-bold uppercase tracking-[.12em] text-pink-light sm:text-[9px] sm:tracking-[.2em]">
-                  Concern guide
-                </span>
-                <span className="mt-2 block font-display text-2xl leading-none sm:text-4xl">
-                  {concern.shortName}
-                </span>
-                <span className="mt-3 hidden text-xs leading-5 text-white/65 sm:block">
-                  {concern.description}
-                </span>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[.1em] sm:mt-5 sm:gap-2 sm:text-[10px] sm:tracking-[.15em]">
-                  Explore treatments{" "}
-                  <ArrowRight
-                    size={14}
-                    className="transition group-hover:translate-x-1"
-                  />
-                </span>
-              </span>
+              <ConcernCardContent
+                concern={concern}
+                image={concern.image}
+                priority={index === 0}
+              />
             </Link>
           ))}
           {popularTreatments[0] && (
@@ -98,20 +78,23 @@ export function TreatmentConcerns({
                   Popular at Pink
                 </span>
                 <span className="mt-2 block font-display text-2xl leading-none sm:text-4xl">
-                  Client favourites
+                  Customer choices &amp; offers
                 </span>
                 <span className="mt-3 hidden text-xs leading-5 text-white/70 sm:block">
-                  Browse the treatments our clients ask about most.
+                  Browse popular customer choices alongside current offers and promotions.
                 </span>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[.1em] sm:mt-5 sm:gap-2 sm:text-[10px] sm:tracking-[.15em]">
-                  See popular treatments <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+                  Explore choices &amp; offers <ArrowRight size={14} className="transition group-hover:translate-x-1" />
                 </span>
               </span>
             </Link>
           )}
         </div>
-        <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-pink-light/55 p-5 sm:p-7">
+        <div className="mt-7 flex flex-col gap-5 rounded-2xl border border-pink/15 bg-pink-light/70 p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between sm:p-7">
           <div>
+            <p className="text-[9px] font-bold uppercase tracking-[.2em] text-pink">
+              More salon services
+            </p>
             <h3 className="font-display text-2xl">
               Looking for hair, nails or everyday beauty?
             </h3>
@@ -122,9 +105,9 @@ export function TreatmentConcerns({
           </div>
           <Link
             href="/products-services#beauty-wellness"
-            className="inline-flex min-h-11 items-center gap-2 text-xs font-bold text-pink"
+            className="button-primary w-full shrink-0 sm:w-auto"
           >
-            Browse salon services <ArrowRight size={15} />
+            Browse hair, nails &amp; beauty <ArrowRight size={15} />
           </Link>
         </div>
       </div>

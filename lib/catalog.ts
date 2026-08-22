@@ -226,6 +226,7 @@ const catalogueConcernAssignments: Record<string, string[]> = {
   "skin-rejuvenation-treatment": ["skin-boosters", "acne-texture"],
   "medibac-facial": ["acne-texture"],
   "carbon-peel-facial": ["acne-texture"],
+  "hair-spa": ["hair-loss"],
   "body-morpheus8": ["body-contouring"],
 };
 
