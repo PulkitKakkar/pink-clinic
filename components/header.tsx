@@ -61,7 +61,7 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
               <Link
                 key={label}
                 href={href}
-                className={`inline-flex min-h-11 items-center text-[10px] font-bold uppercase tracking-[.14em] transition 2xl:text-xs 2xl:tracking-[.16em] ${lightHeader ? "text-ink/70 hover:text-pink" : "text-white/80 hover:text-white"}`}
+                className={`inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[.12em] transition 2xl:text-[13px] 2xl:tracking-[.14em] ${lightHeader ? "text-ink/70 hover:text-pink" : "text-white/80 hover:text-white"}`}
               >
                 {label}
               </Link>
@@ -70,7 +70,7 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
           <div className="flex shrink-0 items-center gap-3">
             <Link
               href="/learner-login"
-              className={`inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[.14em] transition ${lightHeader ? "border-black/15 text-ink hover:border-pink hover:text-pink" : "border-white/35 text-white hover:border-white hover:bg-white hover:text-ink"}`}
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[.12em] transition ${lightHeader ? "border-black/15 text-ink hover:border-pink hover:text-pink" : "border-white/35 text-white hover:border-white hover:bg-white hover:text-ink"}`}
             >
               Learner portal
             </Link>
