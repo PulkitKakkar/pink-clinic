@@ -15,7 +15,7 @@ export function Hero() {
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
       <div className="noise absolute inset-0 opacity-40" />
-      <div className="container-site relative flex pb-10 pt-36 sm:pb-14 sm:pt-44 lg:min-h-[720px] lg:items-start lg:pb-32 lg:pt-44 xl:pt-52">
+      <div className="container-site relative flex pb-10 sm:pb-14 lg:min-h-[720px] lg:items-start lg:pb-32">
         <div className="max-w-3xl">
           <div className="mb-5 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[.28em] text-white/75 sm:mb-8 sm:text-[10px]">
             <span className="h-px w-8 bg-pink" />

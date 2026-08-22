@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Check, Search, ShoppingBag } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBasket } from "@/components/providers/basket-provider";
+import {
+  ConcernCardContent,
+  concernCardClassName,
+} from "@/components/catalog/concern-card-content";
 import type { CatalogItem } from "@/lib/catalog";
 import { getCatalogImage } from "@/lib/catalog-images";
 import {
@@ -272,8 +276,8 @@ export function CatalogBrowser({
               </button>
             )}
           </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {concernCards.map(({ slug, shortName, item }, index) => (
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+            {concernCards.map(({ slug, shortName, description, item }, index) => (
               <div key={slug} className="grid gap-2">
                 <button
                   type="button"
@@ -284,22 +288,14 @@ export function CatalogBrowser({
                     setCollection("all");
                     setVisibleCount(12);
                   })}
-                  className={`group relative min-h-36 overflow-hidden rounded-2xl bg-[#210013] p-4 text-left text-white ring-offset-2 transition ${concern === slug ? "ring-2 ring-pink" : ""}`}
+                  className={`${concernCardClassName} ring-offset-2 transition ${concern === slug ? "ring-2 ring-pink" : ""}`}
                 >
-                  {item && (
-                    <Image
-                      src={getCatalogImage(item.images)}
-                      alt=""
-                      fill
-                      priority={index === 0}
-                      className="object-cover opacity-45 transition group-hover:scale-105"
-                      sizes="(min-width: 640px) 33vw, 50vw"
-                    />
-                  )}
-                  <span className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
-                  <span className="relative flex h-full items-end font-display text-2xl leading-none">
-                    {shortName}
-                  </span>
+                  <ConcernCardContent
+                    concern={{ shortName, description }}
+                    image={item ? getCatalogImage(item.images) : undefined}
+                    priority={index === 0}
+                    actionLabel="Show matching treatments"
+                  />
                 </button>
                 <Link
                   href={`/concerns/${slug}`}

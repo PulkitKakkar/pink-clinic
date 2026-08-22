@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getBranchCatalog } from "@/lib/catalog";
-import { matchesConcern } from "@/lib/concerns";
+import { concernDecisionGuides } from "@/lib/concern-guidance";
+import { matchesConcern, treatmentConcerns } from "@/lib/concerns";
 
 describe("treatment concern assignments", () => {
   it("treats explicit concern assignments as authoritative", () => {
@@ -60,6 +61,7 @@ describe("treatment concern assignments", () => {
         expect(byHandle.get("body-morpheus8")?.concerns).toEqual([
           "body-contouring",
         ]);
+        expect(byHandle.get("hair-spa")?.concerns).toEqual(["hair-loss"]);
       }
     } finally {
       if (originalProjectId === undefined) {
@@ -67,6 +69,12 @@ describe("treatment concern assignments", () => {
       } else {
         process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = originalProjectId;
       }
+    }
+  });
+
+  it("provides complete guidance for every concern", () => {
+    for (const concern of treatmentConcerns) {
+      expect(concernDecisionGuides[concern.slug], concern.slug).toBeDefined();
     }
   });
 });

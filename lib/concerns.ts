@@ -239,6 +239,49 @@ export const treatmentConcerns: TreatmentConcern[] = [
     ],
   },
   {
+    slug: "hair-loss",
+    name: "Hair loss and thinning hair support",
+    shortName: "Hair loss",
+    description:
+      "A careful starting point for thinning, shedding and scalp concerns, with supportive hair care and guidance on when to speak to your GP.",
+    terms: ["hair spa", "scalp"],
+    goals: [
+      "Understand visible changes",
+      "Support hair and scalp care",
+      "Know when medical assessment matters",
+    ],
+    whatItMeans:
+      "Hair loss can appear as gradual thinning, increased shedding, a receding hairline or distinct patches. Causes vary and can include hereditary pattern hair loss, illness, stress, weight loss, iron deficiency, medicines or scalp conditions. A salon service can support the condition and appearance of the hair and scalp, but it cannot diagnose the cause or promise regrowth.",
+    commonSigns: [
+      "More shedding than usual",
+      "A widening parting or reduced density",
+      "A receding hairline or thinning crown",
+      "Patchy loss or a change in the scalp",
+    ],
+    approaches: [
+      {
+        title: "Start with the cause",
+        description:
+          "Speak to your GP before using a commercial hair clinic, particularly when loss is sudden, patchy, unexplained or accompanied by scalp symptoms.",
+      },
+      {
+        title: "Supportive hair and scalp care",
+        description:
+          "Gentle salon care may help the hair feel conditioned and the scalp feel cared for, but it is not a medical hair-loss treatment.",
+      },
+      {
+        title: "Set realistic expectations",
+        description:
+          "No option works for every type of hair loss. Any proposed treatment should be discussed only after the likely cause and limitations are understood.",
+      },
+    ],
+    whatToExpect: [
+      "Questions about when the change began and how it has progressed",
+      "Clear separation between supportive salon care and medical treatment",
+      "A recommendation to seek GP or dermatology advice where appropriate",
+    ],
+  },
+  {
     slug: "body-contouring",
     name: "Weight management and body shaping treatments",
     shortName: "Weight & body shaping",
