@@ -112,12 +112,13 @@ describe("consultation templates", () => {
     expect(errors).toContain("Laser treatment cannot be completed while the patch test is positive or pending.");
   });
 
-  it("renders the three record workflow actions", () => {
+  it("renders draft and finalize actions without treatment completion", () => {
     const template = getConsultationTemplate("iv-therapy")!;
     const html = renderToStaticMarkup(createElement(ConsultationForm, { template, practitionerNames: [], treatmentNames: [] }));
     expect(html).toContain('value="draft"');
     expect(html).toContain('value="finalize"');
-    expect(html).toContain('value="complete"');
+    expect(html).not.toContain('value="complete"');
+    expect(html).not.toContain("Complete treatment");
   });
 
   it.each(["anti-wrinkle", "dermal-fillers"])(
