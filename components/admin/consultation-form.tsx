@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle, Save } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
@@ -445,10 +445,6 @@ export function ConsultationForm({
           </button>
           <button disabled={status === "saving"} name="submitIntent" value="finalize" type="submit" className="inline-flex items-center gap-2 rounded-full border border-pink px-4 py-2 text-xs font-bold text-pink disabled:opacity-60">
             <ClipboardCheck size={14} /> Finalize consultation
-          </button>
-          <button disabled={status === "saving"} name="submitIntent" value="complete" type="submit" className="button-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-70">
-            {status === "saving" ? <LoaderCircle className="animate-spin" size={15} /> : <Save size={15} />}
-            {status === "saving" ? "Saving..." : "Complete treatment"}
           </button>
         </div>
       </div>
