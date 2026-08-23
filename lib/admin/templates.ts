@@ -318,6 +318,79 @@ const ivTherapy: ConsultationTemplate = {
   ],
 };
 
+const mounjaro: ConsultationTemplate = {
+  slug: "mounjaro", title: "Mounjaro (Tirzepatide) Consultation", description: "Prescriber-led suitability assessment, informed consent, monitoring plan and administration record for Mounjaro (tirzepatide).",
+  sourceFile: "Mounjaro Consultation and Treatment Record.pdf", reviewRequired: true,
+  version: "2026-08-23.1",
+  conditionalRequirements: [
+    { whenField: "pregnancyPotential", values: ["Yes"], requiredField: "contraceptionPlan", message: "Record the contraception and pregnancy-prevention discussion." },
+    { whenField: "oralContraception", values: ["Yes"], requiredField: "contraceptionPlan", message: "Record the additional barrier or non-oral contraception plan." },
+    { whenField: "diabetesMedication", values: ["Yes"], requiredField: "diabetesMedicationDetails", message: "Record diabetes medicines and the hypoglycaemia monitoring plan." },
+    { whenField: "previousGlp1", values: ["Yes"], requiredField: "previousGlp1Details", message: "Record previous GLP-1/GIP treatment, response and adverse effects." },
+    { whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "clinicalDecisionNotes", message: "Record the clinical decision and referral/restriction details." },
+  ],
+  completionBlockers: [
+    { field: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], message: "Mounjaro administration cannot be completed unless the client is suitable to proceed." },
+    { field: "pregnantTryingBreastfeeding", values: ["Yes"], message: "Mounjaro administration cannot be completed during pregnancy, while trying to conceive or while breastfeeding." },
+    { field: "acutePancreatitisSymptoms", values: ["Yes"], message: "Mounjaro administration cannot be completed while acute pancreatitis symptoms require urgent assessment." },
+  ],
+  sections: [
+    details(),
+    { title: "Treatment goals and baseline assessment", fields: [
+      { ...boundedNumber("heightCm", "Height (cm)", 100, 250), required: true }, { ...boundedNumber("baselineWeightKg", "Baseline weight (kg)", 30, 400), required: true },
+      { ...boundedNumber("baselineBmi", "Baseline BMI (kg/m2)", 10, 100), required: true }, boundedNumber("waistCm", "Waist circumference (cm)", 30, 250),
+      f("treatmentIndication", "Licensed treatment indication and eligibility rationale", "textarea", true),
+      f("weightRelatedConditions", "Weight-related conditions and relevant clinical measurements", "textarea", true),
+      f("goalsExpectations", "Goals, expectations, previous weight-management approaches and agreed lifestyle support", "textarea", true),
+    ]},
+    { title: "Medical history and medicine review", description: "Answer every question and record relevant dates, diagnoses and medicine names.", fields: [
+      yesNo("tirzepatideAllergy", "Allergy or previous hypersensitivity to tirzepatide or any Mounjaro ingredient?"),
+      yesNo("pregnantTryingBreastfeeding", "Currently pregnant, trying to conceive or breastfeeding?"),
+      yesNo("pregnancyPotential", "Able to become pregnant?"), yesNo("oralContraception", "Currently using oral contraception?"),
+      f("contraceptionPlan", "Contraception discussion, additional protection and one-month washout plan", "textarea"),
+      yesNo("previousGlp1", "Previous or current GLP-1/GIP medicine?"), f("previousGlp1Details", "Medicine, dose, last dose date, response, reason for stopping and adverse effects", "textarea"),
+      yesNo("diabetes", "Diabetes or history of abnormal blood glucose?"), yesNo("diabetesMedication", "Using insulin, a sulfonylurea or another diabetes medicine?"),
+      f("diabetesMedicationDetails", "Diabetes medicines, glucose/HbA1c information and hypoglycaemia monitoring or dose-adjustment plan", "textarea"),
+      yesNo("pancreatitisHistory", "Previous pancreatitis or pancreatic disease?"), yesNo("acutePancreatitisSymptoms", "Current severe persistent abdominal pain, particularly radiating to the back, with or without nausea or vomiting?"),
+      yesNo("gallbladderDisease", "Gallstones, gallbladder disease or previous gallbladder surgery?"), yesNo("severeGastrointestinalDisease", "Severe gastrointestinal disease, including severe gastroparesis?"),
+      yesNo("kidneyDisease", "Kidney disease, impaired renal function or risk of dehydration?"), yesNo("liverDisease", "Liver disease?"),
+      yesNo("eatingDisorder", "Current or previous eating disorder, disordered eating or significant nutritional concern?"),
+      yesNo("mentalHealthRisk", "Mental-health condition, suicidal thoughts, self-harm risk or medicine misuse concern requiring assessment?"),
+      yesNo("plannedProcedure", "Planned surgery, procedure, sedation or general anaesthetic?"),
+      yesNo("otherMedication", "Taking any other prescribed, over-the-counter or herbal medicines?"),
+      f("medicalMedicationDetails", "Details of every Yes answer, allergies, current medicines and relevant investigations", "textarea", true),
+    ]},
+    referralDecision(),
+    { title: "Prescription, counselling and informed consent", fields: [
+      f("prescriberName", "Prescriber name, professional registration and prescription reference", "textarea", true),
+      { id: "plannedDose", label: "Planned starting/current dose", type: "select", required: true, options: ["2.5 mg", "5 mg", "7.5 mg", "10 mg", "12.5 mg", "15 mg"].map((value) => ({ value, label: value })) },
+      f("doseSchedule", "Dose schedule, titration plan and review criteria", "textarea", true),
+      f("licensedUseConfirmed", "Licensed indication, alternatives, expected benefits, limitations and the role of diet and physical activity have been discussed", "checkbox", true),
+      f("commonEffectsDiscussed", "Common gastrointestinal effects, injection-site reactions, dehydration risk and practical management have been discussed", "checkbox", true),
+      f("pancreatitisWarning", "Pancreatitis warning symptoms and the need to stop treatment and seek urgent medical help have been discussed", "checkbox", true),
+      f("hypoglycaemiaWarning", "Hypoglycaemia risk and monitoring have been discussed where insulin or sulfonylureas are used", "checkbox", true),
+      f("pregnancyContraceptionWarning", "Pregnancy, breastfeeding, contraception and tirzepatide washout advice have been discussed where relevant", "checkbox", true),
+      f("procedureWarning", "The client will tell surgical and anaesthetic teams that they use tirzepatide before a procedure", "checkbox", true),
+      f("storageSharpsTraining", "Storage, KwikPen use, weekly dosing, missed-dose instructions, site rotation and sharps disposal have been explained", "checkbox", true),
+      f("questionsAnswered", "Questions have been answered and the client has had enough time to decide", "checkbox", true),
+      f("consentToTreatment", "I consent to the agreed Mounjaro treatment and monitoring plan", "checkbox", true),
+    ]},
+    { title: "Administration and supply record", description: "Practitioner use only. Complete for a dose administered or supplied by the clinic.", fields: [
+      completion("administrationDateTime", "Administration / supply date and time"),
+      completion("doseGiven", "Dose administered or supplied"), completion("penPresentation", "Pen strength and presentation"),
+      completion("batchNumber", "Batch / lot number"), completion("expiryDate", "Expiry date", "date"),
+      completion("administrationRouteSite", "Route, injection site and site rotation record"),
+      completion("administeredBy", "Administered by client/practitioner and practitioner name where applicable"),
+      completion("preDoseChecks", "Identity, prescription, dose, product integrity, storage and expiry checks completed", "checkbox"),
+      completion("currentWeightKg", "Current weight (kg)", "number"), f("currentBmi", "Current BMI (kg/m2)", "number"),
+      completion("responseAndSideEffects", "Response, adherence, side effects, hydration/nutrition and relevant observations", "textarea"),
+      completion("adverseEventAction", "Adverse events, actions, escalation and Yellow Card advice (enter None if none)", "textarea"),
+      completion("nextDoseReview", "Next dose, review date and monitoring plan", "textarea"),
+    ]},
+    practitioner(),
+  ],
+};
+
 const lemonBottle: ConsultationTemplate = {
   slug: "lemon-bottle", title: "Lemon Bottle Consultation", description: "Medical assessment and consent for Lemon Bottle fat dissolving treatment.",
   sourceFile: "Lemon Bottle Consultation Form.pdf", reviewRequired: true,
@@ -487,7 +560,7 @@ const laserDevice: ConsultationTemplate = {
   ],
 };
 
-export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, lemonBottle, spmu, laserDevice]
+export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice]
   .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }));
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
 
