@@ -81,6 +81,7 @@ describe("consultation templates", () => {
       "dermal-fillers": ["needleCannulaDetails", "anaestheticDetails", "emergencyPlanDiscussed"],
       "skin-peel-microneedling": ["treatmentProductTraceability", "infectionControlCheck", "needleDevice"],
       "iv-therapy": ["infusionTiming", "cannulaRecord", "postObservations"],
+      mounjaro: ["doseGiven", "batchNumber", "expiryDate", "administrationRouteSite", "responseAndSideEffects"],
       "lemon-bottle": ["supplierProductVerification", "batchNumber", "injectionRecord"],
       spmu: ["pigmentTraceability", "needleCartridgeTraceability", "infectionControlCheck"],
       "laser-device": ["deviceDetails", "treatmentAreasSettings", "treatmentEndpoint"],
@@ -161,6 +162,28 @@ describe("consultation templates", () => {
       "contraActions",
       "peelProduct",
       "needleDevice",
+    ]));
+  });
+
+  it("adds a prescriber-led Mounjaro consultation and administration record", () => {
+    const template = getConsultationTemplate("mounjaro");
+    const ids = template?.sections.flatMap((section) => section.fields.map((field) => field.id));
+
+    expect(template?.sourceFile).toBe("Mounjaro Consultation and Treatment Record.pdf");
+    expect(ids).toEqual(expect.arrayContaining([
+      "baselineBmi",
+      "prescriberName",
+      "plannedDose",
+      "pancreatitisWarning",
+      "contraceptionPlan",
+      "doseGiven",
+      "batchNumber",
+      "administrationRouteSite",
+      "nextDoseReview",
+    ]));
+    expect(template?.completionBlockers).toEqual(expect.arrayContaining([
+      expect.objectContaining({ field: "pregnantTryingBreastfeeding" }),
+      expect.objectContaining({ field: "acutePancreatitisSymptoms" }),
     ]));
   });
 });
