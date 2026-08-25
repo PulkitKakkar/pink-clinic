@@ -39,7 +39,8 @@ const details = (extra: ConsultationField[] = []): ConsultationSection => ({
     f("contactNumber", "Contact number", "tel", true), f("email", "Email address", "email", true),
     f("address", "Address", "textarea"), f("emergencyContact", "Emergency contact", "text"),
     f("emergencyContactNumber", "Emergency contact number", "tel"),
-    f("gpDetails", "GP name and address, if applicable", "textarea"), ...extra,
+    f("gpDetails", "GP name and address, if applicable", "textarea"),
+    f("occupation", "Occupation", "text"), f("referralSource", "Where did you hear about us?", "text"), ...extra,
   ],
 });
 const practitioner = (extra: ConsultationField[] = []): ConsultationSection => ({
@@ -153,7 +154,7 @@ const antiWrinkle: ConsultationTemplate = {
   ],
   detailGroups: [{ fields: ["tryingToConceive", "pregnant", "breastfeeding", "hrtContraception", "underMedicalCare", "prescriptionMedication", "supplementsHerbal", "antibiotics", "anticoagulants", "steroidsImmunosuppression", "retinoids", "photosensitisingMedication", "allergies", "asthma", "diabetes", "epilepsy", "cardiacDisease", "kidneyLiverDisease", "bloodDisorder", "autoimmuneDisease", "anxietyMentalHealth", "cancerRadiation", "recentSurgery", "activeInfection", "inflammatorySkinCondition", "woundsBruising", "healingScarring", "oedema", "tattoosMoles"], requiredField: "medicalHistoryDetails", message: "Explain every Yes answer in the medical-history details field." }],
   sections: [
-    details([f("occupation", "Occupation", "text")]),
+    details(),
     { title: "Consultation goals and previous treatment", fields: [
       f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
       yesNo("previousAntiWrinkle", "Previous botulinum toxin or anti-wrinkle treatment?"), f("previousAntiWrinkleDetails", "Previous product, areas, dates, results and complications", "textarea"),
@@ -181,7 +182,7 @@ const dermalFillers: ConsultationTemplate = {
   ],
   detailGroups: [{ fields: ["tryingToConceive", "pregnant", "breastfeeding", "hrtContraception", "underMedicalCare", "prescriptionMedication", "supplementsHerbal", "antibiotics", "anticoagulants", "steroidsImmunosuppression", "retinoids", "photosensitisingMedication", "allergies", "asthma", "diabetes", "epilepsy", "cardiacDisease", "kidneyLiverDisease", "bloodDisorder", "autoimmuneDisease", "anxietyMentalHealth", "cancerRadiation", "recentSurgery", "activeInfection", "inflammatorySkinCondition", "woundsBruising", "healingScarring", "oedema", "tattoosMoles"], requiredField: "medicalHistoryDetails", message: "Explain every Yes answer in the medical-history details field." }],
   sections: [
-    details([f("occupation", "Occupation", "text")]),
+    details(),
     { title: "Consultation goals and previous treatment", fields: [
       f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
       yesNo("previousFillers", "Previous dermal filler, cosmetic procedure or implant in the proposed area?"), f("previousFillersDetails", "Previous product, areas, dates, results and complications", "textarea"),
@@ -211,7 +212,7 @@ const skinPeelMicroneedling: ConsultationTemplate = {
   ],
   detailGroups: [{ fields: ["pregnantBreastfeeding", "hrtContraception", "underMedicalCare", "autoimmuneDisease", "prescriptionMedication", "antibiotics", "anticoagulants", "photosensitisingMedication", "retinoidsActives", "activeInfection", "bloodDisorder", "skinCancer", "dermatitisPsoriasis", "healingScarring", "kidneyOedema", "asthma", "mentalHealth", "burnsLesions", "recentTan"], requiredField: "medicalHistoryDetails", message: "Explain every Yes answer in the medical-history details field." }],
   sections: [
-    details([f("occupation", "Occupation", "text")]),
+    details(),
     { title: "Consultation goals and skincare", fields: [
       f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
       f("morningSkincare", "Morning skincare routine, active ingredients and products", "textarea", true), f("eveningSkincare", "Evening skincare routine, active ingredients and products", "textarea", true),
@@ -492,7 +493,7 @@ const laserDevice: ConsultationTemplate = {
   sourceFile: "dAb New Machine.pdf", reviewRequired: true,
   completionBlockers: [{ field: "result", values: ["Positive — do not proceed", "Pending"], message: "Laser treatment cannot be completed while the patch test is positive or pending." }],
   sections: [
-    details([f("occupation", "Occupation", "text"), f("homeTelephone", "Home telephone", "tel"), f("referralSource", "How did you hear about us?", "text"), f("areasToTreat", "Areas to be treated / hair removal", "textarea", true)]),
+    details([f("homeTelephone", "Home telephone", "tel"), f("areasToTreat", "Areas to be treated / hair removal", "textarea", true)]),
     { title: "Laser medical background", fields: [
       yesNo("underDoctorCare", "Currently under a doctor's care?"), f("doctorCareDetails", "Doctor care details", "textarea"),
       yesNo("hormoneMedication", "Taking hormone medication?"), f("hormoneMedicationDetails", "Hormone medication details", "textarea"),
@@ -560,7 +561,163 @@ const laserDevice: ConsultationTemplate = {
   ],
 };
 
-export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice]
+type TreatmentQuestion = { id: string; label: string };
+
+const briefMedicalScreen = (): ConsultationSection => ({
+  title: "Essential medical and suitability screening",
+  description: "Record details for every Yes answer before deciding whether treatment can proceed.",
+  fields: [
+    yesNo("allergies", "Any allergy or previous reaction to products, medicines, latex, adhesive, dye or anaesthetic?"),
+    yesNo("medication", "Any prescription, over-the-counter or herbal medicine relevant to this service?"),
+    yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?"),
+    yesNo("activeInfection", "Active infection, fever, cold sore, rash, open wound, inflamed skin or nail infection?"),
+    yesNo("healingBleeding", "Bleeding disorder, blood-thinning medicine, diabetes, poor circulation or impaired healing?"),
+    yesNo("recentTreatment", "Recent surgery, cosmetic procedure, peel, laser, injectable or other treatment in the area?"),
+    f("medicalHistoryDetails", "Details of every Yes answer, current medicines and allergies (enter None known when applicable)", "textarea", true),
+  ],
+});
+
+const sharedGoals = (): ConsultationSection => ({
+  title: "Goals and practitioner assessment",
+  fields: [
+    f("clientGoals", "Main concern, desired outcome and expectations", "textarea", true),
+    f("previousTreatment", "Relevant previous treatment and response", "textarea"),
+    f("areaAssessment", "Treatment-area assessment, observations and classification", "textarea", true),
+    f("treatmentPlan", "Proposed treatment, area, product/device and alternatives including no treatment", "textarea", true),
+  ],
+});
+
+const sharedConsent = (title: string, risks: string): ConsultationSection => ({
+  title: "Information discussed and informed consent",
+  description: `Complete after discussing the agreed ${title} plan with the client.`,
+  fields: [
+    f("benefitsLimitations", "Expected benefits, limitations, likely sessions, costs, preparation and aftercare have been explained", "checkbox", true),
+    f("materialRisks", `Material risks discussed: ${risks}`, "checkbox", true),
+    f("alternativesUnderstood", "Alternatives, including postponing or having no treatment, have been discussed", "checkbox", true),
+    f("resultsNotGuaranteed", "The client understands results vary and cannot be guaranteed", "checkbox", true),
+    f("questionsAnswered", "The client had enough time to ask questions and decide without pressure", "checkbox", true),
+    yesNo("clinicalPhotographyConsent", "Consent to photographs for the confidential clinical record?"),
+    yesNo("marketingPhotographyConsent", "Optional consent to agreed anonymised photographs for education or marketing?"),
+    f("consentToTreatment", `The client consents to the agreed ${title} treatment plan and understands consent may be withdrawn before treatment`, "checkbox", true),
+  ],
+});
+
+const sharedTreatmentRecord = (injectable = false): ConsultationSection => ({
+  title: "Treatment decision and session record",
+  description: "Practitioner use only. Complete at the treatment appointment.",
+  fields: [
+    { id: "suitabilityOutcome", label: "Suitability decision", type: "select", required: true, options: ["Suitable to proceed", "Defer or restrict treatment", "Medical referral required", "Not suitable"].map((value) => ({ value, label: value })) },
+    f("decisionNotes", "Clinical reasoning, restriction, referral or refusal details", "textarea", true),
+    completion("treatmentDate", "Treatment date", "date"), completion("areasTreated", "Area(s) treated", "textarea"),
+    completion("productDevice", injectable ? "Medicine/product, lawful authorisation or prescription, and device/needle" : "Product/device and protocol"),
+    completion("settingsDose", injectable ? "Dose, route, site and technique" : "Settings, intensity, duration and technique"),
+    completion("batchExpiry", "Batch/lot and expiry, where applicable"),
+    completion("endpointResponse", "Clinical endpoint, immediate response, adverse event and action taken", "textarea"),
+    completion("aftercareFollowUp", "Aftercare supplied, warning signs and follow-up plan", "textarea"),
+  ],
+});
+
+function treatmentConsultation(config: {
+  slug: string;
+  title: string;
+  description: string;
+  detailed: boolean;
+  injectable?: boolean;
+  risks: string;
+  questions: TreatmentQuestion[];
+}): ConsultationTemplate {
+  return {
+    slug: config.slug,
+    title: `${config.title} Consultation`,
+    description: config.description,
+    sourceFile: "Pink Clinic Consultation Forms.pdf",
+    reviewRequired: true,
+    version: "2026-08-25.1",
+    conditionalRequirements: [{ whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "decisionNotes", message: "Record the clinical decision and referral/restriction details." }],
+    sections: [
+      details(),
+      config.detailed ? comprehensiveMedicalScreen() : briefMedicalScreen(),
+      sharedGoals(),
+      { title: "Treatment-specific screening", description: "Answer every question and add relevant detail to the medical-history or assessment notes.", fields: config.questions.map((question) => yesNo(question.id, question.label)) },
+      sharedConsent(config.title, config.risks),
+      sharedTreatmentRecord(config.injectable),
+      practitioner(),
+    ],
+  };
+}
+
+const requestedTreatmentConsultations: ConsultationTemplate[] = [
+  treatmentConsultation({ slug: "hydrafacial", title: "Hydrafacial", description: "Detailed skin assessment, contraindication screening, informed consent and treatment record for Hydrafacial.", detailed: true, risks: "temporary redness, tightness, sensitivity, dryness, irritation, breakout, allergic reaction, abrasion and aggravation of an existing skin condition.", questions: [
+    { id: "inflamedSunburntSkin", label: "Active inflammation, sunburn, infection, open lesion or cold sore in the treatment area?" },
+    { id: "recentResurfacing", label: "Recent peel, resurfacing, waxing, injectable or surgery in the treatment area?" },
+    { id: "solutionSensitivity", label: "Known sensitivity to Hydrafacial solutions, exfoliating acids or proposed ingredients?" },
+    { id: "retinoidUse", label: "Current or recent retinoid, isotretinoin or exfoliating-acid use affecting skin tolerance?" },
+  ]}),
+  treatmentConsultation({ slug: "carbon-peel-facial", title: "Carbon Peel Facial", description: "Detailed laser carbon peel suitability, light-sensitivity screening, consent and settings record.", detailed: true, risks: "heat, discomfort, redness, swelling, dryness, crusting, blistering, burns, infection, scarring, pigment change and eye injury if protection is not used.", questions: [
+    { id: "recentTan", label: "Recent tanning, fake tan, sunburn or inability to avoid sun exposure?" }, { id: "lightSensitivity", label: "Photosensitising medicine or light-triggered condition?" },
+    { id: "pigmentChangeHistory", label: "History of pigment change after inflammation, peel or laser?" }, { id: "activeFacialLesion", label: "Active acne infection, cold sore, open wound or suspicious lesion?" },
+  ]}),
+  treatmentConsultation({ slug: "tattoo-removal", title: "Tattoo Removal", description: "Detailed laser tattoo assessment, test-patch planning, informed consent and treatment settings record.", detailed: true, risks: "pain, redness, swelling, pinpoint bleeding, blistering, crusting, infection, textural change, scarring, pigment change, incomplete clearance, ink colour change and allergic reaction.", questions: [
+    { id: "tattooRecorded", label: "Tattoo location, colours, age, type and previous removal attempts fully recorded?" }, { id: "tattooRecentTan", label: "Recent tanning, fake tan or sunburn?" },
+    { id: "tattooLightSensitivity", label: "Photosensitising medicine or light-triggered condition?" }, { id: "tattooScarringRisk", label: "History of keloid scarring, pigment change or poor wound healing?" },
+    { id: "tattooSuspiciousLesion", label: "Tattoo overlies a mole, suspicious lesion or permanent cosmetic pigment requiring specialist assessment?" },
+  ]}),
+  treatmentConsultation({ slug: "ipl-skin-rejuvenation", title: "IPL Skin Rejuvenation", description: "Detailed IPL skin assessment, light-sensitivity screening, consent, test-patch and treatment record.", detailed: true, risks: "heat, stinging, redness, swelling, pigment darkening or crusting, blistering, burns, infection, scarring, pigment or hair change and eye injury if protection is not used.", questions: [
+    { id: "iplRecentTan", label: "Recent tanning, fake tan, sunburn or planned strong sun exposure?" }, { id: "iplPhotosensitivity", label: "Photosensitising medicine or light-triggered condition?" },
+    { id: "iplPigmentRisk", label: "History of melasma, pigment change or keloid scarring?" }, { id: "iplActiveLesion", label: "Active infection, cold sore, open wound or suspicious lesion?" },
+    { id: "iplDeviceSuitability", label: "Skin type, hair/pigment target and treatment area suitable for the approved device protocol?" },
+  ]}),
+  treatmentConsultation({ slug: "microdermabrasion", title: "Microdermabrasion", description: "Detailed skin assessment, contraindication screening, consent and treatment record for microdermabrasion.", detailed: true, risks: "redness, tenderness, dryness, abrasion, bruising or petechiae, broken capillaries, pigment change, infection and aggravation of an existing skin condition.", questions: [
+    { id: "fragileInflamedSkin", label: "Active rosacea flare, eczema, dermatitis, acne infection or fragile/couperose skin?" }, { id: "microOpenLesion", label: "Open lesion, cold sore, sunburn or recent facial surgery?" },
+    { id: "microRecentTreatment", label: "Recent peel, resurfacing, waxing or injectable in the area?" }, { id: "microRetinoids", label: "Current or recent retinoid or exfoliating-acid use affecting skin tolerance?" },
+  ]}),
+  treatmentConsultation({ slug: "morpheus8", title: "Morpheus8", description: "Detailed radiofrequency microneedling assessment, contraindication screening, consent and device record.", detailed: true, risks: "pain, redness, swelling, bruising, pinpoint bleeding, crusting, burns, blistering, infection, scarring, pigment change, altered sensation, contour or fat-volume change and an unsatisfactory result.", questions: [
+    { id: "implantedDevice", label: "Pacemaker, defibrillator or implanted electrical/metal device in or near the treatment area?" }, { id: "morpheusPregnancy", label: "Pregnant or breastfeeding?" },
+    { id: "morpheusActiveInfection", label: "Active infection, cold sore, open wound or inflammatory skin disease?" }, { id: "morpheusHealingRisk", label: "Bleeding disorder, anticoagulant use or impaired healing?" },
+    { id: "morpheusRecentProcedure", label: "Recent isotretinoin, surgery, filler, threads or energy-based treatment?" }, { id: "morpheusScarring", label: "History of keloid scarring or significant pigment change?" },
+  ]}),
+  treatmentConsultation({ slug: "dermaplaning", title: "Dermaplaning", description: "Detailed skin assessment, blade-treatment suitability screening, consent and treatment record.", detailed: true, risks: "minor cuts, abrasion, redness, tenderness, dryness, breakout, infection, pigment change and aggravation of an existing skin condition.", questions: [
+    { id: "dermaplaningInflammation", label: "Active inflamed acne, infection, cold sore, open wound or sunburn?" }, { id: "dermaplaningBleeding", label: "Bleeding disorder, anticoagulant use or fragile skin?" },
+    { id: "dermaplaningRecentTreatment", label: "Recent peel, resurfacing, waxing or surgery in the area?" }, { id: "dermaplaningRetinoids", label: "Current or recent retinoid or exfoliating-acid use affecting skin tolerance?" },
+  ]}),
+  treatmentConsultation({ slug: "prp-hair-face", title: "PRP for Hair or Face", description: "Detailed blood-draw, PRP suitability, treatment planning, consent and traceability record.", detailed: true, injectable: true, risks: "blood-draw discomfort, fainting, bruising, bleeding, swelling, pain, infection, headache, temporary hair shedding, tissue or nerve injury, scarring, pigment change and limited or no improvement.", questions: [
+    { id: "prpTreatmentPurpose", label: "Treatment purpose and area (hair/scalp, face/skin or other) recorded?" }, { id: "prpBloodDisorder", label: "Blood, platelet or anaemia diagnosis, or abnormal blood-test result?" },
+    { id: "prpAnticoagulants", label: "Anticoagulant, antiplatelet medicine or tendency to bleed or bruise?" }, { id: "prpSystemicIllness", label: "Active infection, cancer treatment, immunosuppression or systemic illness?" },
+    { id: "prpNeedleFainting", label: "Needle phobia, fainting history or previous blood-draw complication?" }, { id: "prpRecentProcedure", label: "Recent procedure, injectable or active inflammation in the treatment area?" },
+  ]}),
+  treatmentConsultation({ slug: "skin-eye-boosters", title: "Skin or Eye Boosters", description: "Detailed injectable booster assessment, eye-area screening, consent and product traceability record.", detailed: true, injectable: true, risks: "pain, redness, swelling, bruising, bleeding, infection, lumps or nodules, asymmetry, prolonged eye-area oedema, allergy, pigment change, tissue injury and rare vascular occlusion with possible skin loss or visual impairment.", questions: [
+    { id: "boosterProductArea", label: "Proposed product and treatment area identified, with the eye area assessed separately?" }, { id: "boosterPregnancy", label: "Pregnant, trying to conceive or breastfeeding?" },
+    { id: "boosterAllergy", label: "Allergy to proposed product components or local anaesthetic?" }, { id: "boosterInfection", label: "Active infection, cold sore, dental infection or inflammatory skin disease?" },
+    { id: "boosterSystemicRisk", label: "Autoimmune condition, immunosuppression, bleeding disorder or anticoagulant use?" }, { id: "boosterRecentInjectable", label: "Recent filler, threads, surgery or injectable treatment?" },
+    { id: "boosterVascularHistory", label: "History of vascular complication, severe allergy, delayed nodules or prolonged oedema?" },
+  ]}),
+  treatmentConsultation({ slug: "intramuscular-injections", title: "Intramuscular Injections", description: "Medicine-specific assessment, lawful authorisation checks, informed consent and administration record for intramuscular injections.", detailed: true, injectable: true, risks: "pain, bleeding, bruising, swelling, infection, fainting, allergic reaction or anaphylaxis, nerve or blood-vessel injury, tissue damage and medicine-specific adverse effects.", questions: [
+    { id: "imAuthorisation", label: "Medicine, indication and lawful authorisation or prescription verified?" }, { id: "imAllergy", label: "Allergy to the medicine, excipients, latex, dressing or antiseptic?" },
+    { id: "imPregnancy", label: "Pregnancy or breastfeeding status checked where relevant to the medicine?" }, { id: "imBleedingRisk", label: "Bleeding disorder, anticoagulant or antiplatelet use, or low platelets?" },
+    { id: "imPreviousReaction", label: "Previous adverse reaction, fainting, needle phobia or injection-site problem?" }, { id: "imMedicineChecks", label: "Correct person, medicine, dose, route, site, batch, expiry and storage verified?" },
+  ]}),
+  treatmentConsultation({ slug: "facial", title: "Facial", description: "Brief client consultation, skin suitability check, consent and treatment record for a facial.", detailed: false, risks: "temporary redness, sensitivity, irritation, breakout or allergic reaction.", questions: [
+    { id: "facialActiveSkinIssue", label: "Active infection, cold sore, open wound, sunburn or inflamed skin?" }, { id: "facialProductSensitivity", label: "Allergy or sensitivity to skincare, fragrance or proposed ingredients?" }, { id: "facialRecentProcedure", label: "Recent peel, resurfacing, facial waxing or injectable?" },
+  ]}),
+  treatmentConsultation({ slug: "waxing-hot-waxing", title: "Waxing / Hot Waxing", description: "Brief waxing suitability, consent and treatment record.", detailed: false, risks: "pain, redness, bruising, skin lifting, burns, folliculitis, ingrown hairs, infection, pigment change or allergic reaction.", questions: [
+    { id: "waxRetinoids", label: "Retinoid, exfoliating acid, recent peel/resurfacing or fragile skin?" }, { id: "waxSkinDamage", label: "Sunburn, infection, open wound, bruising or inflamed skin?" }, { id: "waxAllergy", label: "Allergy or sensitivity to wax, rosin, fragrance or aftercare product?" },
+  ]}),
+  treatmentConsultation({ slug: "pedicure-manicure", title: "Pedicure / Manicure", description: "Brief nail-service health screening, consent and treatment record.", detailed: false, risks: "cuts, soreness, infection, allergy, nail damage or aggravation of an existing nail or skin condition.", questions: [
+    { id: "nailDiabetesCirculation", label: "Diabetes, poor circulation, neuropathy or reduced sensation?" }, { id: "nailInfection", label: "Fungal or bacterial infection, wart, open wound or inflamed skin or nail?" }, { id: "nailProductAllergy", label: "Allergy or sensitivity to polish, gel, acrylic, adhesive or acetone?" },
+  ]}),
+  treatmentConsultation({ slug: "lash-brow-tint", title: "Eyelash / Eyebrow Tint", description: "Brief tint patch-test, eye-health screening, consent and treatment record.", detailed: false, risks: "stinging, redness, swelling, dermatitis, chemical injury, eye irritation or severe allergic reaction.", questions: [
+    { id: "tintPatchTest", label: "Patch test completed and acceptable under the current product instructions and clinic policy?" }, { id: "tintEyeCondition", label: "Eye infection, irritation, recent eye surgery or broken skin?" }, { id: "tintPreviousReaction", label: "Previous reaction to hair dye, tint, henna, black henna or PPD?" },
+  ]}),
+  treatmentConsultation({ slug: "hair-colour", title: "Hair Colour", description: "Brief hair-colour skin-alert testing, scalp screening, consent and service record.", detailed: false, risks: "scalp or skin irritation, severe allergic reaction, chemical burn, hair breakage, uneven or unexpected colour and damage to clothing or property.", questions: [
+    { id: "colourAlertTest", label: "Skin alert and strand testing completed and acceptable under current product instructions and clinic policy?" }, { id: "colourScalpCondition", label: "Scalp irritation, broken skin, infection or recent chemical service?" }, { id: "colourPreviousReaction", label: "Previous reaction to hair dye, bleach, henna, black henna or PPD?" },
+  ]}),
+  treatmentConsultation({ slug: "ear-piercing", title: "Ear Piercing", description: "Brief piercing eligibility, health screening, consent and procedure traceability record.", detailed: false, risks: "pain, bleeding, swelling, infection, embedding, migration or rejection, allergic reaction, scarring or keloid and asymmetry.", questions: [
+    { id: "piercingAgeConsent", label: "Age, identity and guardian consent checked in line with clinic policy?" }, { id: "piercingAllergy", label: "Metal, latex, antiseptic or dressing allergy?" },
+    { id: "piercingHealingRisk", label: "Bleeding disorder, anticoagulant use, poor healing or keloid history?" }, { id: "piercingSiteCondition", label: "Current illness, ear infection, dermatitis or damaged skin at the proposed site?" },
+  ]}),
+];
+
+export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice, ...requestedTreatmentConsultations]
   .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }));
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
 
