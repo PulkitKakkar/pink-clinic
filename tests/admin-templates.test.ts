@@ -7,6 +7,25 @@ import { ConsultationForm } from "@/components/admin/consultation-form";
 import { consultationTemplates, getConsultationTemplate, validateConsultationAnswers } from "@/lib/admin/templates";
 
 describe("consultation templates", () => {
+  it("includes all requested treatment and service consultation forms", () => {
+    const requestedSlugs = [
+      "hydrafacial", "carbon-peel-facial", "tattoo-removal", "ipl-skin-rejuvenation",
+      "microdermabrasion", "morpheus8", "dermaplaning", "prp-hair-face",
+      "skin-eye-boosters", "intramuscular-injections", "facial", "waxing-hot-waxing",
+      "pedicure-manicure", "lash-brow-tint", "hair-colour", "ear-piercing",
+    ];
+
+    expect(consultationTemplates).toHaveLength(24);
+    expect(consultationTemplates.map((template) => template.slug)).toEqual(expect.arrayContaining(requestedSlugs));
+  });
+
+  it("asks occupation and referral source on every consultation form", () => {
+    for (const template of consultationTemplates) {
+      const ids = template.sections.flatMap((section) => section.fields.map((field) => field.id));
+      expect(ids, template.slug).toEqual(expect.arrayContaining(["occupation", "referralSource"]));
+    }
+  });
+
   it("uses unique field identifiers within every form", () => {
     for (const template of consultationTemplates) {
       const ids = template.sections.flatMap((section) => section.fields.map((field) => field.id));
