@@ -26,6 +26,24 @@ describe("consultation templates", () => {
     }
   });
 
+  it("keeps routine service forms concise and removes irrelevant clinical fields", () => {
+    const briefSlugs = ["facial", "waxing-hot-waxing", "pedicure-manicure", "lash-brow-tint", "hair-colour", "ear-piercing"];
+    for (const slug of briefSlugs) {
+      const fields = getConsultationTemplate(slug)!.sections.flatMap((section) => section.fields);
+      const ids = fields.map((field) => field.id);
+      expect(ids, slug).not.toEqual(expect.arrayContaining(["gender", "address", "emergencyContact", "gpDetails", "settingsDose", "marketingPhotographyConsent"]));
+      expect(fields.find((field) => field.id === "decisionNotes")?.required, slug).not.toBe(true);
+    }
+  });
+
+  it("uses focused rather than blanket medical screening on the new advanced forms", () => {
+    const advancedSlugs = ["hydrafacial", "carbon-peel-facial", "tattoo-removal", "ipl-skin-rejuvenation", "microdermabrasion", "morpheus8", "dermaplaning", "prp-hair-face", "skin-eye-boosters", "intramuscular-injections"];
+    for (const slug of advancedSlugs) {
+      const ids = getConsultationTemplate(slug)!.sections.flatMap((section) => section.fields.map((field) => field.id));
+      expect(ids, slug).not.toEqual(expect.arrayContaining(["hrtContraception", "asthma", "oedema", "tattoosMoles", "anxietyMentalHealth"]));
+    }
+  });
+
   it("uses unique field identifiers within every form", () => {
     for (const template of consultationTemplates) {
       const ids = template.sections.flatMap((section) => section.fields.map((field) => field.id));
