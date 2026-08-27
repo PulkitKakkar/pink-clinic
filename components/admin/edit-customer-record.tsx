@@ -29,6 +29,8 @@ export function EditCustomerRecord({
         email: f.get("email"),
         address: f.get("address"),
         gender: f.get("gender"),
+        occupation: f.get("occupation"),
+        dateOfBirth: f.get("dateOfBirth"),
         marketingConsent: f.get("marketingConsent") === "true",
       }),
     });
@@ -110,6 +112,22 @@ export function EditCustomerRecord({
                   <option>Non-binary</option>
                   <option>Prefer not to say</option>
                 </select>
+              </Field>
+              <Field label="Occupation">
+                <input
+                  name="occupation"
+                  defaultValue={customer.occupation}
+                  className={cls}
+                />
+              </Field>
+              <Field label="Date of birth">
+                <input
+                  name="dateOfBirth"
+                  type="date"
+                  max={new Date().toISOString().slice(0, 10)}
+                  defaultValue={customer.dateOfBirth}
+                  className={cls}
+                />
               </Field>
               <Field label="Customer address" wide>
                 <textarea

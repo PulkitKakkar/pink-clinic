@@ -14,6 +14,8 @@ export function booking(overrides: Partial<Booking> = {}): Booking {
     customerPhone: "07123456789",
     customerAddress: "1 Test Street",
     customerGender: "",
+    customerOccupation: "",
+    customerDateOfBirth: "",
     marketingConsent: false,
     marketingConsentUpdatedAt: null,
     startsAt: "2026-07-24T09:00:00.000Z",

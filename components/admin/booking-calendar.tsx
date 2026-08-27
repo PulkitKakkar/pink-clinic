@@ -422,6 +422,8 @@ export function BookingCalendar({
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
         customerGender: form.get("customerGender"),
+        customerOccupation: form.get("customerOccupation"),
+        customerDateOfBirth: form.get("customerDateOfBirth"),
         marketingConsent: form.get("marketingConsent") === "on",
         startsAt: new Date(String(form.get("startsAt"))).toISOString(),
         notes: form.get("notes"),
@@ -482,6 +484,8 @@ export function BookingCalendar({
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
         customerGender: form.get("customerGender"),
+        customerOccupation: form.get("customerOccupation"),
+        customerDateOfBirth: form.get("customerDateOfBirth"),
         marketingConsent: form.get("marketingConsent") === "true",
         marketingConsentUpdatedAt:
           form.get("marketingConsent") === String(editing.marketingConsent)
@@ -734,6 +738,14 @@ export function BookingCalendar({
                 defaultValue={customer?.address || ""}
                 className={inputClass}
               />
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Occupation
+              <input key={`occupation-${selectedCustomer}`} name="customerOccupation" defaultValue={customer?.occupation || ""} className={inputClass} />
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Date of birth
+              <input key={`dob-${selectedCustomer}`} name="customerDateOfBirth" type="date" max={new Date().toISOString().slice(0, 10)} defaultValue={customer?.dateOfBirth || ""} className={inputClass} />
             </label>
             <label className="flex items-start gap-3 rounded-xl border border-black/5 bg-white p-4 text-xs leading-5">
               <input
@@ -1101,6 +1113,14 @@ export function BookingCalendar({
                   defaultValue={editing.customerAddress}
                   className={inputClass}
                 />
+              </label>
+              <label className="grid gap-2 text-xs font-bold">
+                Occupation
+                <input name="customerOccupation" defaultValue={editing.customerOccupation} className={inputClass} />
+              </label>
+              <label className="grid gap-2 text-xs font-bold">
+                Date of birth
+                <input name="customerDateOfBirth" type="date" max={new Date().toISOString().slice(0, 10)} defaultValue={editing.customerDateOfBirth} className={inputClass} />
               </label>
               <label className="grid gap-2 text-xs font-bold sm:col-span-2">
                 Promotional consent
