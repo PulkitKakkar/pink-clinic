@@ -27,6 +27,16 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
     throw new BookingValidationError(
       "Customer name and phone number are required.",
     );
+  const customerDateOfBirth = input.customerDateOfBirth?.trim() || "";
+  if (
+    customerDateOfBirth &&
+    (!/^\d{4}-\d{2}-\d{2}$/.test(customerDateOfBirth) ||
+      Number.isNaN(new Date(`${customerDateOfBirth}T00:00:00Z`).valueOf()) ||
+      new Date(`${customerDateOfBirth}T00:00:00Z`).toISOString().slice(0, 10) !==
+        customerDateOfBirth ||
+      customerDateOfBirth > new Date().toISOString().slice(0, 10))
+  )
+    throw new BookingValidationError("Enter a valid date of birth.");
 
   const configuredService = services.find(
     (item) => item.id === input.serviceId,
@@ -102,6 +112,8 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
     customerPhone: input.customerPhone.trim(),
     customerAddress: input.customerAddress?.trim() || "",
     customerGender: input.customerGender?.trim() || "",
+    customerOccupation: input.customerOccupation?.trim() || "",
+    customerDateOfBirth,
     marketingConsent: normalizeBoolean(input.marketingConsent),
     marketingConsentUpdatedAt:
       input.marketingConsentUpdatedAt || new Date().toISOString(),

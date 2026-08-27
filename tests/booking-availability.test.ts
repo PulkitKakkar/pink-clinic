@@ -25,6 +25,8 @@ function booking(staffId: string, start: string, end: string): Booking {
     customerPhone: "07000000000",
     customerAddress: "",
     customerGender: "",
+    customerOccupation: "",
+    customerDateOfBirth: "",
     marketingConsent: false,
     marketingConsentUpdatedAt: null,
     startsAt: start,

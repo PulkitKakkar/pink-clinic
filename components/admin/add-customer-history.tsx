@@ -74,6 +74,8 @@ export function AddCustomerHistory({
         customerEmail: f.get("customerEmail"),
         customerAddress: f.get("customerAddress"),
         customerGender: f.get("customerGender"),
+        customerOccupation: f.get("customerOccupation"),
+        customerDateOfBirth: f.get("customerDateOfBirth"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
         notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
@@ -242,6 +244,24 @@ export function AddCustomerHistory({
                   <option>Non-binary</option>
                   <option>Prefer not to say</option>
                 </select>
+              </Field>
+              <Field label="Occupation">
+                <input
+                  key={`occupation-${selected}`}
+                  name="customerOccupation"
+                  defaultValue={customer?.occupation || ""}
+                  className={cls}
+                />
+              </Field>
+              <Field label="Date of birth">
+                <input
+                  key={`dob-${selected}`}
+                  name="customerDateOfBirth"
+                  type="date"
+                  max={new Date().toISOString().slice(0, 10)}
+                  defaultValue={customer?.dateOfBirth || ""}
+                  className={cls}
+                />
               </Field>
               <Field label="Customer address" wide>
                 <AddressLookup
