@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle, X } from "lucide-react";
 import type { ConsultationTemplate } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
@@ -261,7 +261,7 @@ export function ConsultationForm({
                 {field.type !== "checkbox" && (
                   <span>
                     {field.label}
-                    {field.required && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
+                    {(field.required || field.completionRequired) && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
                   </span>
                 )}
                 {field.id === "address" ? (
@@ -448,6 +448,17 @@ export function ConsultationForm({
           </button>
         </div>
       </div>
+      {status === "saved" && (
+        <div role="dialog" aria-modal="true" aria-labelledby="save-success-title" className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-5">
+          <div className="relative w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-2xl sm:p-10">
+            <button type="button" onClick={() => setStatus("idle")} aria-label="Close confirmation" className="absolute right-4 top-4 rounded-full bg-cream p-2 text-black/60"><X size={20} /></button>
+            <CheckCircle2 className="mx-auto text-green-600" size={68} strokeWidth={1.8} />
+            <h2 id="save-success-title" className="mt-5 font-display text-4xl">Consultation {recordId ? "updated" : "saved"}</h2>
+            <p className="mt-3 text-sm leading-6 text-black/55">The consultation record has been saved successfully.</p>
+            <button type="button" onClick={() => setStatus("idle")} className="mt-7 w-full rounded-full bg-pink px-6 py-3 text-sm font-bold text-white">Done</button>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

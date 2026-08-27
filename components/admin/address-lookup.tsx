@@ -12,7 +12,7 @@ export function AddressLookup({
       name={name}
       rows={3}
       defaultValue={defaultValue}
-      placeholder="Full address, including postcode"
+      placeholder="House/building, street, town or city"
       className={cls}
     />
   );
