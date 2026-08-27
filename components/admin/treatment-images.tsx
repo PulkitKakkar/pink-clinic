@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Camera, LoaderCircle, X } from "lucide-react";
+import { Camera, ImagePlus, LoaderCircle, X } from "lucide-react";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 
 async function prepareImage(file: File): Promise<string> {
@@ -53,10 +53,19 @@ export function TreatmentImages({ images, onChange }: { images: TreatmentImage[]
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {(["before", "after"] as const).map((phase) => (
-          <label key={phase} className={`flex items-center justify-center gap-2 rounded-xl border border-dashed border-pink/40 bg-pink-light/25 p-4 text-xs font-bold text-pink hover:bg-pink-light/50 ${uploading ? "cursor-wait opacity-60" : "cursor-pointer"}`}>
-            {uploading ? <LoaderCircle size={16} className="animate-spin" /> : <Camera size={16} />} {uploading ? "Uploading..." : `Add ${phase} images`}
-            <input disabled={uploading} className="sr-only" type="file" accept="image/*" multiple onChange={(e) => { void add(e.target.files, phase); e.target.value = ""; }} />
-          </label>
+          <div key={phase} className="grid gap-2 rounded-xl border border-pink/15 bg-pink-light/20 p-3">
+            <p className="text-center text-xs font-bold capitalize text-black/65">{phase} images</p>
+            <div className="grid grid-cols-2 gap-2">
+              <label className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink px-3 py-3 text-xs font-bold text-white ${uploading ? "cursor-wait opacity-60" : ""}`}>
+                {uploading ? <LoaderCircle size={16} className="animate-spin" /> : <Camera size={16} />} Camera
+                <input disabled={uploading} className="sr-only" type="file" accept="image/*" capture="environment" onChange={(e) => { void add(e.target.files, phase); e.target.value = ""; }} />
+              </label>
+              <label className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-pink/30 bg-white px-3 py-3 text-xs font-bold text-pink ${uploading ? "cursor-wait opacity-60" : ""}`}>
+                <ImagePlus size={16} /> Upload
+                <input disabled={uploading} className="sr-only" type="file" accept="image/*" multiple onChange={(e) => { void add(e.target.files, phase); e.target.value = ""; }} />
+              </label>
+            </div>
+          </div>
         ))}
       </div>
       {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-xs font-bold text-red-700">{error}</p>}
