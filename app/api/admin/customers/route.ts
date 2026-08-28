@@ -13,10 +13,12 @@ export async function PATCH(request: Request) {
       sessionNumber?: string;
       totalSessions?: string;
       bookingIds?: string[];
-      name?: string;
+      firstName?: string;
+      lastName?: string;
       phone?: string;
       email?: string;
       address?: string;
+      postcode?: string;
       gender?: string;
       occupation?: string;
       dateOfBirth?: string;
@@ -44,9 +46,9 @@ export async function PATCH(request: Request) {
       });
       return NextResponse.json({ booking });
     }
-    if (!body.bookingIds?.length || !body.name?.trim() || !body.phone?.trim())
+    if (!body.bookingIds?.length || !body.firstName?.trim() || !body.lastName?.trim() || !body.phone?.trim() || !body.address?.trim() || !body.postcode?.trim())
       return NextResponse.json(
-        { error: "Customer name, phone and record ids are required." },
+        { error: "Customer first name, last name, phone, address, postcode and record ids are required." },
         { status: 400 },
       );
     const existing = await getBookings();
@@ -63,10 +65,12 @@ export async function PATCH(request: Request) {
       bookings.push(
         await updateBooking({
           id: booking.id,
-          customerName: body.name,
+          customerFirstName: body.firstName,
+          customerLastName: body.lastName,
           customerPhone: body.phone,
           customerEmail: body.email || "",
           customerAddress: body.address || "",
+          customerPostcode: body.postcode || "",
           customerGender: body.gender || "",
           customerOccupation: body.occupation || "",
           customerDateOfBirth: body.dateOfBirth || "",

@@ -33,9 +33,12 @@ type BookingRow = {
   treatment_name: string;
   duration_minutes: number;
   customer_name: string;
+  customer_first_name?: string;
+  customer_last_name?: string;
   customer_email: string;
   customer_phone: string;
   customer_address?: string;
+  customer_postcode?: string;
   customer_gender?: string;
   customer_occupation?: string;
   customer_date_of_birth?: string | Date | null;
@@ -66,9 +69,12 @@ function fromRow(row: BookingRow): Booking {
     treatmentName: row.treatment_name,
     durationMinutes: row.duration_minutes,
     customerName: row.customer_name,
+    customerFirstName: row.customer_first_name || row.customer_name.split(/\s+/)[0] || "",
+    customerLastName: row.customer_last_name || row.customer_name.split(/\s+/).slice(1).join(" "),
     customerEmail: row.customer_email,
     customerPhone: row.customer_phone,
     customerAddress: row.customer_address || "",
+    customerPostcode: row.customer_postcode || "",
     customerGender: row.customer_gender || "",
     customerOccupation: row.customer_occupation || "",
     customerDateOfBirth: row.customer_date_of_birth
@@ -105,6 +111,9 @@ async function getLocalBookings(): Promise<Booking[]> {
       marketingConsent: Boolean(booking.marketingConsent),
       marketingConsentUpdatedAt: booking.marketingConsentUpdatedAt || null,
       customerAddress: booking.customerAddress || "",
+      customerFirstName: booking.customerFirstName || booking.customerName.split(/\s+/)[0] || "",
+      customerLastName: booking.customerLastName || booking.customerName.split(/\s+/).slice(1).join(" "),
+      customerPostcode: booking.customerPostcode || "",
       customerGender: booking.customerGender || "",
       customerOccupation: booking.customerOccupation || "",
       customerDateOfBirth: booking.customerDateOfBirth || "",
@@ -158,8 +167,8 @@ export async function createBooking(input: CreateBookingInput) {
   if (sql) {
     try {
       const rows = await sql<BookingRow[]>`
-        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_email, customer_phone, customer_address, customer_gender, customer_occupation, customer_date_of_birth, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes, images)
-        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.customerGender}, ${candidate.customerOccupation}, ${candidate.customerDateOfBirth || null}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes}, ${sql.json(candidate.images)})
+        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_first_name, customer_last_name, customer_email, customer_phone, customer_address, customer_postcode, customer_gender, customer_occupation, customer_date_of_birth, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes, images)
+        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerFirstName}, ${candidate.customerLastName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.customerPostcode}, ${candidate.customerGender}, ${candidate.customerOccupation}, ${candidate.customerDateOfBirth || null}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes}, ${sql.json(candidate.images)})
         RETURNING *`;
       return fromRow(rows[0]);
     } catch (error) {
@@ -208,7 +217,7 @@ export async function updateBooking(input: UpdateBookingInput) {
       const rows = await sql<BookingRow[]>`
         UPDATE bookings SET branch_id=${candidate.branchId}, staff_id=${candidate.staffId}, practitioner_name=${candidate.practitionerName},
           service_id=${candidate.serviceId}, treatment_name=${candidate.treatmentName}, duration_minutes=${candidate.durationMinutes},
-          customer_name=${candidate.customerName}, customer_email=${candidate.customerEmail}, customer_phone=${candidate.customerPhone}, customer_address=${candidate.customerAddress}, customer_gender=${candidate.customerGender}, customer_occupation=${candidate.customerOccupation}, customer_date_of_birth=${candidate.customerDateOfBirth || null},
+          customer_name=${candidate.customerName}, customer_first_name=${candidate.customerFirstName}, customer_last_name=${candidate.customerLastName}, customer_email=${candidate.customerEmail}, customer_phone=${candidate.customerPhone}, customer_address=${candidate.customerAddress}, customer_postcode=${candidate.customerPostcode}, customer_gender=${candidate.customerGender}, customer_occupation=${candidate.customerOccupation}, customer_date_of_birth=${candidate.customerDateOfBirth || null},
           marketing_consent=${candidate.marketingConsent}, marketing_consent_updated_at=${candidate.marketingConsentUpdatedAt},
           starts_at=${candidate.startsAt}, ends_at=${candidate.endsAt}, status=${candidate.status}, notes=${candidate.notes}, images=${sql.json(candidate.images)}, updated_at=now()
         WHERE id=${input.id} RETURNING *`;

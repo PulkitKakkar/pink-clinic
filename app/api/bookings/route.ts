@@ -16,9 +16,12 @@ type CustomerBookingRequest = {
   treatmentName?: string;
   durationMinutes?: number;
   startsAt?: string;
-  customerName?: string;
+  customerFirstName?: string;
+  customerLastName?: string;
   customerEmail?: string;
   customerPhone?: string;
+  customerAddress?: string;
+  customerPostcode?: string;
   paymentReference?: string;
 };
 
@@ -31,9 +34,12 @@ export async function POST(request: Request) {
       !input.branchId ||
       !input.serviceId ||
       !input.treatmentName ||
-      !input.customerName ||
+      !input.customerFirstName ||
+      !input.customerLastName ||
       !input.customerEmail ||
       !input.customerPhone ||
+      !input.customerAddress ||
+      !input.customerPostcode ||
       !input.paymentReference ||
       Number.isNaN(startsAt.valueOf()) ||
       !Number.isInteger(durationMinutes)
@@ -72,10 +78,12 @@ export async function POST(request: Request) {
           serviceId: input.serviceId,
           treatmentName: input.treatmentName,
           durationMinutes,
-          customerName: input.customerName,
+          customerFirstName: input.customerFirstName,
+          customerLastName: input.customerLastName,
           customerEmail: input.customerEmail,
           customerPhone: input.customerPhone,
-          customerAddress: "",
+          customerAddress: input.customerAddress,
+          customerPostcode: input.customerPostcode,
           marketingConsent: false,
           startsAt: startsAt.toISOString(),
           status: "confirmed",

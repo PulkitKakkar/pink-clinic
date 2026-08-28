@@ -23,9 +23,13 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
   const startsAt = new Date(input.startsAt);
   if (!branch || Number.isNaN(startsAt.valueOf()))
     throw new BookingValidationError("Invalid branch or start time.");
-  if (!input.customerName?.trim() || !input.customerPhone?.trim())
+  if (!input.customerFirstName?.trim() || !input.customerLastName?.trim() || !input.customerPhone?.trim())
     throw new BookingValidationError(
-      "Customer name and phone number are required.",
+      "Customer first name, last name and phone number are required.",
+    );
+  if (!input.customerAddress?.trim() || !input.customerPostcode?.trim())
+    throw new BookingValidationError(
+      "Customer address and postcode are required.",
     );
   const customerDateOfBirth = input.customerDateOfBirth?.trim() || "";
   if (
@@ -107,10 +111,13 @@ export async function normalizeBookingInput(input: CreateBookingInput) {
         : configuredService!.id,
     treatmentName,
     durationMinutes,
-    customerName: input.customerName.trim(),
+    customerName: `${input.customerFirstName.trim()} ${input.customerLastName.trim()}`,
+    customerFirstName: input.customerFirstName.trim(),
+    customerLastName: input.customerLastName.trim(),
     customerEmail: input.customerEmail?.trim() || "",
     customerPhone: input.customerPhone.trim(),
     customerAddress: input.customerAddress?.trim() || "",
+    customerPostcode: input.customerPostcode?.trim().toUpperCase() || "",
     customerGender: input.customerGender?.trim() || "",
     customerOccupation: input.customerOccupation?.trim() || "",
     customerDateOfBirth,

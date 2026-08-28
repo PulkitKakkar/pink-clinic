@@ -24,10 +24,12 @@ export function EditCustomerRecord({
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         bookingIds: customer.bookings.map((b) => b.id),
-        name: f.get("name"),
+        firstName: f.get("firstName"),
+        lastName: f.get("lastName"),
         phone: f.get("phone"),
         email: f.get("email"),
         address: f.get("address"),
+        postcode: f.get("postcode"),
         gender: f.get("gender"),
         occupation: f.get("occupation"),
         dateOfBirth: f.get("dateOfBirth"),
@@ -79,13 +81,17 @@ export function EditCustomerRecord({
               </button>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label="Customer name">
+              <Field label="First name">
                 <input
                   required
-                  name="name"
-                  defaultValue={customer.name}
+                  name="firstName"
+                  autoComplete="given-name"
+                  defaultValue={customer.firstName}
                   className={cls}
                 />
+              </Field>
+              <Field label="Last name">
+                <input required name="lastName" autoComplete="family-name" defaultValue={customer.lastName} className={cls} />
               </Field>
               <Field label="Customer phone">
                 <input
@@ -132,10 +138,15 @@ export function EditCustomerRecord({
               <Field label="Customer address" wide>
                 <textarea
                   name="address"
+                  required
+                  autoComplete="street-address"
                   rows={3}
                   defaultValue={customer.address}
                   className={cls}
                 />
+              </Field>
+              <Field label="Customer postcode">
+                <input name="postcode" required autoComplete="postal-code" defaultValue={customer.postcode} className={`${cls} uppercase`} />
               </Field>
               <Field label="Promotional consent" wide>
                 <select

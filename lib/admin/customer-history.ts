@@ -3,9 +3,12 @@ import type { Booking } from "@/lib/admin/booking-types";
 export type CustomerHistory = {
   id: string;
   name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   address: string;
+  postcode: string;
   gender: string;
   occupation: string;
   dateOfBirth: string;
@@ -69,9 +72,12 @@ export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
       return {
         id,
         name: latestBooking.customerName,
+        firstName: latestBooking.customerFirstName,
+        lastName: latestBooking.customerLastName,
         email: latestBooking.customerEmail,
         phone: latestBooking.customerPhone,
         address: latestBooking.customerAddress || "",
+        postcode: latestBooking.customerPostcode || "",
         gender: latestBooking.customerGender || "",
         occupation: latestBooking.customerOccupation || "",
         dateOfBirth: latestBooking.customerDateOfBirth || "",

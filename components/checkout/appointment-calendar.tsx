@@ -8,6 +8,8 @@ export type CustomerDetails = {
   lastName: string;
   email: string;
   phone: string;
+  address: string;
+  postcode: string;
 };
 
 export type AppointmentDetails = {
@@ -94,9 +96,12 @@ export function AppointmentCalendar({ details, onContinue, continueLabel = "Book
           treatmentName: details.treatmentName,
           durationMinutes: details.durationMinutes,
           startsAt: selected,
-          customerName: `${details.customer.firstName} ${details.customer.lastName}`,
+          customerFirstName: details.customer.firstName,
+          customerLastName: details.customer.lastName,
           customerEmail: details.customer.email,
           customerPhone: details.customer.phone,
+          customerAddress: details.customer.address,
+          customerPostcode: details.customer.postcode,
           paymentReference: details.paymentReference,
         }),
       });

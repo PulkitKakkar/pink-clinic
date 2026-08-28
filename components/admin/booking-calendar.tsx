@@ -417,10 +417,12 @@ export function BookingCalendar({
         durationMinutes: Number(form.get("durationMinutes")),
         staffId: form.get("staffId"),
         practitionerName: form.get("practitionerName"),
-        customerName: form.get("customerName"),
+        customerFirstName: form.get("customerFirstName"),
+        customerLastName: form.get("customerLastName"),
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
+        customerPostcode: form.get("customerPostcode"),
         customerGender: form.get("customerGender"),
         customerOccupation: form.get("customerOccupation"),
         customerDateOfBirth: form.get("customerDateOfBirth"),
@@ -479,10 +481,12 @@ export function BookingCalendar({
         durationMinutes: Number(form.get("durationMinutes")),
         staffId: form.get("staffId"),
         practitionerName: form.get("practitionerName"),
-        customerName: form.get("customerName"),
+        customerFirstName: form.get("customerFirstName"),
+        customerLastName: form.get("customerLastName"),
         customerEmail: form.get("customerEmail"),
         customerPhone: form.get("customerPhone"),
         customerAddress: form.get("customerAddress"),
+        customerPostcode: form.get("customerPostcode"),
         customerGender: form.get("customerGender"),
         customerOccupation: form.get("customerOccupation"),
         customerDateOfBirth: form.get("customerDateOfBirth"),
@@ -706,9 +710,10 @@ export function BookingCalendar({
               )}
             </div>
             <label className="grid gap-2 text-xs font-bold">
-              Customer name
-              <input key={`name-${selectedCustomer}`} name="customerName" required defaultValue={customer?.name || ""} className={inputClass} />
+              First name
+              <input key={`first-name-${selectedCustomer}`} name="customerFirstName" required autoComplete="given-name" defaultValue={customer?.firstName || ""} className={inputClass} />
             </label>
+            <label className="grid gap-2 text-xs font-bold">Last name<input key={`last-name-${selectedCustomer}`} name="customerLastName" required autoComplete="family-name" defaultValue={customer?.lastName || ""} className={inputClass} /></label>
             <label className="grid gap-2 text-xs font-bold">
               Customer phone
               <input key={`phone-${selectedCustomer}`} name="customerPhone" required type="tel" defaultValue={customer?.phone || ""} className={inputClass} />
@@ -734,10 +739,16 @@ export function BookingCalendar({
               <textarea
                 key={`address-${selectedCustomer}`}
                 name="customerAddress"
+                required
+                autoComplete="street-address"
                 rows={2}
                 defaultValue={customer?.address || ""}
                 className={inputClass}
               />
+            </label>
+            <label className="grid gap-2 text-xs font-bold">
+              Customer postcode
+              <input key={`postcode-${selectedCustomer}`} name="customerPostcode" required autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${inputClass} uppercase`} />
             </label>
             <label className="grid gap-2 text-xs font-bold">
               Occupation
@@ -1072,14 +1083,16 @@ export function BookingCalendar({
                 />
               </label>
               <label className="grid gap-2 text-xs font-bold">
-                Customer name
+                First name
                 <input
-                  name="customerName"
+                  name="customerFirstName"
                   required
-                  defaultValue={editing.customerName}
+                  autoComplete="given-name"
+                  defaultValue={editing.customerFirstName}
                   className={inputClass}
                 />
               </label>
+              <label className="grid gap-2 text-xs font-bold">Last name<input name="customerLastName" required autoComplete="family-name" defaultValue={editing.customerLastName} className={inputClass} /></label>
               <label className="grid gap-2 text-xs font-bold">
                 Customer phone
                 <input
@@ -1109,10 +1122,16 @@ export function BookingCalendar({
                 Customer address
                 <textarea
                   name="customerAddress"
+                  required
+                  autoComplete="street-address"
                   rows={2}
                   defaultValue={editing.customerAddress}
                   className={inputClass}
                 />
+              </label>
+              <label className="grid gap-2 text-xs font-bold">
+                Customer postcode
+                <input name="customerPostcode" required autoComplete="postal-code" defaultValue={editing.customerPostcode} className={`${inputClass} uppercase`} />
               </label>
               <label className="grid gap-2 text-xs font-bold">
                 Occupation
