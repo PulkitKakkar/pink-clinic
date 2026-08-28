@@ -34,10 +34,10 @@ const f = (id: string, label: string, type: ConsultationField["type"] = "yes-no"
 const details = (extra: ConsultationField[] = []): ConsultationSection => ({
   title: "Client details",
   fields: [
-    f("fullName", "Full name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
+    f("firstName", "First name", "text", true), f("lastName", "Last name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
     { id: "gender", label: "Gender", type: "select", required: true, options: ["Female", "Male", "Non-binary", "Prefer not to say"].map((value) => ({ value, label: value })) },
     f("contactNumber", "Contact number", "tel", true), f("email", "Email address", "email", true),
-    f("address", "Address (without postcode)", "textarea"), f("postcode", "Postcode", "text"),
+    f("address", "Address", "textarea", true), f("postcode", "Postcode", "text", true),
     f("emergencyContact", "Emergency contact", "text", true),
     f("emergencyContactNumber", "Emergency contact number", "tel", true),
     f("gpDetails", "GP name and address (without postcode), if applicable", "textarea"),
@@ -577,7 +577,7 @@ type TreatmentQuestion = { id: string; label: string };
 const briefDetails = (): ConsultationSection => ({
   title: "Client details",
   fields: [
-    f("fullName", "Full name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
+    f("firstName", "First name", "text", true), f("lastName", "Last name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
     f("contactNumber", "Contact number", "tel", true), f("email", "Email address", "email", true),
     f("occupation", "Occupation", "text"), f("referralSource", "Where did you hear about us?", "text"),
   ],

@@ -37,9 +37,10 @@ export async function POST(request: Request) {
       answers: body.answers,
       images: body.images || [],
     });
-    const fullName = String(body.answers.fullName || "").trim();
+    const firstName = String(body.answers.firstName || "").trim();
+    const lastName = String(body.answers.lastName || "").trim();
     const phone = String(body.answers.contactNumber || "").trim();
-    if (fullName && phone && body.answers.recordStatus !== "draft")
+    if (firstName && lastName && phone && body.answers.recordStatus !== "draft")
       await createBooking({
         branchId: "reading-west-street",
         serviceId: "manual",
@@ -49,10 +50,12 @@ export async function POST(request: Request) {
         practitionerName: String(
           body.answers.practitionerName || "Consultation record",
         ),
-        customerName: fullName,
+        customerFirstName: firstName,
+        customerLastName: lastName,
         customerPhone: phone,
         customerEmail: String(body.answers.email || ""),
         customerAddress: String(body.answers.address || ""),
+        customerPostcode: String(body.answers.postcode || ""),
         customerGender: String(body.answers.gender || ""),
         marketingConsent: body.answers.marketingConsent === true,
         startsAt: new Date().toISOString(),
@@ -94,13 +97,14 @@ export async function PATCH(request: Request) {
     if (Array.isArray(body.images))
       record = await updateConsultationImages(body.id, body.images);
     if (existing && body.answers && existing.answers.recordStatus === "draft" && body.answers.recordStatus !== "draft") {
-      const fullName = String(body.answers.fullName || "").trim();
+      const firstName = String(body.answers.firstName || "").trim();
+      const lastName = String(body.answers.lastName || "").trim();
       const phone = String(body.answers.contactNumber || "").trim();
-      if (fullName && phone)
+      if (firstName && lastName && phone)
         await createBooking({
           branchId: "reading-west-street", serviceId: "manual", treatmentName: `${existing.templateTitle} consultation`, durationMinutes: 5,
-          staffId: "manual", practitionerName: String(body.answers.practitionerName || "Consultation record"), customerName: fullName,
-          customerPhone: phone, customerEmail: String(body.answers.email || ""), customerAddress: String(body.answers.address || ""),
+          staffId: "manual", practitionerName: String(body.answers.practitionerName || "Consultation record"), customerFirstName: firstName, customerLastName: lastName,
+          customerPhone: phone, customerEmail: String(body.answers.email || ""), customerAddress: String(body.answers.address || ""), customerPostcode: String(body.answers.postcode || ""),
           customerGender: String(body.answers.gender || ""), marketingConsent: body.answers.marketingConsent === true, startsAt: new Date().toISOString(),
           status: "completed", notes: `Digital consultation finalised: ${existing.templateTitle}`, images: body.images || existing.images || [],
         });

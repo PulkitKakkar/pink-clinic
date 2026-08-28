@@ -36,9 +36,12 @@ export type Booking = {
   treatmentName: string;
   durationMinutes: number;
   customerName: string;
+  customerFirstName: string;
+  customerLastName: string;
   customerEmail: string;
   customerPhone: string;
   customerAddress: string;
+  customerPostcode: string;
   customerGender: string;
   customerOccupation: string;
   customerDateOfBirth: string;
@@ -54,6 +57,6 @@ export type Booking = {
 
 export type CreateBookingInput = Omit<
   Booking,
-  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt" | "images" | "customerGender" | "customerOccupation" | "customerDateOfBirth"
+  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt" | "images" | "customerName" | "customerGender" | "customerOccupation" | "customerDateOfBirth"
 > & { customerGender?: string; customerOccupation?: string; customerDateOfBirth?: string; marketingConsentUpdatedAt?: string | null; images?: TreatmentImage[] };
 export type UpdateBookingInput = Partial<CreateBookingInput> & { id: string };

@@ -84,6 +84,8 @@ export function BasketCheckout({
               lastName: String(form.get("lastName") || ""),
               email: String(form.get("email") || ""),
               phone: String(form.get("phone") || ""),
+              address: String(form.get("address") || ""),
+              postcode: String(form.get("postcode") || ""),
             });
             setPurchasedItems(branchItems);
             setShowProvider(true);
@@ -97,6 +99,8 @@ export function BasketCheckout({
             <label className="grid gap-2 text-xs font-bold">Last name<input name="lastName" autoComplete="family-name" required className="rounded-xl border border-black/10 bg-white px-4 py-3.5 outline-none focus:border-pink" /></label>
             <label className="grid gap-2 text-xs font-bold sm:col-span-2">Email address<input name="email" type="email" autoComplete="email" required className="rounded-xl border border-black/10 bg-white px-4 py-3.5 outline-none focus:border-pink" /></label>
             <label className="grid gap-2 text-xs font-bold sm:col-span-2">Phone number<input name="phone" type="tel" autoComplete="tel" required className="rounded-xl border border-black/10 bg-white px-4 py-3.5 outline-none focus:border-pink" /></label>
+            <label className="grid gap-2 text-xs font-bold sm:col-span-2">Address<textarea name="address" autoComplete="street-address" required rows={2} className="rounded-xl border border-black/10 bg-white px-4 py-3.5 outline-none focus:border-pink" /></label>
+            <label className="grid gap-2 text-xs font-bold">Postcode<input name="postcode" autoComplete="postal-code" required className="rounded-xl border border-black/10 bg-white px-4 py-3.5 uppercase outline-none focus:border-pink" /></label>
           </div>
           <div className="mt-6 flex gap-3 rounded-2xl bg-white p-4 text-xs leading-5 text-black/50"><ShieldCheck className="shrink-0 text-pink" size={18} />Card details will be handled by {payment.providerName}, not stored by Pink Beauty.</div>
           <CheckoutAgreements />

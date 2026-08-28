@@ -69,10 +69,12 @@ export function AddCustomerHistory({
         durationMinutes: 5,
         staffId: "manual",
         practitionerName: "Historical record",
-        customerName: f.get("customerName"),
+        customerFirstName: f.get("customerFirstName"),
+        customerLastName: f.get("customerLastName"),
         customerPhone: f.get("customerPhone"),
         customerEmail: f.get("customerEmail"),
         customerAddress: f.get("customerAddress"),
+        customerPostcode: f.get("customerPostcode"),
         customerGender: f.get("customerGender"),
         customerOccupation: f.get("customerOccupation"),
         customerDateOfBirth: f.get("customerDateOfBirth"),
@@ -203,14 +205,18 @@ export function AddCustomerHistory({
                   </span>
                 )}
               </div>
-              <Field label="Customer name">
+              <Field label="First name">
                 <input
-                  key={`name-${selected}`}
+                  key={`first-name-${selected}`}
                   required
-                  name="customerName"
-                  defaultValue={customer?.name || ""}
+                  name="customerFirstName"
+                  autoComplete="given-name"
+                  defaultValue={customer?.firstName || ""}
                   className={cls}
                 />
+              </Field>
+              <Field label="Last name">
+                <input key={`last-name-${selected}`} required name="customerLastName" autoComplete="family-name" defaultValue={customer?.lastName || ""} className={cls} />
               </Field>
               <Field label="Customer phone">
                 <input
@@ -268,7 +274,11 @@ export function AddCustomerHistory({
                   key={`address-${selected}`}
                   name="customerAddress"
                   defaultValue={customer?.address || ""}
+                  required
                 />
+              </Field>
+              <Field label="Customer postcode">
+                <input key={`postcode-${selected}`} required name="customerPostcode" autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${cls} uppercase`} />
               </Field>
               <Field label="Treatment" wide>
                 <SearchableOptionInput

@@ -150,9 +150,9 @@ export default async function AdminCustomersPage({
                             {customer.email}
                           </span>
                         )}
-                        {customer.address && (
+                        {(customer.address || customer.postcode) && (
                           <span className="basis-full text-black/45">
-                            {customer.address}
+                            {[customer.address, customer.postcode].filter(Boolean).join(", ")}
                           </span>
                         )}
                         {customer.gender && (
