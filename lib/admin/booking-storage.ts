@@ -161,8 +161,11 @@ export async function checkBookingStorageHealth() {
   await sql`SELECT 1`;
 }
 
-export async function createBooking(input: CreateBookingInput) {
-  const candidate = await normalizeBookingInput(input);
+export async function createBooking(
+  input: CreateBookingInput,
+  options?: { requirePostcode?: boolean },
+) {
+  const candidate = await normalizeBookingInput(input, options);
   assertProductionStorage();
   if (sql) {
     try {

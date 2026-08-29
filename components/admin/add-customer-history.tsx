@@ -135,6 +135,10 @@ export function AddCustomerHistory({
                   Create a customer or add another treatment to an existing
                   customer.
                 </p>
+                <p className="mt-2 text-xs text-black/45">
+                  <span className="font-bold text-pink" aria-hidden="true">*</span>{" "}
+                  Required fields
+                </p>
               </div>
               <button type="button" onClick={() => setOpen(false)}>
                 <X size={18} />
@@ -205,7 +209,7 @@ export function AddCustomerHistory({
                   </span>
                 )}
               </div>
-              <Field label="First name">
+              <Field label="First name" required>
                 <input
                   key={`first-name-${selected}`}
                   required
@@ -215,10 +219,10 @@ export function AddCustomerHistory({
                   className={cls}
                 />
               </Field>
-              <Field label="Last name">
+              <Field label="Last name" required>
                 <input key={`last-name-${selected}`} required name="customerLastName" autoComplete="family-name" defaultValue={customer?.lastName || ""} className={cls} />
               </Field>
-              <Field label="Customer phone">
+              <Field label="Customer phone" wide required>
                 <input
                   key={`phone-${selected}`}
                   required
@@ -228,6 +232,17 @@ export function AddCustomerHistory({
                   className={cls}
                 />
               </Field>
+              <Field label="Customer address" wide required>
+                <AddressLookup
+                  key={`address-${selected}`}
+                  name="customerAddress"
+                  defaultValue={customer?.address || ""}
+                  required
+                />
+              </Field>
+              <p className="mt-2 border-t border-black/10 pt-5 text-[10px] font-bold uppercase tracking-[.18em] text-black/40 sm:col-span-2">
+                Optional details
+              </p>
               <Field label="Customer email" wide>
                 <input
                   key={`email-${selected}`}
@@ -236,6 +251,9 @@ export function AddCustomerHistory({
                   defaultValue={customer?.email || ""}
                   className={cls}
                 />
+              </Field>
+              <Field label="Customer postcode">
+                <input key={`postcode-${selected}`} name="customerPostcode" autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${cls} uppercase`} />
               </Field>
               <Field label="Gender">
                 <select
@@ -268,17 +286,6 @@ export function AddCustomerHistory({
                   defaultValue={customer?.dateOfBirth || ""}
                   className={cls}
                 />
-              </Field>
-              <Field label="Customer address" wide>
-                <AddressLookup
-                  key={`address-${selected}`}
-                  name="customerAddress"
-                  defaultValue={customer?.address || ""}
-                  required
-                />
-              </Field>
-              <Field label="Customer postcode">
-                <input key={`postcode-${selected}`} required name="customerPostcode" autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${cls} uppercase`} />
               </Field>
               <Field label="Treatment" wide>
                 <SearchableOptionInput
@@ -355,17 +362,24 @@ export function AddCustomerHistory({
 function Field({
   label,
   wide,
+  required,
   children,
 }: {
   label: string;
   wide?: boolean;
+  required?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <label
       className={`grid gap-2 text-xs font-bold ${wide ? "sm:col-span-2" : ""}`}
     >
-      {label}
+      <span>
+        {label}
+        {required && (
+          <span className="ml-1 text-pink" aria-hidden="true">*</span>
+        )}
+      </span>
       {children}
     </label>
   );

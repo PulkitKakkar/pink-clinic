@@ -43,10 +43,15 @@ export async function POST(request: Request) {
       suppressNotification?: boolean;
       historicalRecord?: boolean;
     };
-    const booking = await createBooking({
-      ...input,
-      status: input.historicalRecord ? "completed" : "confirmed",
-    });
+    const booking = await createBooking(
+      {
+        ...input,
+        status: input.historicalRecord ? "completed" : "confirmed",
+      },
+      {
+        requirePostcode: !input.historicalRecord,
+      },
+    );
     return NextResponse.json(
       {
         booking,
