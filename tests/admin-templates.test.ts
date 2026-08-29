@@ -108,6 +108,17 @@ describe("consultation templates", () => {
     }
   });
 
+  it("places treatment images directly after one practitioner treatment record", () => {
+    for (const template of consultationTemplates) {
+      const imageSections = template.sections.filter((section) => section.treatmentImagesAfter);
+      expect(imageSections, template.slug).toHaveLength(1);
+      expect(
+        imageSections[0].audience === "practitioner" || /practitioner|actual treatment session/i.test(imageSections[0].description || ""),
+        template.slug,
+      ).toBe(true);
+    }
+  });
+
   it.each(["anti-wrinkle", "dermal-fillers", "skin-peel-microneedling", "lemon-bottle", "spmu", "laser-device"])(
     "%s separates clinical and marketing photography consent",
     (slug) => {
