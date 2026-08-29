@@ -68,7 +68,7 @@ export default async function AdminCustomersPage({
           <Link href="/admin/sms-campaigns" className="button-primary inline-flex items-center gap-2"><MessageSquareText size={15} /> Create SMS campaign</Link>
           <AddCustomerHistory customers={customers} treatmentNames={treatmentNames} />
         </div>
-        <CustomerSearch customers={allCustomers} initialQuery={query} />
+        <CustomerSearch key={query} customers={allCustomers} initialQuery={query} />
         <form className="hidden" action="/admin/customers">
           <label className="relative flex-1">
             <Search

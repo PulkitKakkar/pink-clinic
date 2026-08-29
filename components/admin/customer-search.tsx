@@ -48,7 +48,8 @@ export function CustomerSearch({
           aria-label="Clear search"
           onClick={() => {
             setValue("");
-            router.push("/admin/customers");
+            router.replace("/admin/customers");
+            router.refresh();
           }}
           className="absolute right-3 top-2.5 p-1 text-black/35"
         >
