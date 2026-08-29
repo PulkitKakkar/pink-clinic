@@ -1,6 +1,10 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
-import { getConsultationTemplate, validateConsultationAnswers } from "@/lib/admin/templates";
+import {
+  getConsultationTemplate,
+  preserveLockedClientAnswers,
+  validateConsultationAnswers,
+} from "@/lib/admin/templates";
 import {
   ConsultationStorageConfigurationError,
   saveConsultation,
@@ -87,6 +91,11 @@ export async function PATCH(request: Request) {
     if (body.answers) {
       const template = existing ? getConsultationTemplate(existing.templateSlug) : undefined;
       if (!existing || !template) return NextResponse.json({ error: "Consultation not found." }, { status: 404 });
+      body.answers = preserveLockedClientAnswers(
+        template,
+        existing.answers,
+        body.answers,
+      );
       const validationErrors = validateConsultationAnswers(template, body.answers);
       if (validationErrors.length)
         return NextResponse.json({ error: "Consultation validation failed.", validationErrors }, { status: 400 });

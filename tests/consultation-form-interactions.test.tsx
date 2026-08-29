@@ -144,7 +144,7 @@ describe("consultation form touch controls", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
-    renderForm();
+    renderForm({ signatureData: "data:image/png;base64,test" });
 
     await user.click(screen.getByText("Yes"));
     await user.click(
@@ -152,12 +152,23 @@ describe("consultation form touch controls", () => {
         name: /consultation and treatment terms/i,
       }),
     );
-    await user.click(screen.getByRole("button", { name: "Save client section" }));
+    await user.click(
+      screen.getByRole("button", {
+        name: "Validate and save client section",
+      }),
+    );
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledOnce());
     const request = fetchMock.mock.calls[0][1] as RequestInit;
     const payload = JSON.parse(String(request.body));
     expect(payload.answers.medicalQuestion).toBe("Yes");
     expect(payload.answers.recordStatus).toBe("draft");
+    expect(payload.answers.clientSectionCompletedAt).toBeTruthy();
+    expect(
+      screen.queryByRole("button", {
+        name: "Validate and save client section",
+      }),
+    ).toBeNull();
+    expect(screen.getByText("Client section saved and locked")).toBeTruthy();
   });
 });
