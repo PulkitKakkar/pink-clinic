@@ -6,6 +6,7 @@ import {
   CalendarDays,
   LayoutDashboard,
   LogOut,
+  MessageSquareText,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -48,6 +49,12 @@ export function AdminHeader() {
             className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
           >
             <Users size={13} /> Customers
+          </Link>
+          <Link
+            href="/admin/sms-campaigns"
+            className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
+          >
+            <MessageSquareText size={13} /> SMS
           </Link>
         </nav>
         <form action="/api/admin/logout" method="post">

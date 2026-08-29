@@ -61,6 +61,46 @@ class TwilioSmsNotificationProvider implements NotificationProvider {
   }
 }
 
+export async function sendMarketingSms(to: string, message: string) {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID?.trim();
+  const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER?.trim();
+  if (!accountSid || !authToken || !fromNumber) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info(`[notification:test] marketing-sms -> ${formatPhoneNumber(to)}`);
+      return;
+    }
+    throw new NotificationConfigurationError(
+      "Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER to send promotional SMS.",
+    );
+  }
+
+  const toNumber = formatPhoneNumber(to);
+  const response = await fetch(
+    `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+    {
+      method: "POST",
+      headers: {
+        authorization: `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString("base64")}`,
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        To: toNumber,
+        From: formatPhoneNumber(fromNumber),
+        Body: message,
+      }),
+    },
+  );
+  if (!response.ok) {
+    const error = await response.text();
+    if (response.status === 401)
+      throw new Error("Twilio rejected the configured credentials.");
+    if (response.status === 400 && error.includes('"code":21211'))
+      throw new Error(`Twilio rejected the phone number ${toNumber}.`);
+    throw new Error(`Twilio returned ${response.status}: ${error.slice(0, 300)}`);
+  }
+}
+
 class LocalNotificationProvider implements NotificationProvider {
   async send(notification: Parameters<NotificationProvider["send"]>[0]) {
     console.info(`[notification:test] ${notification.type} -> ${notification.channels.join(", ")} -> ${notification.booking.customerName}`);
