@@ -28,7 +28,12 @@ import type { Branch } from "@/lib/branches";
 import type { CustomerHistory } from "@/lib/admin/customer-history";
 
 const MANUAL = "manual";
+const DEFAULT_BRANCH_ID = "reading-watlington-street";
 const BOOKING_DURATIONS = Array.from({ length: 8 }, (_, index) => (index + 1) * 15);
+const BOOKING_TIMES = Array.from({ length: 49 }, (_, index) => {
+  const totalMinutes = 8 * 60 + index * 15;
+  return `${String(Math.floor(totalMinutes / 60)).padStart(2, "0")}:${String(totalMinutes % 60).padStart(2, "0")}`;
+});
 const inputClass =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 const statusStyle: Record<BookingStatus, string> = {
@@ -62,6 +67,50 @@ const addDays = (date: Date, amount: number) => {
 };
 const addMonths = (date: Date, amount: number) =>
   new Date(date.getFullYear(), date.getMonth() + amount, 1);
+
+function BookingDateTimeFields({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [date = "", time = ""] = value.split("T");
+  return (
+    <>
+      <input type="hidden" name="startsAt" value={value} />
+      <label className="grid gap-2 text-xs font-bold">
+        Date
+        <input
+          required
+          type="date"
+          value={date}
+          onChange={(event) => onChange(`${event.target.value}T${time}`)}
+          className={inputClass}
+        />
+      </label>
+      <label className="grid gap-2 text-xs font-bold">
+        Start time
+        <select
+          required
+          value={time}
+          onChange={(event) => onChange(`${date}T${event.target.value}`)}
+          className={inputClass}
+        >
+          <option value="">Select start time</option>
+          {time && !BOOKING_TIMES.includes(time) && (
+            <option value={time}>{time}</option>
+          )}
+          {BOOKING_TIMES.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </label>
+    </>
+  );
+}
 
 type Props = {
   initialBookings: Booking[];
@@ -209,7 +258,10 @@ export function BookingCalendar({
   const [cursorDate, setCursorDate] = useState(new Date());
   const [branchFilter, setBranchFilter] = useState("all");
   const [staffFilter, setStaffFilter] = useState("all");
-  const [formBranch, setFormBranch] = useState(branches[0]?.id || "");
+  const defaultBranch = branches.some((branch) => branch.id === DEFAULT_BRANCH_ID)
+    ? DEFAULT_BRANCH_ID
+    : branches[0]?.id || "";
+  const [formBranch, setFormBranch] = useState(defaultBranch);
   const [formService, setFormService] = useState("");
   const [formStaff, setFormStaff] = useState("");
   const [formTreatmentName, setFormTreatmentName] = useState("");
@@ -225,6 +277,7 @@ export function BookingCalendar({
   const [editService, setEditService] = useState("");
   const [editStaff, setEditStaff] = useState("");
   const [editDuration, setEditDuration] = useState(60);
+  const [editStartsAt, setEditStartsAt] = useState("");
   const [message, setMessage] = useState<Message>({ type: "idle" });
   const [editMessage, setEditMessage] = useState<Message>({ type: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
@@ -331,6 +384,7 @@ export function BookingCalendar({
       booking.staffId.startsWith("manual:") ? MANUAL : booking.staffId,
     );
     setEditDuration(booking.durationMinutes);
+    setEditStartsAt(localDateTime(new Date(booking.startsAt)));
     setEditMessage({ type: "idle" });
   }
 
@@ -453,7 +507,7 @@ export function BookingCalendar({
           },
     );
     formElement.reset();
-    setFormBranch(branches[0]?.id || "");
+    setFormBranch(defaultBranch);
     setFormService("");
     setFormPickerVersion((version) => version + 1);
     setFormStaff("");
@@ -652,17 +706,12 @@ export function BookingCalendar({
               />
             </label>
           )}
-          <label className="grid gap-2 text-xs font-bold">
-            Date and start time
-            <input
-              name="startsAt"
-              required
-              type="datetime-local"
+          <div className="grid gap-4 sm:grid-cols-2">
+            <BookingDateTimeFields
               value={formStartsAt}
-              onChange={(event) => setFormStartsAt(event.target.value)}
-              className={inputClass}
+              onChange={setFormStartsAt}
             />
-          </label>
+          </div>
           <fieldset className="grid gap-4 rounded-2xl border border-black/5 bg-pink-light/20 p-4">
             <legend className="px-1 text-xs font-bold text-black/55">Customer details</legend>
             <div className="grid gap-2 text-xs font-bold">
@@ -1072,16 +1121,12 @@ export function BookingCalendar({
                   ))}
                 </select>
               </label>
-              <label className="grid gap-2 text-xs font-bold sm:col-span-2">
-                Date and start time
-                <input
-                  name="startsAt"
-                  type="datetime-local"
-                  required
-                  defaultValue={localDateTime(new Date(editing.startsAt))}
-                  className={inputClass}
+              <div className="grid gap-4 sm:col-span-2 sm:grid-cols-2">
+                <BookingDateTimeFields
+                  value={editStartsAt}
+                  onChange={setEditStartsAt}
                 />
-              </label>
+              </div>
               <label className="grid gap-2 text-xs font-bold">
                 First name
                 <input
