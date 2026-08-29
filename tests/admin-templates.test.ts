@@ -119,6 +119,66 @@ describe("consultation templates", () => {
     }
   });
 
+  it("keeps customer consent sections before practitioner sections", () => {
+    for (const template of consultationTemplates) {
+      const firstPractitioner = template.sections.findIndex(
+        (section) =>
+          section.audience === "practitioner" ||
+          /practitioner use only|complete at the treatment appointment|actual treatment session/i.test(
+            section.description || "",
+          ),
+      );
+      const lastCustomerConsent = template.sections.findLastIndex(
+        (section) => section.audience === "client-consent",
+      );
+      expect(firstPractitioner, template.slug).toBeGreaterThan(-1);
+      if (lastCustomerConsent >= 0)
+        expect(lastCustomerConsent, template.slug).toBeLessThan(firstPractitioner);
+    }
+  });
+
+  it("renders signature and agreement before the client save boundary and images before practitioner fields", () => {
+    for (const template of consultationTemplates) {
+      const html = renderToStaticMarkup(
+        createElement(ConsultationForm, {
+          template,
+          practitionerNames: [],
+          treatmentNames: [],
+        }),
+      );
+      expect(html.indexOf('name="signatureData"'), template.slug).toBeLessThan(
+        html.indexOf("Save client section"),
+      );
+      expect(html.indexOf("Customer agreement"), template.slug).toBeLessThan(
+        html.indexOf("Save client section"),
+      );
+      expect(html.indexOf("Treatment images"), template.slug).toBeLessThan(
+        html.indexOf("Practitioner use only"),
+      );
+    }
+  });
+
+  it("marks client consent section headings as required", () => {
+    for (const template of consultationTemplates.filter((item) =>
+      item.sections.some((section) => section.audience === "client-consent"),
+    )) {
+      const html = renderToStaticMarkup(
+        createElement(ConsultationForm, {
+          template,
+          practitionerNames: [],
+          treatmentNames: [],
+        }),
+      );
+      for (const section of template.sections.filter(
+        (item) => item.audience === "client-consent",
+      )) {
+        expect(html, `${template.slug}: ${section.title}`).toContain(
+          `${section.title}<span class="ml-1 text-pink" aria-hidden="true">*</span>`,
+        );
+      }
+    }
+  });
+
   it.each(["anti-wrinkle", "dermal-fillers", "skin-peel-microneedling", "lemon-bottle", "spmu", "laser-device"])(
     "%s separates clinical and marketing photography consent",
     (slug) => {

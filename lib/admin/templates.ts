@@ -181,12 +181,13 @@ const antiWrinkle: ConsultationTemplate = {
       f("toxinCommonRisks", "Common and material risks including pain/bruising, headache, asymmetry, brow/eyelid ptosis, dry eye or visual symptoms and local weakness have been discussed", "checkbox", true),
       f("toxinUrgentSymptoms", "Urgent symptoms of distant toxin spread, including swallowing, speech or breathing difficulty, and the emergency action required have been discussed", "checkbox", true),
     ]},
+    injectableDeclarations(),
     referralDecision(),
     { title: "Botulinum toxin treatment plan", audience: "practitioner", description: "Practitioner use only.", fields: [
       options("treatmentAreas", "Proposed treatment areas", ["Frontalis / forehead", "Corrugator and procerus / frown lines", "Orbicularis oculi / crow’s feet", "Nasalis / bunny lines", "Masseter", "Mentalis / chin", "Platysma / neck", "Orbicularis oris / lip lines", "Depressor anguli oris", "Levator labii superioris", "Other"], true),
       f("otherTreatmentArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Assessment, muscle activity, asymmetry, planned outcome and limitations", "textarea"),
     ]},
-    procedureRecord("toxin"), practitioner(), injectableDeclarations(),
+    procedureRecord("toxin"), practitioner(),
   ],
 };
 
@@ -208,15 +209,18 @@ const dermalFillers: ConsultationTemplate = {
       yesNo("dentalWork", "Recent or planned dental work, dental procedure or oral infection?"),
       yesNo("specialEvents", "Special event or travel planned in the next 2 weeks?"), f("specialEventDetails", "Event or travel details", "textarea"),
     ]},
-    comprehensiveMedicalScreen(), lifestyleAndSkin(), referralDecision(),
-    { title: "Dermal filler treatment plan", fields: [
-      options("fillerAreas", "Proposed treatment areas", ["Lips / lip line", "Cheeks / zygomatic area", "Nasolabial folds", "Marionette lines", "Perioral lines", "Chin", "Jawline", "Temples", "Tear trough", "Other"], true),
-      f("otherFillerArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Facial assessment, asymmetry, product/volume plan, expected outcome and limitations", "textarea", true),
+    comprehensiveMedicalScreen(), lifestyleAndSkin(),
+    { title: "Pre-treatment risk confirmations", description: "The client must confirm each statement before treatment.", audience: "client-consent", fields: [
       f("vascularRiskUnderstood", "Specific risks including vascular occlusion, tissue necrosis, visual disturbance/blindness and urgent treatment have been explained", "checkbox", true),
       f("fillerCommonDelayedRisks", "Common and delayed risks including pain, bruising, swelling, infection, asymmetry, under/over-correction, lumps/nodules, migration, delayed inflammation and cold-sore reactivation where relevant have been explained", "checkbox", true),
       f("dissolvingUnderstood", "Where the selected product is hyaluronic-acid filler, the possible need for hyaluronidase/dissolving, review or emergency referral has been explained", "checkbox", true),
     ]},
-    injectableDeclarations(), procedureRecord("filler"), practitioner(),
+    injectableDeclarations(), referralDecision(),
+    { title: "Dermal filler treatment plan", audience: "practitioner", description: "Practitioner use only.", fields: [
+      options("fillerAreas", "Proposed treatment areas", ["Lips / lip line", "Cheeks / zygomatic area", "Nasolabial folds", "Marionette lines", "Perioral lines", "Chin", "Jawline", "Temples", "Tear trough", "Other"], true),
+      f("otherFillerArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Facial assessment, asymmetry, product/volume plan, expected outcome and limitations", "textarea", true),
+    ]},
+    procedureRecord("filler"), practitioner(),
   ],
 };
 
