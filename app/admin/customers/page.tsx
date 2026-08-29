@@ -4,6 +4,7 @@ import {
   MailCheck,
   MailX,
   Phone,
+  MessageSquareText,
   Search,
   UserRound,
 } from "lucide-react";
@@ -63,7 +64,8 @@ export default async function AdminCustomersPage({
     <>
       <AdminHeader />
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
-        <div className="mb-5 flex justify-end">
+        <div className="mb-5 flex flex-wrap justify-end gap-2">
+          <Link href="/admin/sms-campaigns" className="button-primary inline-flex items-center gap-2"><MessageSquareText size={15} /> Create SMS campaign</Link>
           <AddCustomerHistory customers={customers} treatmentNames={treatmentNames} />
         </div>
         <CustomerSearch customers={allCustomers} initialQuery={query} />
