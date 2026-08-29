@@ -232,6 +232,51 @@ export function ConsultationForm({
       setValue("testPatchFitzpatrick", type);
   }
 
+  const customerConsentSections = (
+    <>
+      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
+      </section>
+      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+        <h2 className="font-display text-2xl">Customer agreement</h2>
+        <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
+          <input
+            name="termsAgreement"
+            type="checkbox"
+            required
+            defaultChecked={initialValue("termsAgreement") === true}
+            className="mt-1 accent-pink"
+          />
+          <span>
+            <strong className="block">
+              I agree to Pink Beauty&apos;s consultation and treatment terms
+            </strong>
+            I confirm the information provided is accurate and understand this
+            consultation record and my signature will be retained securely. Read
+            the <a href="/terms" target="_blank" className="font-bold text-pink underline">terms and conditions</a> and <a href="/privacy" target="_blank" className="font-bold text-pink underline">privacy policy</a>.
+          </span>
+        </label>
+        <label className="mt-3 flex items-start gap-3 rounded-xl border border-black/5 bg-cream p-4 text-sm leading-5">
+          <input
+            name="marketingConsent"
+            type="checkbox"
+            defaultChecked={initialValue("marketingConsent") === true}
+            className="mt-1 accent-pink"
+          />
+          <span>
+            <strong className="block">I agree to receive promotional messages</strong>
+            Pink Beauty may use my contact details to send offers and updates by
+            SMS or email. This is optional and I can withdraw my consent at any
+            time.
+          </span>
+        </label>
+      </section>
+    </>
+  );
+  const hasTreatmentImages = template.sections.some(
+    (section) => section.treatmentImagesAfter,
+  );
+
   return (
     <form
       onSubmit={submit}
@@ -245,7 +290,14 @@ export function ConsultationForm({
           className={`rounded-2xl border p-5 shadow-soft sm:p-7 ${isPractitionerSection(section) ? "border-pink/35 bg-pink-light/35 ring-1 ring-pink/10" : "border-black/5 bg-white"}`}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-display text-2xl">{section.title}</h2>
+            <h2 className="font-display text-2xl">
+              {section.title}
+              {section.audience === "client-consent" && (
+                <span className="ml-1 text-pink" aria-hidden="true">
+                  *
+                </span>
+              )}
+            </h2>
             {isPractitionerSection(section) && <span className="rounded-full bg-pink px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">Practitioner use only</span>}
             {section === template.sections[0] && (
               <span className="rounded-full bg-pink-light px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-pink">
@@ -348,7 +400,15 @@ export function ConsultationForm({
                       defaultChecked={initialValue(field.id) === true}
                       className="mt-1 accent-pink"
                     />
-                    {field.label}
+                    <span>
+                      {field.label}
+                      {field.showRequiredMarker !== false &&
+                        (field.required || field.completionRequired) && (
+                          <span className="ml-1 text-pink" aria-hidden="true">
+                            *
+                          </span>
+                        )}
+                    </span>
                   </span>
                 ) : (
                   <input
@@ -370,56 +430,22 @@ export function ConsultationForm({
             ))}
           </div>
         </section>
-        {section.treatmentImagesAfter && (
-          <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
-            <TreatmentImages images={images} onChange={setImages} />
-          </section>
-        )}
         {!isPractitionerSection(section) && template.sections[sectionIndex + 1] && isPractitionerSection(template.sections[sectionIndex + 1]) && (
-          <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
-            <div><p className="font-bold text-green-900">Client section complete</p><p className="mt-1 text-xs leading-5 text-green-800/75">Save these answers before handing the form to your practitioner.</p></div>
-            <button disabled={status === "saving"} formNoValidate name="submitIntent" value="draft" type="submit" className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-700 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-60 sm:mt-0"><FilePenLine size={14} /> Save client section</button>
-          </div>
+          <>
+            {customerConsentSections}
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
+              <div><p className="font-bold text-green-900">Client section complete</p><p className="mt-1 text-xs leading-5 text-green-800/75">Save these answers before handing the form to your practitioner.</p></div>
+              <button disabled={status === "saving"} formNoValidate name="submitIntent" value="draft" type="submit" className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-700 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-60 sm:mt-0"><FilePenLine size={14} /> Save client section</button>
+            </div>
+            {hasTreatmentImages && (
+              <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
+                <TreatmentImages images={images} onChange={setImages} />
+              </section>
+            )}
+          </>
         )}
         </div>
       ))}
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
-      </section>
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <h2 className="font-display text-2xl">Customer agreement</h2>
-        <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
-          <input
-            name="termsAgreement"
-            type="checkbox"
-            required
-            defaultChecked={initialValue("termsAgreement") === true}
-            className="mt-1 accent-pink"
-          />
-          <span>
-            <strong className="block">
-              I agree to Pink Beauty&apos;s consultation and treatment terms
-            </strong>
-            I confirm the information provided is accurate and understand this
-            consultation record and my signature will be retained securely. Read
-            the <a href="/terms" target="_blank" className="font-bold text-pink underline">terms and conditions</a> and <a href="/privacy" target="_blank" className="font-bold text-pink underline">privacy policy</a>.
-          </span>
-        </label>
-        <label className="mt-3 flex items-start gap-3 rounded-xl border border-black/5 bg-cream p-4 text-sm leading-5">
-          <input
-            name="marketingConsent"
-            type="checkbox"
-            defaultChecked={initialValue("marketingConsent") === true}
-            className="mt-1 accent-pink"
-          />
-          <span>
-            <strong className="block">I agree to receive promotional messages</strong>
-            Pink Beauty may use my contact details to send offers and updates by
-            SMS or email. This is optional and I can withdraw my consent at any
-            time.
-          </span>
-        </label>
-      </section>
       <div className="sticky bottom-4 flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white/95 p-4 shadow-luxe backdrop-blur">
         <p className="text-xs text-black/45">
           {status === "saved" ? (
