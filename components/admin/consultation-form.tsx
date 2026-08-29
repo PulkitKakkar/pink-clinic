@@ -370,6 +370,11 @@ export function ConsultationForm({
             ))}
           </div>
         </section>
+        {section.treatmentImagesAfter && (
+          <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
+            <TreatmentImages images={images} onChange={setImages} />
+          </section>
+        )}
         {!isPractitionerSection(section) && template.sections[sectionIndex + 1] && isPractitionerSection(template.sections[sectionIndex + 1]) && (
           <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
             <div><p className="font-bold text-green-900">Client section complete</p><p className="mt-1 text-xs leading-5 text-green-800/75">Save these answers before handing the form to your practitioner.</p></div>
@@ -378,9 +383,6 @@ export function ConsultationForm({
         )}
         </div>
       ))}
-      <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
-        <TreatmentImages images={images} onChange={setImages} />
-      </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
       </section>
