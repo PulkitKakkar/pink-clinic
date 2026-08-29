@@ -4,7 +4,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ConsultationForm } from "@/components/admin/consultation-form";
-import { consultationTemplates, getConsultationTemplate, validateConsultationAnswers } from "@/lib/admin/templates";
+import { consultationTemplates, getConsultationTemplate, preserveLockedClientAnswers, validateConsultationAnswers } from "@/lib/admin/templates";
 import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
 
 describe("consultation templates", () => {
@@ -174,10 +174,10 @@ describe("consultation templates", () => {
         }),
       );
       expect(html.indexOf('name="signatureData"'), template.slug).toBeLessThan(
-        html.indexOf("Save client section"),
+        html.indexOf("Validate and save client section"),
       );
       expect(html.indexOf("Customer agreement"), template.slug).toBeLessThan(
-        html.indexOf("Save client section"),
+        html.indexOf("Validate and save client section"),
       );
       expect(html.indexOf("Treatment images"), template.slug).toBeLessThan(
         html.indexOf("Practitioner use only"),
@@ -243,10 +243,62 @@ describe("consultation templates", () => {
     }
   });
 
+  it("allows stress levels from 0 through 10", () => {
+    const stressFields = consultationTemplates.flatMap((template) =>
+      template.sections
+        .flatMap((section) => section.fields)
+        .filter((field) => ["workStress", "homeStress"].includes(field.id)),
+    );
+    expect(stressFields.length).toBeGreaterThan(0);
+    for (const field of stressFields) {
+      expect(field.min, field.id).toBe(0);
+      expect(field.max, field.id).toBe(10);
+      expect(field.label, field.id).toContain("0–10");
+    }
+  });
+
   it("allows incomplete drafts but rejects unsigned final records", () => {
     const template = getConsultationTemplate("anti-wrinkle")!;
     expect(validateConsultationAnswers(template, { recordStatus: "draft" })).toEqual([]);
     expect(validateConsultationAnswers(template, { recordStatus: "ready-for-treatment" })).toContain("Customer signature is required.");
+  });
+
+  it("fully validates a customer section before marking its draft complete", () => {
+    const template = getConsultationTemplate("anti-wrinkle")!;
+    const errors = validateConsultationAnswers(template, {
+      recordStatus: "draft",
+      clientSectionCompletedAt: "2026-08-29T12:00:00.000Z",
+    });
+    expect(errors).toContain("First name is required.");
+    expect(errors).toContain("Customer signature is required.");
+    expect(errors).toContain("Customer agreement is required.");
+    expect(errors).not.toContain("Practitioner name is required.");
+  });
+
+  it("preserves locked customer answers while allowing practitioner updates", () => {
+    const template = getConsultationTemplate("anti-wrinkle")!;
+    const merged = preserveLockedClientAnswers(
+      template,
+      {
+        firstName: "Original",
+        signatureData: "signed",
+        termsAgreement: true,
+        clientSectionCompletedAt: "2026-08-29T12:00:00.000Z",
+        practitionerName: "Old practitioner",
+      },
+      {
+        firstName: "Changed",
+        signatureData: "replaced",
+        termsAgreement: false,
+        clientSectionCompletedAt: "removed",
+        practitionerName: "New practitioner",
+      },
+    );
+    expect(merged.firstName).toBe("Original");
+    expect(merged.signatureData).toBe("signed");
+    expect(merged.termsAgreement).toBe(true);
+    expect(merged.clientSectionCompletedAt).toBe("2026-08-29T12:00:00.000Z");
+    expect(merged.practitionerName).toBe("New practitioner");
   });
 
   it("blocks treatment completion when a patch test is pending", () => {

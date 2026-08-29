@@ -2,7 +2,10 @@
 
 import { useRef, useState } from "react";
 import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle, X } from "lucide-react";
-import type { ConsultationTemplate } from "@/lib/admin/templates";
+import {
+  isPractitionerConsultationSection,
+  type ConsultationTemplate,
+} from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
 import { TreatmentImages } from "@/components/admin/treatment-images";
@@ -42,9 +45,7 @@ function fitzpatrick(total: number) {
   return "VI";
 }
 
-function isPractitionerSection(section: ConsultationTemplate["sections"][number]) {
-  return section.audience === "practitioner" || /practitioner use only|complete at the treatment appointment|actual treatment session/i.test(section.description || "");
-}
+const isPractitionerSection = isPractitionerConsultationSection;
 
 export function ConsultationForm({
   template,
@@ -73,6 +74,9 @@ export function ConsultationForm({
   const today = new Date().toLocaleDateString("en-CA");
   const initialValue = (name: string) => initialAnswers[name];
   const [recordStatus, setRecordStatus] = useState(String(initialValue("recordStatus") || "draft"));
+  const [clientSectionLocked, setClientSectionLocked] = useState(
+    Boolean(initialValue("clientSectionCompletedAt")),
+  );
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,7 +85,13 @@ export function ConsultationForm({
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const intent = submitter?.value || "draft";
     const fields = template.sections.flatMap((section) => section.fields);
-    const visibleFields = fields.filter((field) => !field.hideWhen?.values.includes(String(form.get(field.hideWhen.field) || "")));
+    const clientFields = template.sections
+      .filter((section) => !isPractitionerSection(section))
+      .flatMap((section) => section.fields);
+    const validatingClientSection = intent === "client-save";
+    const validatedFields = validatingClientSection ? clientFields : fields;
+    const validatedFieldIds = new Set(validatedFields.map((field) => field.id));
+    const visibleFields = validatedFields.filter((field) => !field.hideWhen?.values.includes(String(form.get(field.hideWhen.field) || "")));
     const requiredFields = visibleFields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
     const missingField = intent === "draft" ? undefined : requiredFields.find((field) =>
       field.type === "checkbox"
@@ -91,25 +101,26 @@ export function ConsultationForm({
           : !String(form.get(field.id) || "").trim(),
     );
     const unmetConditional = intent === "draft" ? undefined : template.conditionalRequirements?.find((rule) =>
-      rule.values.includes(String(form.get(rule.whenField) || "")) && !String(form.get(rule.requiredField) || "").trim(),
+      validatedFieldIds.has(rule.requiredField) && rule.values.includes(String(form.get(rule.whenField) || "")) && !String(form.get(rule.requiredField) || "").trim(),
     );
     const unmetDetailGroup = intent === "draft" ? undefined : template.detailGroups?.find((group) =>
-      group.fields.some((fieldId) => form.get(fieldId) === "Yes") && !String(form.get(group.requiredField) || "").trim(),
+      validatedFieldIds.has(group.requiredField) && group.fields.some((fieldId) => form.get(fieldId) === "Yes") && !String(form.get(group.requiredField) || "").trim(),
     );
-    const unexplainedYes = intent === "draft" ? undefined : fields.find((field, index) => {
+    const unexplainedYes = intent === "draft" ? undefined : validatedFields.find((field, index) => {
       if (field.type !== "yes-no" || form.get(field.id) !== "Yes") return false;
-      const next = fields[index + 1];
+      const next = validatedFields[index + 1];
       return Boolean(next && ["text", "textarea"].includes(next.type) && /detail|explain|when|where|list/i.test(next.label) && !String(form.get(next.id) || "").trim());
     });
-    const unexplainedOther = intent === "draft" ? undefined : fields.find((field, index) => {
+    const unexplainedOther = intent === "draft" ? undefined : validatedFields.find((field, index) => {
       if (field.type !== "multi-checkbox" || !form.getAll(field.id).includes("Other")) return false;
-      const next = fields[index + 1];
+      const next = validatedFields[index + 1];
       return Boolean(next && /other/i.test(next.label) && !String(form.get(next.id) || "").trim());
     });
     const emergencyContactIncomplete = intent === "draft" ? false : Boolean(String(form.get("emergencyContact") || "").trim()) !== Boolean(String(form.get("emergencyContactNumber") || "").trim());
     const signatureMissing = intent !== "draft" && !String(form.get("signatureData") || "");
+    const agreementMissing = intent !== "draft" && form.get("termsAgreement") !== "on";
     const completionBlocker = intent === "complete" ? template.completionBlockers?.find((rule) => rule.values.includes(String(form.get(rule.field) || ""))) : undefined;
-    if (missingField || unmetConditional || unmetDetailGroup || unexplainedYes || unexplainedOther || emergencyContactIncomplete || signatureMissing || completionBlocker) {
+    if (missingField || unmetConditional || unmetDetailGroup || unexplainedYes || unexplainedOther || emergencyContactIncomplete || signatureMissing || agreementMissing || completionBlocker) {
       setStatus("invalid");
       const unexplainedYesIndex = unexplainedYes ? fields.indexOf(unexplainedYes) : -1;
       const unexplainedOtherIndex = unexplainedOther ? fields.indexOf(unexplainedOther) : -1;
@@ -120,6 +131,7 @@ export function ConsultationForm({
         (unexplainedOther ? `Describe the Other selection for “${unexplainedOther.label}”.` : "") ||
         (emergencyContactIncomplete ? "Enter both the emergency contact name and number, or leave both blank." : "") ||
         (signatureMissing ? "Add the customer signature before finalising." : "") ||
+        (agreementMissing ? "Confirm the customer agreement before saving." : "") ||
         `Complete “${missingField?.label || "the required field"}”.`,
       );
       formElement.querySelector<HTMLElement>(`[name="${missingName}"]`)?.focus();
@@ -141,6 +153,12 @@ export function ConsultationForm({
     answers.termsAgreement = form.get("termsAgreement") === "on";
     answers.marketingConsent = form.get("marketingConsent") === "on";
     answers.signatureData = String(form.get("signatureData") || "");
+    if (intent === "client-save")
+      answers.clientSectionCompletedAt =
+        String(initialValue("clientSectionCompletedAt") || "") ||
+        new Date().toISOString();
+    else if (initialValue("clientSectionCompletedAt"))
+      answers.clientSectionCompletedAt = String(initialValue("clientSectionCompletedAt"));
     answers.recordStatus = intent === "complete" ? "completed" : intent === "finalize" ? "ready-for-treatment" : recordStatus;
     answers.consentVersion = template.version || "2026-08-02";
     answers.lastUpdatedAt = new Date().toISOString();
@@ -162,6 +180,7 @@ export function ConsultationForm({
     const result = response.ok ? await response.json() : undefined;
     setStatus(response.ok ? "saved" : "error");
     if (response.ok) setRecordStatus(String(answers.recordStatus));
+    if (response.ok && intent === "client-save") setClientSectionLocked(true);
     if (response.ok && !activeRecordId && result?.record?.id) setActiveRecordId(result.record.id);
   }
 
@@ -233,7 +252,10 @@ export function ConsultationForm({
   }
 
   const customerConsentSections = (
-    <>
+    <div
+      className={clientSectionLocked ? "contents opacity-70" : "contents"}
+      inert={clientSectionLocked}
+    >
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
       </section>
@@ -271,7 +293,7 @@ export function ConsultationForm({
           </span>
         </label>
       </section>
-    </>
+    </div>
   );
   const hasTreatmentImages = template.sections.some(
     (section) => section.treatmentImagesAfter,
@@ -287,6 +309,7 @@ export function ConsultationForm({
       {template.sections.map((section, sectionIndex) => (
         <div key={section.title} className="contents">
         <section
+          inert={clientSectionLocked && !isPractitionerSection(section)}
           className={`rounded-2xl border p-5 shadow-soft sm:p-7 ${isPractitionerSection(section) ? "border-pink/35 bg-pink-light/35 ring-1 ring-pink/10" : "border-black/5 bg-white"}`}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -439,8 +462,8 @@ export function ConsultationForm({
           <>
             {customerConsentSections}
             <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
-              <div><p className="font-bold text-green-900">Client section complete</p><p className="mt-1 text-xs leading-5 text-green-800/75">Save these answers before handing the form to your practitioner.</p></div>
-              <button disabled={status === "saving"} formNoValidate name="submitIntent" value="draft" type="submit" className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-700 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-60 sm:mt-0"><FilePenLine size={14} /> Save client section</button>
+              <div><p className="font-bold text-green-900">{clientSectionLocked ? "Client section saved and locked" : "Client section complete"}</p><p className="mt-1 text-xs leading-5 text-green-800/75">{clientSectionLocked ? "Customer answers can no longer be changed." : "Complete all required answers, consent and signature before handing the form to your practitioner."}</p></div>
+              {!clientSectionLocked && <button disabled={status === "saving"} formNoValidate name="submitIntent" value="client-save" type="submit" className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-700 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-60 sm:mt-0"><FilePenLine size={14} /> Validate and save client section</button>}
             </div>
             {hasTreatmentImages && (
               <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">

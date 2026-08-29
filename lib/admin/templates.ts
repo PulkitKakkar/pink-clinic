@@ -104,7 +104,7 @@ const lifestyleAndSkin = (): ConsultationSection => ({
   fields: [
     yesNo("smokesOrVapes", "Smoke or vape?"), f("smokingAmount", "Cigarettes/vaping frequency", "text"),
     yesNo("drinksAlcohol", "Drink alcohol?"), boundedNumber("alcoholUnits", "Approximate alcohol units per week", 0, 200),
-    boundedNumber("workStress", "Work stress level (1–10)", 1, 10), boundedNumber("homeStress", "Home stress level (1–10)", 1, 10),
+    boundedNumber("workStress", "Work stress level (0–10)", 0, 10), boundedNumber("homeStress", "Home stress level (0–10)", 0, 10),
     f("morningSkincare", "Morning skincare routine and products", "textarea", true), f("eveningSkincare", "Evening skincare routine and products", "textarea", true),
     f("skinConcerns", "Specific skin concerns", "textarea"),
     options("skinCharacteristics", "Current skin characteristics", ["Normal", "Dry", "Oily", "Combination", "Sensitive", "Dehydrated", "Mature", "Congested", "Acne", "Erythema", "Pigmentation", "Scarring", "Broken capillaries", "Large/open pores", "Dark circles"]),
@@ -804,14 +804,54 @@ export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, derma
   .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }));
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
 
+export function isPractitionerConsultationSection(
+  section: ConsultationSection,
+) {
+  return section.audience === "practitioner" ||
+    /practitioner use only|complete at the treatment appointment|actual treatment session/i.test(
+      section.description || "",
+    );
+}
+
+export function preserveLockedClientAnswers(
+  template: ConsultationTemplate,
+  existing: Record<string, string | boolean | string[]>,
+  submitted: Record<string, string | boolean | string[]>,
+) {
+  if (!existing.clientSectionCompletedAt) return submitted;
+  const protectedKeys = new Set([
+    ...template.sections
+      .filter((section) => !isPractitionerConsultationSection(section))
+      .flatMap((section) => section.fields.map((field) => field.id)),
+    "signatureData",
+    "termsAgreement",
+    "marketingConsent",
+    "clientSectionCompletedAt",
+  ]);
+  const merged = { ...submitted };
+  for (const key of protectedKeys) {
+    if (key in existing) merged[key] = existing[key];
+    else delete merged[key];
+  }
+  return merged;
+}
+
 export function validateConsultationAnswers(
   template: ConsultationTemplate,
   answers: Record<string, string | boolean | string[]>,
 ) {
   const status = String(answers.recordStatus || "draft");
-  if (status === "draft") return [];
+  const clientSectionComplete = Boolean(answers.clientSectionCompletedAt);
+  if (status === "draft" && !clientSectionComplete) return [];
   const complete = status === "completed";
-  const fields = template.sections.flatMap((section) => section.fields);
+  const validatingClientSection = status === "draft" && clientSectionComplete;
+  const fields = template.sections
+    .filter(
+      (section) =>
+        !validatingClientSection || !isPractitionerConsultationSection(section),
+    )
+    .flatMap((section) => section.fields);
+  const fieldIds = new Set(fields.map((field) => field.id));
   const hasValue = (id: string) => {
     const value = answers[id];
     return Array.isArray(value) ? value.length > 0 : typeof value === "boolean" ? value : Boolean(String(value || "").trim());
@@ -824,10 +864,10 @@ export function validateConsultationAnswers(
   if (!hasValue("signatureData")) errors.push("Customer signature is required.");
   if (answers.termsAgreement !== true) errors.push("Customer agreement is required.");
   for (const rule of template.conditionalRequirements || []) {
-    if (rule.values.includes(String(answers[rule.whenField] || "")) && !hasValue(rule.requiredField)) errors.push(rule.message);
+    if (fieldIds.has(rule.requiredField) && rule.values.includes(String(answers[rule.whenField] || "")) && !hasValue(rule.requiredField)) errors.push(rule.message);
   }
   for (const group of template.detailGroups || []) {
-    if (group.fields.some((id) => answers[id] === "Yes") && !hasValue(group.requiredField)) errors.push(group.message);
+    if (fieldIds.has(group.requiredField) && group.fields.some((id) => answers[id] === "Yes") && !hasValue(group.requiredField)) errors.push(group.message);
   }
   if (complete) {
     for (const blocker of template.completionBlockers || []) {
