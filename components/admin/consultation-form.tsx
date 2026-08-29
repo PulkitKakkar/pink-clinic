@@ -309,16 +309,20 @@ export function ConsultationForm({
             <p className="mt-2 text-sm text-black/55">{section.description}</p>
           )}
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            {section.fields.filter((field) => !field.hideWhen?.values.includes(selectedGender)).map((field) => (
-              <label
+            {section.fields.filter((field) => !field.hideWhen?.values.includes(selectedGender)).map((field) => {
+              const groupedControl = field.type === "yes-no" || field.type === "multi-checkbox";
+              const FieldContainer = groupedControl ? "fieldset" : "label";
+              const FieldHeading = groupedControl ? "legend" : "span";
+              return (
+              <FieldContainer
                 key={field.id}
                 className={`grid gap-2 text-xs font-bold ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
               >
                 {field.type !== "checkbox" && (
-                  <span>
+                  <FieldHeading>
                     {field.label}
                     {field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
-                  </span>
+                  </FieldHeading>
                 )}
                 {field.id === "address" ? (
                   <AddressLookup name={field.id} defaultValue={String(initialValue(field.id) || "")} />
@@ -357,7 +361,7 @@ export function ConsultationForm({
                   />
                 ) : field.type === "yes-no" ? (
                   <span className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={field.label}>
-                    {["No", "Yes"].map((value) => <span key={value} className="flex items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-medium"><input name={field.id} value={value} type="radio" required={field.required} defaultChecked={initialValue(field.id) === value} className="accent-pink" />{value}</span>)}
+                    {["No", "Yes"].map((value) => <label key={value} className="flex cursor-pointer items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-medium"><input name={field.id} value={value} type="radio" required={field.required} defaultChecked={initialValue(field.id) === value} className="accent-pink" />{value}</label>)}
                   </span>
                 ) : field.type === "select" ? (
                   <select
@@ -376,9 +380,9 @@ export function ConsultationForm({
                 ) : field.type === "multi-checkbox" ? (
                   <span className="grid gap-2 rounded-xl border border-black/5 bg-cream p-4 sm:grid-cols-2">
                     {field.options?.map((option) => (
-                      <span
+                      <label
                         key={option.value}
-                        className="flex items-center gap-2 text-sm font-medium"
+                        className="flex cursor-pointer items-center gap-2 text-sm font-medium"
                       >
                         <input
                           name={field.id}
@@ -388,7 +392,7 @@ export function ConsultationForm({
                           className="accent-pink"
                         />
                         {option.label}
-                      </span>
+                      </label>
                     ))}
                   </span>
                 ) : field.type === "checkbox" ? (
@@ -426,8 +430,9 @@ export function ConsultationForm({
                     className={inputClass}
                   />
                 )}
-              </label>
-            ))}
+              </FieldContainer>
+              );
+            })}
           </div>
         </section>
         {!isPractitionerSection(section) && template.sections[sectionIndex + 1] && isPractitionerSection(template.sections[sectionIndex + 1]) && (

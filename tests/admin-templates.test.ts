@@ -90,6 +90,33 @@ describe("consultation templates", () => {
     }
   });
 
+  it("renders Yes and No as separate touch targets instead of one wrapping label", () => {
+    for (const template of consultationTemplates) {
+      const html = renderToStaticMarkup(
+        createElement(ConsultationForm, {
+          template,
+          practitionerNames: [],
+          treatmentNames: [],
+        }),
+      );
+      for (const field of template.sections
+        .flatMap((section) => section.fields)
+        .filter((item) => item.type === "yes-no")) {
+        expect(html, `${template.slug}: ${field.id} No`).toMatch(
+          new RegExp(
+            `<label[^>]*cursor-pointer[^>]*><input[^>]*name="${field.id}"[^>]*value="No"`,
+          ),
+        );
+        expect(html, `${template.slug}: ${field.id} Yes`).toMatch(
+          new RegExp(
+            `<label[^>]*cursor-pointer[^>]*><input[^>]*name="${field.id}"[^>]*value="Yes"`,
+          ),
+        );
+      }
+      expect(html).not.toMatch(/<label[^>]*>\s*<legend>/);
+    }
+  });
+
   it("links every template to an existing PDF source", () => {
     for (const template of consultationTemplates) {
       const sourcePath = path.join(process.cwd(), "private", "admin-forms", template.sourceFile);
