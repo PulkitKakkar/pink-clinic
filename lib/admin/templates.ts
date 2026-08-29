@@ -9,9 +9,11 @@ export type ConsultationField = {
   min?: number;
   max?: number;
   options?: ConsultationOption[];
+  hideWhen?: { field: string; values: string[] };
+  showRequiredMarker?: boolean;
 };
 
-export type ConsultationSection = { title: string; description?: string; fields: ConsultationField[] };
+export type ConsultationSection = { title: string; description?: string; audience?: "client" | "practitioner" | "client-consent"; fields: ConsultationField[] };
 export type ConsultationTemplate = {
   slug: string;
   title: string;
@@ -33,20 +35,22 @@ export type ConsultationTemplate = {
 const f = (id: string, label: string, type: ConsultationField["type"] = "yes-no", required = false): ConsultationField => ({ id, label, type, required });
 const details = (extra: ConsultationField[] = []): ConsultationSection => ({
   title: "Client details",
+  audience: "client",
   fields: [
     f("firstName", "First name", "text", true), f("lastName", "Last name", "text", true), f("dateOfBirth", "Date of birth", "date", true),
     { id: "gender", label: "Gender", type: "select", required: true, options: ["Female", "Male", "Non-binary", "Prefer not to say"].map((value) => ({ value, label: value })) },
     f("contactNumber", "Contact number", "tel", true), f("email", "Email address", "email", true),
     f("address", "Address", "textarea", true), f("postcode", "Postcode", "text", true),
-    f("emergencyContact", "Emergency contact", "text", true),
+    f("emergencyContact", "Emergency contact name", "text", true),
     f("emergencyContactNumber", "Emergency contact number", "tel", true),
-    f("gpDetails", "GP name and address (without postcode), if applicable", "textarea"),
+    f("gpDetails", "GP name and address (without postcode)", "textarea", true),
     f("gpPostcode", "GP postcode, if applicable", "text"),
     f("occupation", "Occupation", "text", true), f("referralSource", "Where did you hear about us?", "text", true), ...extra,
   ],
 });
 const practitioner = (extra: ConsultationField[] = []): ConsultationSection => ({
   title: "Practitioner details",
+  audience: "practitioner",
   fields: [
     f("practitionerName", "Practitioner name", "text", true), f("consultationDate", "Date of consultation", "date", true), ...extra,
     f("practitionerNotes", "Clinical notes and individual consent discussion", "textarea"),
@@ -56,6 +60,7 @@ const practitioner = (extra: ConsultationField[] = []): ConsultationSection => (
 });
 const score = (value: string, label: string): ConsultationOption => ({ value, label: `${value} — ${label}` });
 const yesNo = (id: string, label: string) => f(id, label, "yes-no", true);
+const hideForMale = (field: ConsultationField): ConsultationField => ({ ...field, hideWhen: { field: "gender", values: ["Male"] } });
 const options = (id: string, label: string, values: string[], required = false): ConsultationField => ({
   id, label, type: "multi-checkbox", required, options: values.map((value) => ({ value, label: value })),
 });
@@ -67,10 +72,13 @@ const boundedNumber = (id: string, label: string, min: number, max: number): Con
 });
 const comprehensiveMedicalScreen = (): ConsultationSection => ({
   title: "Comprehensive medical history and contraindications",
+  audience: "client",
   description: "Answer every question. Give dates, diagnoses, medication names and relevant details in the notes field.",
   fields: [
-    yesNo("tryingToConceive", "Trying to conceive?"), yesNo("pregnant", "Currently pregnant?"), yesNo("breastfeeding", "Currently breastfeeding?"),
-    yesNo("hrtContraception", "Using HRT or hormonal contraception?"), yesNo("underMedicalCare", "Under the care of a GP, medical practitioner or healthcare specialist in the last year?"),
+    { ...yesNo("tryingToConceive", "Trying to conceive?"), hideWhen: { field: "gender", values: ["Male"] } },
+    { ...yesNo("pregnant", "Currently pregnant?"), hideWhen: { field: "gender", values: ["Male"] } },
+    { ...yesNo("breastfeeding", "Currently breastfeeding?"), hideWhen: { field: "gender", values: ["Male"] } },
+    { ...yesNo("hrtContraception", "Using HRT or hormonal contraception?"), hideWhen: { field: "gender", values: ["Male"] } }, yesNo("underMedicalCare", "Under the care of a GP, medical practitioner or healthcare specialist in the last year?"),
     yesNo("prescriptionMedication", "Using prescription medication, including oral or topical medication?"),
     yesNo("supplementsHerbal", "Using supplements or herbal remedies, including St John’s Wort?"),
     yesNo("antibiotics", "Currently taking antibiotics?"), yesNo("anticoagulants", "Taking anticoagulants, blood thinners, aspirin or anti-inflammatory medication?"),
@@ -92,28 +100,31 @@ const comprehensiveMedicalScreen = (): ConsultationSection => ({
 });
 const lifestyleAndSkin = (): ConsultationSection => ({
   title: "Lifestyle, skin and wellbeing",
+  audience: "client",
   fields: [
     yesNo("smokesOrVapes", "Smoke or vape?"), f("smokingAmount", "Cigarettes/vaping frequency", "text"),
     yesNo("drinksAlcohol", "Drink alcohol?"), boundedNumber("alcoholUnits", "Approximate alcohol units per week", 0, 200),
     boundedNumber("workStress", "Work stress level (1–10)", 1, 10), boundedNumber("homeStress", "Home stress level (1–10)", 1, 10),
-    f("morningSkincare", "Morning skincare routine and products", "textarea"), f("eveningSkincare", "Evening skincare routine and products", "textarea"),
+    f("morningSkincare", "Morning skincare routine and products", "textarea", true), f("eveningSkincare", "Evening skincare routine and products", "textarea", true),
     f("skinConcerns", "Specific skin concerns", "textarea"),
     options("skinCharacteristics", "Current skin characteristics", ["Normal", "Dry", "Oily", "Combination", "Sensitive", "Dehydrated", "Mature", "Congested", "Acne", "Erythema", "Pigmentation", "Scarring", "Broken capillaries", "Large/open pores", "Dark circles"]),
   ],
 });
 const referralDecision = (): ConsultationSection => ({
   title: "Suitability and referral decision",
+  audience: "practitioner",
   description: "Practitioner use only. Do not proceed until restrictions and referral requirements have been resolved.",
   fields: [
     { id: "suitabilityOutcome", label: "Consultation outcome", type: "select", required: true, options: ["Suitable to proceed", "Defer or restrict treatment", "Medical referral required", "Not suitable"].map((value) => ({ value, label: value })) },
     options("restrictionReasons", "Restrictions identified", ["Allergy", "Active illness or fever", "Anxiety", "Cuts/bruising/open wound", "Recent injectable or facial treatment", "Recent vaccination", "Herpes simplex", "Hypersensitive skin", "Scarring risk", "Other"]),
     options("referralReasons", "Medical referral considerations", ["Anticoagulant use", "Cardiac disease", "Diabetes", "Liver or kidney disease", "Medical oedema", "Prescribed medication", "Recent surgery", "Radiation treatment", "Undiagnosed pain or swelling", "Other"]),
     { id: "writtenPermission", label: "Written permission / additional consent", type: "select", options: ["Not required", "GP or specialist permission attached", "Additional informed consent recorded", "Pending"].map((value) => ({ value, label: value })) },
-    f("clinicalDecisionNotes", "Clinical reasoning, restrictions, referral details and alternative options", "textarea", true),
+    f("clinicalDecisionNotes", "Clinical reasoning, restrictions, referral details and alternative options", "textarea"),
   ],
 });
 const injectableDeclarations = (): ConsultationSection => ({
   title: "Pre-treatment declarations and informed consent",
+  audience: "client-consent",
   description: "Each statement must be discussed and confirmed before treatment.",
   fields: [
     f("ageEligibilityConfirmed", "The client’s identity and eligibility for cosmetic injectable treatment, including being aged 18 or over, have been confirmed", "checkbox", true),
@@ -133,18 +144,19 @@ const injectableDeclarations = (): ConsultationSection => ({
 });
 const procedureRecord = (kind: "toxin" | "filler"): ConsultationSection => ({
   title: "Procedure record and aftercare",
+  audience: "practitioner",
   description: "Practitioner use only. Complete at the treatment appointment.",
   fields: [
     f("prescriber", "Prescriber / prescription reference, if applicable", "text"), completion("productName", "Product name"),
     completion("batchNumber", "Batch / lot number"), completion("expiryDate", "Expiry date", "date"),
-    completion("areasTreated", "Areas treated, injection points, plane and dose/volume by area", "textarea"), completion("quantityUsed", kind === "toxin" ? "Total units and dilution used" : "Total volume used (ml)"),
-    ...(kind === "toxin" ? [completion("diluentDetails", "Diluent, batch number and volume"), completion("reconstitutionDateTime", "Reconstitution date and time", "text"), completion("labelUse", "Licensed indication or off-label rationale", "textarea")] : []),
+    ...(kind === "toxin" ? [{ ...options("areasTreated", "Areas treated, injection points, plane and dose/volume by area", ["Frontalis / forehead", "Glabella / frown lines", "Orbicularis oculi / crow’s feet", "Bunny lines", "Brow lift", "Gummy smile", "Lip flip / perioral lines", "Downturned mouth / DAO", "Mentalis / chin", "Masseter / jaw slimming", "Platysmal bands / neck", "Nefertiti lift / jawline", "Axillary hyperhidrosis / underarms", "Palmar hyperhidrosis / hands", "Plantar hyperhidrosis / feet", "Other"]), completionRequired: true, showRequiredMarker: false }] : [completion("areasTreated", "Areas treated, injection points, plane and dose/volume by area", "textarea")]), completion("quantityUsed", kind === "toxin" ? "Total units and dilution used" : "Total volume used (ml)"),
+    ...(kind === "toxin" ? [completion("diluentDetails", "Diluent, batch number and volume"), completion("reconstitutionDateTime", "Reconstitution date and time", "text")] : []),
     ...(kind === "filler" ? [completion("anaestheticDetails", "Anaesthetic used, if any"), completion("needleCannulaDetails", "Needle/cannula type, size and lot where available"), completion("emergencyPlanDiscussed", "Emergency symptoms and clinic contact/escalation plan discussed", "checkbox")] : []),
     ...(kind === "filler" ? [options("treatmentMethod", "Treatment method", ["Needle", "Cannula"]), options("treatmentTechnique", "Technique", ["Threading", "Depot", "Fanning", "Bolus", "Cross-hatching", "Other"])] : []),
     completion("procedureObservations", "Procedure observations, immediate response, complications and actions", "textarea"),
     { ...yesNo("postProcedurePhoto", "Post-procedure photographs taken and uploaded to the clinical record?"), completionRequired: true },
-    completion("aftercareGiven", "Aftercare, urgent warning signs and home-care advice given", "textarea"), completion("followUpDate", "Follow-up / review date", "date"),
-  ],
+    { ...yesNo("aftercareGiven", "Aftercare, urgent warning signs and home-care advice given"), completionRequired: true, showRequiredMarker: false }, completion("followUpDate", "Follow-up / review date", "date"),
+  ].map((field) => ({ ...field, showRequiredMarker: false })),
 });
 const antiWrinkle: ConsultationTemplate = {
   slug: "anti-wrinkle", title: "Anti-Wrinkle Treatment Consultation", description: "Comprehensive medical assessment, treatment planning, informed consent and procedure record for botulinum toxin treatment.",
@@ -157,20 +169,23 @@ const antiWrinkle: ConsultationTemplate = {
   detailGroups: [{ fields: ["tryingToConceive", "pregnant", "breastfeeding", "hrtContraception", "underMedicalCare", "prescriptionMedication", "supplementsHerbal", "antibiotics", "anticoagulants", "steroidsImmunosuppression", "retinoids", "photosensitisingMedication", "allergies", "asthma", "diabetes", "epilepsy", "cardiacDisease", "kidneyLiverDisease", "bloodDisorder", "autoimmuneDisease", "anxietyMentalHealth", "cancerRadiation", "recentSurgery", "activeInfection", "inflammatorySkinCondition", "woundsBruising", "healingScarring", "oedema", "tattoosMoles"], requiredField: "medicalHistoryDetails", message: "Explain every Yes answer in the medical-history details field." }],
   sections: [
     details(),
-    { title: "Consultation goals and previous treatment", fields: [
-      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+    { title: "Consultation goals and previous treatment", audience: "client", fields: [
+      options("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", ["Reduce wrinkles", "Soften fine lines", "Prevent deeper lines", "Look refreshed / less tired", "Create facial balance", "Subtle, natural-looking result", "Confidence boost", "Lift or shape the brows", "Slim or soften the jawline", "Reduce excessive sweating", "Other"]), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea"),
       yesNo("previousAntiWrinkle", "Previous botulinum toxin or anti-wrinkle treatment?"), f("previousAntiWrinkleDetails", "Previous product, areas, dates, results and complications", "textarea"),
       yesNo("neuromuscularDisorder", "Neuromuscular disorder, including myasthenia gravis, Lambert-Eaton syndrome, ALS, facial palsy or swallowing difficulty?"),
       yesNo("specialEvents", "Special event or travel planned in the next 2 weeks?"), f("specialEventDetails", "Event or travel details", "textarea"),
     ]},
-    comprehensiveMedicalScreen(), lifestyleAndSkin(), referralDecision(),
-    { title: "Botulinum toxin treatment plan", fields: [
-      options("treatmentAreas", "Proposed treatment areas", ["Frontalis / forehead", "Corrugator and procerus / frown lines", "Orbicularis oculi / crow’s feet", "Nasalis / bunny lines", "Masseter", "Mentalis / chin", "Platysma / neck", "Orbicularis oris / lip lines", "Depressor anguli oris", "Levator labii superioris", "Other"], true),
-      f("otherTreatmentArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Assessment, muscle activity, asymmetry, planned outcome and limitations", "textarea", true),
+    comprehensiveMedicalScreen(), lifestyleAndSkin(),
+    { title: "Pre-treatment risk confirmations", description: "The client must confirm each statement before treatment.", audience: "client-consent", fields: [
       f("toxinCommonRisks", "Common and material risks including pain/bruising, headache, asymmetry, brow/eyelid ptosis, dry eye or visual symptoms and local weakness have been discussed", "checkbox", true),
       f("toxinUrgentSymptoms", "Urgent symptoms of distant toxin spread, including swallowing, speech or breathing difficulty, and the emergency action required have been discussed", "checkbox", true),
     ]},
-    injectableDeclarations(), procedureRecord("toxin"), practitioner(),
+    referralDecision(),
+    { title: "Botulinum toxin treatment plan", audience: "practitioner", description: "Practitioner use only.", fields: [
+      options("treatmentAreas", "Proposed treatment areas", ["Frontalis / forehead", "Corrugator and procerus / frown lines", "Orbicularis oculi / crow’s feet", "Nasalis / bunny lines", "Masseter", "Mentalis / chin", "Platysma / neck", "Orbicularis oris / lip lines", "Depressor anguli oris", "Levator labii superioris", "Other"], true),
+      f("otherTreatmentArea", "Other treatment area", "text"), f("treatmentPlanNotes", "Assessment, muscle activity, asymmetry, planned outcome and limitations", "textarea"),
+    ]},
+    procedureRecord("toxin"), practitioner(), injectableDeclarations(),
   ],
 };
 
@@ -221,7 +236,7 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       options("treatmentGoals", "Treatment goals", ["General skin rejuvenation", "Improved hydration", "Superficial blemishes", "Improved texture", "Scarring", "Pigmentation", "Other"], true),
     ]},
     { title: "Medical history and peel/microneedling contraindications", description: "Answer every question and explain all Yes answers below.", fields: [
-      yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?"), yesNo("hrtContraception", "Using HRT or hormonal contraception?"),
+      hideForMale(yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?")), hideForMale(yesNo("hrtContraception", "Using HRT or hormonal contraception?")),
       yesNo("underMedicalCare", "Under the care of a medical practitioner or healthcare specialist in the last year?"), yesNo("autoimmuneDisease", "Autoimmune disease?"),
       yesNo("prescriptionMedication", "Using prescription medication, including topical medication or topical steroids?"), yesNo("antibiotics", "Currently taking antibiotics?"),
       yesNo("anticoagulants", "Taking anticoagulants, aspirin, blood thinners or anti-inflammatory medication?"), yesNo("photosensitisingMedication", "Taking photosensitising medication or St John’s Wort?"),
@@ -293,7 +308,7 @@ const ivTherapy: ConsultationTemplate = {
       f("otherSignificantConditions", "Other significant medical conditions", "textarea"),
       yesNo("feverInfection", "Recently experienced fever or infection?"), yesNo("unexplainedWeightLoss", "Recently experienced unexplained weight loss?"),
       yesNo("persistentNauseaVomiting", "Recently experienced persistent nausea or vomiting?"), f("otherSymptoms", "Other concerning symptoms", "textarea"),
-      yesNo("pregnant", "Currently pregnant?"), yesNo("breastfeeding", "Currently breastfeeding?"),
+      hideForMale(yesNo("pregnant", "Currently pregnant?")), hideForMale(yesNo("breastfeeding", "Currently breastfeeding?")),
     ]},
     { title: "Baseline observations and clinical decision", description: "Clinician use only. The automatic blood-pressure flag is advisory; use the clinic's approved observation and escalation protocol.", fields: [
       { ...boundedNumber("systolic", "Pre-treatment systolic (mmHg)", 40, 260), required: true }, { ...boundedNumber("diastolic", "Pre-treatment diastolic (mmHg)", 25, 160), required: true },
@@ -348,9 +363,9 @@ const mounjaro: ConsultationTemplate = {
     ]},
     { title: "Medical history and medicine review", description: "Answer every question and record relevant dates, diagnoses and medicine names.", fields: [
       yesNo("tirzepatideAllergy", "Allergy or previous hypersensitivity to tirzepatide or any Mounjaro ingredient?"),
-      yesNo("pregnantTryingBreastfeeding", "Currently pregnant, trying to conceive or breastfeeding?"),
-      yesNo("pregnancyPotential", "Able to become pregnant?"), yesNo("oralContraception", "Currently using oral contraception?"),
-      f("contraceptionPlan", "Contraception discussion, additional protection and one-month washout plan", "textarea"),
+      hideForMale(yesNo("pregnantTryingBreastfeeding", "Currently pregnant, trying to conceive or breastfeeding?")),
+      hideForMale(yesNo("pregnancyPotential", "Able to become pregnant?")), hideForMale(yesNo("oralContraception", "Currently using oral contraception?")),
+      hideForMale(f("contraceptionPlan", "Contraception discussion, additional protection and one-month washout plan", "textarea")),
       yesNo("previousGlp1", "Previous or current GLP-1/GIP medicine?"), f("previousGlp1Details", "Medicine, dose, last dose date, response, reason for stopping and adverse effects", "textarea"),
       yesNo("diabetes", "Diabetes or history of abnormal blood glucose?"), yesNo("diabetesMedication", "Using insulin, a sulfonylurea or another diabetes medicine?"),
       f("diabetesMedicationDetails", "Diabetes medicines, glucose/HbA1c information and hypoglycaemia monitoring or dose-adjustment plan", "textarea"),
@@ -406,7 +421,7 @@ const lemonBottle: ConsultationTemplate = {
   sections: [
     details(),
     { title: "Lemon Bottle medical history", fields: [
-      yesNo("pregnantBreastfeeding", "Currently pregnant or breastfeeding?"), yesNo("previousFatDissolving", "Previous fat dissolving treatments?"),
+      hideForMale(yesNo("pregnantBreastfeeding", "Currently pregnant or breastfeeding?")), yesNo("previousFatDissolving", "Previous fat dissolving treatments?"),
       f("previousTreatmentDetails", "Previous treatment details", "textarea"), yesNo("soyLidocaineAllergy", "Known allergies, including soy or lidocaine?"),
       f("allergyDetails", "Allergy details", "textarea"), yesNo("bloodThinnersAntiInflammatories", "Taking blood thinners, anti-inflammatory drugs, or other medication?"),
       f("medicationDetails", "Medication list", "textarea"), yesNo("liverKidneyDisease", "Liver or kidney disease?"), yesNo("autoimmuneDisorders", "Autoimmune disorders?"),
@@ -472,7 +487,7 @@ const spmu: ConsultationTemplate = {
       yesNo("antisepticAllergy", "Antiseptic allergy?"), f("localAnaestheticAllergies", "Local anaesthetic allergies", "textarea"), f("otherAllergies", "Other allergies", "textarea"),
       yesNo("dentalInjection", "Had a dental injection to numb gums?"), yesNo("dentalAntibiotics", "Receive antibiotics before dental procedures?"),
       yesNo("dentalInjectionReaction", "Difficulty breathing or rapid heartbeat with a dental injection?"), yesNo("chemoRadiation", "Chemotherapy or radiation therapy in the last year?"),
-      yesNo("pregnant", "Currently pregnant?"), yesNo("breastfeeding", "Currently breastfeeding?"), yesNo("mriNext6Weeks", "Head MRI scheduled in the next 6 weeks?"),
+      hideForMale(yesNo("pregnant", "Currently pregnant?")), hideForMale(yesNo("breastfeeding", "Currently breastfeeding?")), yesNo("mriNext6Weeks", "Head MRI scheduled in the next 6 weeks?"),
       yesNo("futureFacialLaserIpl", "Laser or IPL on the face scheduled for the future?"), yesNo("givesBlood", "Do you give blood?"),
       yesNo("tattooSensitivity", "Sensitised reactions to tattoos or permanent makeup?"),
       yesNo("diabetes", "Diabetes?"), yesNo("anticoagulants", "Taking anticoagulants or affected by a bleeding disorder?"), yesNo("immunosuppression", "Immunosuppression or autoimmune disease?"),
@@ -512,14 +527,14 @@ const laserDevice: ConsultationTemplate = {
       yesNo("sensitiveProducts", "Sensitive to soaps or lotions?"), yesNo("skinIrritation", "Does skin become blotchy, red or irritated easily?"),
       yesNo("recentSunExposure", "Significant sun exposure in the last 6 weeks?"), yesNo("recentWaxing", "Waxed treatment areas within the last month?"),
       yesNo("sunbedsSelfTan", "Uses sun beds or self-tanning products?"), yesNo("tattoosPermanentMakeup", "Tattoos or permanent makeup in treatment areas?"),
-      yesNo("pregnantTrying", "Pregnant or trying to conceive?"), yesNo("previousLaserHairRemoval", "Previous laser hair removal?"), f("previousLaserDetails", "When and where?", "textarea"),
+      hideForMale(yesNo("pregnantTrying", "Pregnant or trying to conceive?")), yesNo("previousLaserHairRemoval", "Previous laser hair removal?"), f("previousLaserDetails", "When and where?", "textarea"),
       yesNo("roaccutane", "Used Roaccutane?"), yesNo("otherCosmeticProcedure", "Had another cosmetic procedure?"), f("cosmeticProcedureDetails", "Procedure details", "textarea"),
     ]},
     { title: "Conditions and contraindications", fields: [
-      yesNo("skinCancer", "Skin cancer?"), yesNo("highBloodPressure", "High blood pressure?"), yesNo("polycysticOvaries", "Polycystic ovaries?"),
-      yesNo("coldSores", "Cold sores?"), yesNo("haemophilia", "Haemophilia?"), yesNo("menopause", "Menopause?"), yesNo("epilepsy", "Epilepsy?"),
-      yesNo("keloid", "Keloid scarring?"), yesNo("antiInflammatoryDrugs", "Taking anti-inflammatory drugs?"), yesNo("irregularPeriods", "Irregular periods?"),
-      yesNo("cancer", "Cancer?"), yesNo("heartProblems", "Heart problems?"), yesNo("birthControlPill", "Taking birth control pill?"), yesNo("diabetes", "Diabetes?"),
+      yesNo("skinCancer", "Skin cancer?"), yesNo("highBloodPressure", "High blood pressure?"), hideForMale(yesNo("polycysticOvaries", "Polycystic ovaries?")),
+      yesNo("coldSores", "Cold sores?"), yesNo("haemophilia", "Haemophilia?"), hideForMale(yesNo("menopause", "Menopause?")), yesNo("epilepsy", "Epilepsy?"),
+      yesNo("keloid", "Keloid scarring?"), yesNo("antiInflammatoryDrugs", "Taking anti-inflammatory drugs?"), hideForMale(yesNo("irregularPeriods", "Irregular periods?")),
+      yesNo("cancer", "Cancer?"), yesNo("heartProblems", "Heart problems?"), hideForMale(yesNo("birthControlPill", "Taking birth control pill?")), yesNo("diabetes", "Diabetes?"),
       yesNo("anticoagulant", "Taking anticoagulants?"), yesNo("thyroid", "Thyroid condition?"), yesNo("aspirin", "Taking aspirin?"),
       f("conditionExplanations", "Condition explanations and dates", "textarea"),
     ]},
@@ -587,7 +602,7 @@ const focusedMedicalScreen = (profile: "skin" | "energy" | "injectable"): Consul
   title: "Medical history and suitability screening",
   description: "Answer each relevant safety question and record details for every Yes answer.",
   fields: [
-    yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?"),
+    hideForMale(yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?")),
     yesNo("underMedicalCare", "Currently under medical care or awaiting investigation, surgery or treatment?"),
     yesNo("medication", "Using prescription, over-the-counter, topical or herbal medicine?"),
     yesNo("allergies", "Any known allergy or previous reaction to a medicine, product, latex, adhesive or anaesthetic?"),
@@ -794,8 +809,9 @@ export function validateConsultationAnswers(
     const value = answers[id];
     return Array.isArray(value) ? value.length > 0 : typeof value === "boolean" ? value : Boolean(String(value || "").trim());
   };
+  const isVisible = (field: ConsultationField) => !field.hideWhen?.values.includes(String(answers[field.hideWhen.field] || ""));
   const errors: string[] = [];
-  for (const field of fields.filter((item) => item.required || (complete && item.completionRequired))) {
+  for (const field of fields.filter((item) => isVisible(item) && (item.required || (complete && item.completionRequired)))) {
     if (!hasValue(field.id)) errors.push(`${field.label} is required.`);
   }
   if (!hasValue("signatureData")) errors.push("Customer signature is required.");

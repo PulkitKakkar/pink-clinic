@@ -5,11 +5,13 @@ import { getBookings } from "@/lib/admin/booking-storage";
 import { buildCustomerHistories } from "@/lib/admin/customer-history";
 import { consultationTemplates } from "@/lib/admin/templates";
 import { getConsultations } from "@/lib/admin/storage";
+import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
   const records = await getConsultations();
+  const draftCount = records.filter((record) => String(record.answers.recordStatus || "draft") === "draft").length;
   const customers = await getBookings()
     .then(buildCustomerHistories)
     .catch(() => []);
@@ -54,13 +56,14 @@ export default async function AdminDashboard() {
               {optedIn} promotional opt-ins
             </span>
           </Link>
-          <article className="rounded-2xl bg-white p-5 shadow-soft">
-            <FileText className="text-pink" size={20} />
-            <strong className="mt-5 block text-3xl">
-              {consultationTemplates.length}
+          <Link href="/admin/consultation-records?status=draft" className="group rounded-2xl border-2 border-pink bg-white p-5 shadow-[0_10px_30px_rgba(196,54,113,0.16)] transition hover:-translate-y-1 hover:bg-pink-light/25 hover:shadow-[0_14px_36px_rgba(196,54,113,0.24)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink/25">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-pink text-white"><FileText size={20} /></span>
+            <strong className="mt-4 block font-display text-4xl leading-none text-pink">
+              {draftCount}
             </strong>
-            <span className="text-xs text-black/40">Form templates</span>
-          </article>
+            <span className="mt-1 block text-sm font-bold text-black/70">Draft consultations</span>
+            <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-pink px-3 py-1.5 text-[10px] font-bold text-white">Continue drafts <ArrowRight size={12} className="transition group-hover:translate-x-1" /></span>
+          </Link>
           <Link
             href="/admin/consultation-records"
             className="rounded-2xl bg-white p-5 shadow-soft transition hover:-translate-y-1"
@@ -99,25 +102,28 @@ export default async function AdminDashboard() {
           <h2 className="font-display text-3xl">Recent consultation records</h2>
           <div className="mt-5 overflow-hidden rounded-2xl border border-black/5 bg-white">
             {records.length ? (
-              records.slice(0, 10).map((record) => (
+              records.slice(0, 10).map((record) => {
+                const isDraft = consultationStatus(record.answers) === "draft";
+                return (
                 <Link
                   href={`/admin/consultation-records/${record.id}`}
                   key={record.id}
-                  className="flex items-center justify-between gap-4 border-b border-black/5 p-4 last:border-0"
+                  className={`flex items-center justify-between gap-4 border-b p-4 last:border-0 ${isDraft ? "border-pink/25 bg-pink-light/45 ring-inset hover:bg-pink-light/70" : "border-black/5 hover:bg-pink-light/20"}`}
                 >
                   <div>
                     <p className="text-sm font-bold">
-                      {String(record.answers.fullName || "Unnamed client")}
+                      {consultationClientName(record.answers)}
                     </p>
                     <p className="mt-1 text-xs text-black/40">
                       {record.templateTitle}
                     </p>
                   </div>
-                  <time className="text-[10px] uppercase tracking-[.12em] text-black/35">
-                    {new Date(record.createdAt).toLocaleString("en-GB")}
-                  </time>
+                  <div className="text-right">
+                    {isDraft && <strong className="block font-display text-3xl leading-none text-pink">DRAFT</strong>}
+                    <time className="mt-1 block text-[10px] uppercase tracking-[.12em] text-black/35">{new Date(record.createdAt).toLocaleString("en-GB")}</time>
+                  </div>
                 </Link>
-              ))
+              )})
             ) : (
               <p className="p-5 text-sm text-black/40">
                 No consultation records saved yet.

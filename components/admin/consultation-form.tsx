@@ -42,6 +42,10 @@ function fitzpatrick(total: number) {
   return "VI";
 }
 
+function isPractitionerSection(section: ConsultationTemplate["sections"][number]) {
+  return section.audience === "practitioner" || /practitioner use only|complete at the treatment appointment|actual treatment session/i.test(section.description || "");
+}
+
 export function ConsultationForm({
   template,
   practitionerNames,
@@ -62,6 +66,8 @@ export function ConsultationForm({
   );
   const [validationError, setValidationError] = useState("");
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
+  const [activeRecordId, setActiveRecordId] = useState(recordId);
+  const [selectedGender, setSelectedGender] = useState(String(initialAnswers.gender || ""));
   const datesSynchronized = useRef(false);
   const manuallySelectedFitzpatrick = useRef(new Set<string>());
   const today = new Date().toLocaleDateString("en-CA");
@@ -75,7 +81,8 @@ export function ConsultationForm({
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const intent = submitter?.value || "draft";
     const fields = template.sections.flatMap((section) => section.fields);
-    const requiredFields = fields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
+    const visibleFields = fields.filter((field) => !field.hideWhen?.values.includes(String(form.get(field.hideWhen.field) || "")));
+    const requiredFields = visibleFields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
     const missingField = intent === "draft" ? undefined : requiredFields.find((field) =>
       field.type === "checkbox"
         ? form.get(field.id) !== "on"
@@ -144,27 +151,23 @@ export function ConsultationForm({
     if (intent === "complete") answers.treatmentCompletedAt = new Date().toISOString();
     else if (initialValue("treatmentCompletedAt")) answers.treatmentCompletedAt = String(initialValue("treatmentCompletedAt"));
     const response = await fetch("/api/admin/consultations", {
-      method: recordId ? "PATCH" : "POST",
+      method: activeRecordId ? "PATCH" : "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(
-        recordId
-          ? { id: recordId, answers, images }
+        activeRecordId
+          ? { id: activeRecordId, answers, images }
           : { templateSlug: template.slug, answers, images },
       ),
     });
+    const result = response.ok ? await response.json() : undefined;
     setStatus(response.ok ? "saved" : "error");
     if (response.ok) setRecordStatus(String(answers.recordStatus));
-    if (response.ok && !recordId) {
-      formElement.reset();
-      formElement.querySelectorAll<HTMLInputElement>('input[type="date"]:not([name="dateOfBirth"])').forEach((field) => { field.value = today; });
-      datesSynchronized.current = false;
-      manuallySelectedFitzpatrick.current.clear();
-      setImages([]);
-    }
+    if (response.ok && !activeRecordId && result?.record?.id) setActiveRecordId(result.record.id);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
     const target = event.target as unknown as HTMLInputElement;
+    if (target.name === "gender") setSelectedGender(target.value);
     if (target.name === "fitzpatrickType" || target.name === "testPatchFitzpatrick") {
       manuallySelectedFitzpatrick.current.add(target.name);
     }
@@ -236,13 +239,14 @@ export function ConsultationForm({
       onInput={handleDateInput}
       className="grid gap-5"
     >
-      {template.sections.map((section) => (
+      {template.sections.map((section, sectionIndex) => (
+        <div key={section.title} className="contents">
         <section
-          key={section.title}
-          className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7"
+          className={`rounded-2xl border p-5 shadow-soft sm:p-7 ${isPractitionerSection(section) ? "border-pink/35 bg-pink-light/35 ring-1 ring-pink/10" : "border-black/5 bg-white"}`}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-2xl">{section.title}</h2>
+            {isPractitionerSection(section) && <span className="rounded-full bg-pink px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">Practitioner use only</span>}
             {section === template.sections[0] && (
               <span className="rounded-full bg-pink-light px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-pink">
                 {recordStatus.replaceAll("-", " ")}
@@ -253,7 +257,7 @@ export function ConsultationForm({
             <p className="mt-2 text-sm text-black/55">{section.description}</p>
           )}
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            {section.fields.map((field) => (
+            {section.fields.filter((field) => !field.hideWhen?.values.includes(selectedGender)).map((field) => (
               <label
                 key={field.id}
                 className={`grid gap-2 text-xs font-bold ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
@@ -261,7 +265,7 @@ export function ConsultationForm({
                 {field.type !== "checkbox" && (
                   <span>
                     {field.label}
-                    {(field.required || field.completionRequired) && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
+                    {field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
                   </span>
                 )}
                 {field.id === "address" ? (
@@ -300,16 +304,9 @@ export function ConsultationForm({
                     className={`${inputClass} bg-pink-light/35 font-bold`}
                   />
                 ) : field.type === "yes-no" ? (
-                  <select
-                    name={field.id}
-                    defaultValue={String(initialValue(field.id) || "")}
-                    required={field.required}
-                    className={inputClass}
-                  >
-                    <option value="">Select</option>
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                  </select>
+                  <span className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={field.label}>
+                    {["No", "Yes"].map((value) => <span key={value} className="flex items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-medium"><input name={field.id} value={value} type="radio" required={field.required} defaultChecked={initialValue(field.id) === value} className="accent-pink" />{value}</span>)}
+                  </span>
                 ) : field.type === "select" ? (
                   <select
                     name={field.id}
@@ -373,12 +370,19 @@ export function ConsultationForm({
             ))}
           </div>
         </section>
+        {!isPractitionerSection(section) && template.sections[sectionIndex + 1] && isPractitionerSection(template.sections[sectionIndex + 1]) && (
+          <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
+            <div><p className="font-bold text-green-900">Client section complete</p><p className="mt-1 text-xs leading-5 text-green-800/75">Save these answers before handing the form to your practitioner.</p></div>
+            <button disabled={status === "saving"} formNoValidate name="submitIntent" value="draft" type="submit" className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-700 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-60 sm:mt-0"><FilePenLine size={14} /> Save client section</button>
+          </div>
+        )}
+        </div>
       ))}
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
+      <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
+        <TreatmentImages images={images} onChange={setImages} />
       </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <TreatmentImages images={images} onChange={setImages} />
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
       </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <h2 className="font-display text-2xl">Customer agreement</h2>
@@ -418,7 +422,7 @@ export function ConsultationForm({
         <p className="text-xs text-black/45">
           {status === "saved" ? (
             <span className="flex items-center gap-2 font-bold text-green-700">
-              <CheckCircle2 size={16} /> Consultation {recordId ? "updated" : "saved"}
+              <CheckCircle2 size={16} /> Consultation {activeRecordId ? "updated" : "saved"}
             </span>
           ) : status === "invalid" ? (
             <span className="font-bold text-red-700">
@@ -434,7 +438,7 @@ export function ConsultationForm({
               consultation...
             </span>
           ) : (
-            recordId
+            activeRecordId
               ? "Update any details, then save the consultation record."
               : "Add the available details, then save the consultation record."
           )}
@@ -453,7 +457,7 @@ export function ConsultationForm({
           <div className="relative w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-2xl sm:p-10">
             <button type="button" onClick={() => setStatus("idle")} aria-label="Close confirmation" className="absolute right-4 top-4 rounded-full bg-cream p-2 text-black/60"><X size={20} /></button>
             <CheckCircle2 className="mx-auto text-green-600" size={68} strokeWidth={1.8} />
-            <h2 id="save-success-title" className="mt-5 font-display text-4xl">Consultation {recordId ? "updated" : "saved"}</h2>
+            <h2 id="save-success-title" className="mt-5 font-display text-4xl">Consultation {activeRecordId ? "updated" : "saved"}</h2>
             <p className="mt-3 text-sm leading-6 text-black/55">The consultation record has been saved successfully.</p>
             <button type="button" onClick={() => setStatus("idle")} className="mt-7 w-full rounded-full bg-pink px-6 py-3 text-sm font-bold text-white">Done</button>
           </div>

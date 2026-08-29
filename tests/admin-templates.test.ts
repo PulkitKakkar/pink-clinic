@@ -5,8 +5,15 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ConsultationForm } from "@/components/admin/consultation-form";
 import { consultationTemplates, getConsultationTemplate, validateConsultationAnswers } from "@/lib/admin/templates";
+import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
 
 describe("consultation templates", () => {
+  it("uses split client names and defaults unfinished records to draft", () => {
+    const answers = { firstName: "Harpreet", lastName: "Batra" };
+    expect(consultationClientName(answers)).toBe("Harpreet Batra");
+    expect(consultationStatus(answers)).toBe("draft");
+  });
+
   it("includes all requested treatment and service consultation forms", () => {
     const requestedSlugs = [
       "hydrafacial", "carbon-peel-facial", "tattoo-removal", "ipl-skin-rejuvenation",
@@ -114,7 +121,7 @@ describe("consultation templates", () => {
 
   it("adds the recommended treatment traceability records", () => {
     const expected: Record<string, string[]> = {
-      "anti-wrinkle": ["diluentDetails", "reconstitutionDateTime", "labelUse"],
+      "anti-wrinkle": ["diluentDetails", "reconstitutionDateTime", "areasTreated"],
       "dermal-fillers": ["needleCannulaDetails", "anaestheticDetails", "emergencyPlanDiscussed"],
       "skin-peel-microneedling": ["treatmentProductTraceability", "infectionControlCheck", "needleDevice"],
       "iv-therapy": ["infusionTiming", "cannulaRecord", "postObservations"],
@@ -186,6 +193,35 @@ describe("consultation templates", () => {
 
     expect(ids).toContain("vascularRiskUnderstood");
     expect(ids).toContain("dissolvingUnderstood");
+  });
+
+  it("applies the revised shared client fields and anti-wrinkle workflow", () => {
+    for (const template of consultationTemplates.filter((item) => item.sections.some((section) => section.fields.some((field) => field.id === "gpDetails")))) {
+      const fields = template.sections.flatMap((section) => section.fields);
+      expect(fields.find((field) => field.id === "emergencyContact")?.label).toBe("Emergency contact name");
+      expect(fields.find((field) => field.id === "gpDetails")?.required).toBe(true);
+    }
+    const template = getConsultationTemplate("anti-wrinkle")!;
+    const fields = template.sections.flatMap((section) => section.fields);
+    expect(fields.find((field) => field.id === "objectivesConcerns")?.type).toBe("multi-checkbox");
+    expect(fields.find((field) => field.id === "alternativesDiscussed")?.required).not.toBe(true);
+    expect(fields.find((field) => field.id === "areasTreated")?.type).toBe("multi-checkbox");
+    expect(fields.find((field) => field.id === "aftercareGiven")?.type).toBe("yes-no");
+    expect(fields.some((field) => field.id === "labelUse")).toBe(false);
+    expect(fields.filter((field) => ["tryingToConceive", "pregnant", "breastfeeding", "hrtContraception"].includes(field.id)).every((field) => field.hideWhen?.values.includes("Male"))).toBe(true);
+  });
+
+  it("hides female-specific questions for male clients across applicable forms", () => {
+    const femaleSpecificIds = new Set([
+      "tryingToConceive", "pregnant", "breastfeeding", "hrtContraception",
+      "pregnantBreastfeeding", "pregnantTryingBreastfeeding", "pregnancyPotential",
+      "oralContraception", "contraceptionPlan", "pregnantTrying", "polycysticOvaries",
+      "menopause", "irregularPeriods", "birthControlPill",
+    ]);
+    const fields = consultationTemplates.flatMap((template) => template.sections.flatMap((section) => section.fields));
+    for (const field of fields.filter((item) => femaleSpecificIds.has(item.id))) {
+      expect(field.hideWhen?.values, field.id).toContain("Male");
+    }
   });
 
   it("adds a Level 5-informed peel and microneedling consultation", () => {

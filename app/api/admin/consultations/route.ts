@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const validationErrors = validateConsultationAnswers(template, body.answers);
     if (validationErrors.length)
       return NextResponse.json({ error: "Consultation validation failed.", validationErrors }, { status: 400 });
-    await saveConsultation({
+    const record = await saveConsultation({
       id: randomUUID(),
       templateSlug: template.slug,
       templateTitle: template.title,
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
         notes: `Digital consultation saved: ${template.title}`,
         images: body.images || [],
       });
-    return NextResponse.json({ saved: true });
+    return NextResponse.json({ saved: true, record });
   } catch (error) {
     if (error instanceof ConsultationStorageConfigurationError)
       return NextResponse.json({ error: error.message }, { status: 503 });

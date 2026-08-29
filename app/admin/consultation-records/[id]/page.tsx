@@ -6,6 +6,7 @@ import { ConsultationForm } from "@/components/admin/consultation-form";
 import { getConsultationTemplate } from "@/lib/admin/templates";
 import { staffMembers } from "@/lib/admin/booking-config";
 import { getAdminTreatmentNames } from "@/lib/admin/lookup-options";
+import { consultationClientName } from "@/lib/admin/consultation-display";
 export const dynamic = "force-dynamic";
 export default async function Page({
   params,
@@ -29,7 +30,7 @@ export default async function Page({
           ← All consultation records
         </Link>
         <h1 className="mt-5 font-display text-4xl">
-          {String(record.answers.fullName || "Unnamed customer")}
+          {consultationClientName(record.answers)}
         </h1>
         <p className="mt-2 text-sm text-black/45">
           {record.templateTitle} ·{" "}
