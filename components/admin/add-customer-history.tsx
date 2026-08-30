@@ -232,12 +232,11 @@ export function AddCustomerHistory({
                   className={cls}
                 />
               </Field>
-              <Field label="Customer address" wide required>
+              <Field label="Customer address" wide>
                 <AddressLookup
                   key={`address-${selected}`}
                   name="customerAddress"
                   defaultValue={customer?.address || ""}
-                  required
                 />
               </Field>
               <p className="mt-2 border-t border-black/10 pt-5 text-[10px] font-bold uppercase tracking-[.18em] text-black/40 sm:col-span-2">

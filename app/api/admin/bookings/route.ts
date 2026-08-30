@@ -49,6 +49,7 @@ export async function POST(request: Request) {
         status: input.historicalRecord ? "completed" : "confirmed",
       },
       {
+        requireAddress: !input.historicalRecord,
         requirePostcode: !input.historicalRecord,
       },
     );

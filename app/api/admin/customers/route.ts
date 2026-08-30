@@ -46,9 +46,9 @@ export async function PATCH(request: Request) {
       });
       return NextResponse.json({ booking });
     }
-    if (!body.bookingIds?.length || !body.firstName?.trim() || !body.lastName?.trim() || !body.phone?.trim() || !body.address?.trim() || !body.postcode?.trim())
+    if (!body.bookingIds?.length || !body.firstName?.trim() || !body.lastName?.trim() || !body.phone?.trim())
       return NextResponse.json(
-        { error: "Customer first name, last name, phone, address, postcode and record ids are required." },
+        { error: "Customer first name, last name, phone and record ids are required." },
         { status: 400 },
       );
     const existing = await getBookings();

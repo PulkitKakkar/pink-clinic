@@ -20,7 +20,7 @@ function normalizeBoolean(value: unknown) {
 
 export async function normalizeBookingInput(
   input: CreateBookingInput,
-  options: { requirePostcode?: boolean } = {},
+  options: { requireAddress?: boolean; requirePostcode?: boolean } = {},
 ) {
   const branch = branches.find((item) => item.id === input.branchId);
   const startsAt = new Date(input.startsAt);
@@ -30,7 +30,7 @@ export async function normalizeBookingInput(
     throw new BookingValidationError(
       "Customer first name, last name and phone number are required.",
     );
-  if (!input.customerAddress?.trim())
+  if (options.requireAddress !== false && !input.customerAddress?.trim())
     throw new BookingValidationError("Customer address is required.");
   if (options.requirePostcode !== false && !input.customerPostcode?.trim())
     throw new BookingValidationError(

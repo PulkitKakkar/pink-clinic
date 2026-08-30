@@ -138,7 +138,6 @@ export function EditCustomerRecord({
               <Field label="Customer address" wide>
                 <textarea
                   name="address"
-                  required
                   autoComplete="street-address"
                   rows={3}
                   defaultValue={customer.address}
@@ -146,7 +145,7 @@ export function EditCustomerRecord({
                 />
               </Field>
               <Field label="Customer postcode">
-                <input name="postcode" required autoComplete="postal-code" defaultValue={customer.postcode} className={`${cls} uppercase`} />
+                <input name="postcode" autoComplete="postal-code" defaultValue={customer.postcode} className={`${cls} uppercase`} />
               </Field>
               <Field label="Promotional consent" wide>
                 <select
