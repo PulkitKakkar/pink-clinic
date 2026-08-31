@@ -513,6 +513,7 @@ const spmu: ConsultationTemplate = {
 const laserDevice: ConsultationTemplate = {
   slug: "laser-device", title: "Laser Hair Removal Consultation", description: "Laser hair removal suitability, Fitzpatrick skin analysis and test patch record.",
   sourceFile: "dAb New Machine.pdf", reviewRequired: true,
+  version: "2026-08-31.1",
   conditionalRequirements: [
     { whenField: "underDoctorCare", values: ["Yes"], requiredField: "doctorCareDetails", message: "Add details of the doctor's care." },
     { whenField: "hormoneMedication", values: ["Yes"], requiredField: "hormoneMedicationDetails", message: "Add the hormone medication details." },
@@ -574,6 +575,7 @@ const laserDevice: ConsultationTemplate = {
       yesNo("treatmentProcessExplained", "Treatment process explained?"), yesNo("hairGrowthCycleExplained", "Hair growth cycle explained?"),
       yesNo("seriesMaintenanceExplained", "Treatment series and maintenance explained?"), yesNo("variableResultsExplained", "Variability of results explained?"),
       yesNo("sunPigmentationExplained", "Sun exposure and hyper/hypopigmentation explained?"), yesNo("homeCareSideEffects", "Home care and side effects explained?"),
+      f("prepaidSessionCancellationAgreement", "I understand that if I buy multiple or prepaid sessions, I must give Pink Beauty at least 48 hours’ notice to cancel or reschedule a booked session. If I give less notice or do not attend, Pink Beauty may treat the appointment as a no-show and deduct it as a used session.", "checkbox", true),
       yesNo("clientAuthorisation", "Client authorises and consents to laser hair removal?"),
     ]},
     { title: "Test Patch Settings", description: "Practitioner use only.", fields: [
