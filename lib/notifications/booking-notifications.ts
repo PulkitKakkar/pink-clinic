@@ -42,6 +42,10 @@ function noReplyCopy() {
   return `For booking help, call ${SMS_CONTACT_NUMBER}. Reply STOP to opt out of promotional SMS only; booking confirmations and reminders will still be sent.`;
 }
 
+function paidBookingCancellationCopy() {
+  return "Paid bookings must be cancelled or rescheduled at least 48 hours in advance. With less notice, or if you do not attend, the booking will be treated as a no-show.";
+}
+
 function notificationCopy(booking: Booking, type: BookingNotificationType) {
   const appointment = new Date(booking.startsAt).toLocaleString("en-GB", {
     timeZone: "Europe/London",
@@ -53,16 +57,17 @@ function notificationCopy(booking: Booking, type: BookingNotificationType) {
     minute: "2-digit",
   });
   const details = `${booking.treatmentName} with ${booking.practitionerName} at ${notificationLocation(booking)} on ${appointment}.`;
+  const cancellationPolicy = paidBookingCancellationCopy();
   const footer = noReplyCopy();
   if (type === "booking-confirmation")
     return {
       subject: "Your Pink Beauty booking is confirmed",
-      message: `Hi ${booking.customerName}, your booking is confirmed. ${details} ${footer}`,
+      message: `Hi ${booking.customerName}, your booking is confirmed. ${details} ${cancellationPolicy} ${footer}`,
     };
   if (type === "booking-updated")
     return {
       subject: "Your Pink Beauty booking has been updated",
-      message: `Hi ${booking.customerName}, your booking has been updated. ${details} ${footer}`,
+      message: `Hi ${booking.customerName}, your booking has been updated. ${details} ${cancellationPolicy} ${footer}`,
     };
   if (type === "booking-cancelled")
     return {
@@ -72,7 +77,7 @@ function notificationCopy(booking: Booking, type: BookingNotificationType) {
   const timing = type === "reminder-48-hours" ? "in two days" : "tomorrow";
   return {
     subject: `Reminder: your Pink Beauty booking is ${timing}`,
-    message: `Hi ${booking.customerName}, this is a reminder that your booking is ${timing}. ${details} ${footer}`,
+    message: `Hi ${booking.customerName}, this is a reminder that your booking is ${timing}. ${details} ${cancellationPolicy} ${footer}`,
   };
 }
 
