@@ -69,6 +69,7 @@ export function ConsultationForm({
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
   const [activeRecordId, setActiveRecordId] = useState(recordId);
   const [selectedGender, setSelectedGender] = useState(String(initialAnswers.gender || ""));
+  const [selectedProcedure, setSelectedProcedure] = useState(String(initialAnswers.procedureType || ""));
   const datesSynchronized = useRef(false);
   const manuallySelectedFitzpatrick = useRef(new Set<string>());
   const today = new Date().toLocaleDateString("en-CA");
@@ -186,6 +187,7 @@ export function ConsultationForm({
 
   function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
     const target = event.target as unknown as HTMLInputElement;
+    if (target.name === "procedureType") setSelectedProcedure(target.value);
     if (target.name === "gender") setSelectedGender(target.value);
     if (target.name === "fitzpatrickType" || target.name === "testPatchFitzpatrick") {
       manuallySelectedFitzpatrick.current.add(target.name);
@@ -295,6 +297,10 @@ export function ConsultationForm({
       </section>
     </div>
   );
+  const lastClientSectionIndex = template.sections.reduce(
+    (lastIndex, section, index) => isPractitionerSection(section) ? lastIndex : index,
+    -1,
+  );
   const hasTreatmentImages = template.sections.some(
     (section) => section.treatmentImagesAfter,
   );
@@ -332,13 +338,14 @@ export function ConsultationForm({
             <p className="mt-2 text-sm text-black/55">{section.description}</p>
           )}
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            {section.fields.filter((field) => !field.hideWhen?.values.includes(selectedGender)).map((field) => {
+            {section.fields.filter((field) => !(field.hideWhen?.field === "gender" && field.hideWhen.values.includes(selectedGender))).map((field) => {
               const groupedControl = field.type === "yes-no" || field.type === "multi-checkbox";
               const FieldContainer = groupedControl ? "fieldset" : "label";
               const FieldHeading = groupedControl ? "legend" : "span";
               return (
               <FieldContainer
                 key={field.id}
+                style={field.hideWhen?.field === "procedureType" && field.hideWhen.values.includes(selectedProcedure) ? { display: "none" } : undefined}
                 className={`grid gap-2 text-xs font-bold ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
               >
                 {field.type !== "checkbox" && (
@@ -458,7 +465,7 @@ export function ConsultationForm({
             })}
           </div>
         </section>
-        {!isPractitionerSection(section) && template.sections[sectionIndex + 1] && isPractitionerSection(template.sections[sectionIndex + 1]) && (
+        {sectionIndex === lastClientSectionIndex && (
           <>
             {customerConsentSections}
             <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">

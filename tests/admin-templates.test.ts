@@ -164,7 +164,7 @@ describe("consultation templates", () => {
     }
   });
 
-  it("renders signature and agreement before the client save boundary and images before practitioner fields", () => {
+  it("renders signature and agreement before the client save boundary and images at the client handover", () => {
     for (const template of consultationTemplates) {
       const html = renderToStaticMarkup(
         createElement(ConsultationForm, {
@@ -179,8 +179,10 @@ describe("consultation templates", () => {
       expect(html.indexOf("Customer agreement"), template.slug).toBeLessThan(
         html.indexOf("Validate and save client section"),
       );
+      const clientSaveIndex = html.indexOf("Validate and save client section");
+      expect(html.indexOf("Treatment images"), template.slug).toBeGreaterThan(clientSaveIndex);
       expect(html.indexOf("Treatment images"), template.slug).toBeLessThan(
-        html.indexOf("Practitioner use only"),
+        html.indexOf("Practitioner use only", clientSaveIndex),
       );
     }
   });
