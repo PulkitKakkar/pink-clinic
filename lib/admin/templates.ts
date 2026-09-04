@@ -236,9 +236,10 @@ const skinPeelMicroneedling: ConsultationTemplate = {
   sections: [
     details(),
     { title: "Consultation goals and skincare", fields: [
-      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+      f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
       f("morningSkincare", "Morning skincare routine, active ingredients and products", "textarea", true), f("eveningSkincare", "Evening skincare routine, active ingredients and products", "textarea", true),
       options("treatmentGoals", "Treatment goals", ["General skin rejuvenation", "Improved hydration", "Superficial blemishes", "Improved texture", "Scarring", "Pigmentation", "Other"], true),
+      f("objectivesConcerns", "Additional goals, concerns or desired outcome (optional)", "textarea"),
     ]},
     { title: "Medical history and peel/microneedling contraindications", description: "Answer every question and explain all Yes answers below.", fields: [
       hideForMale(yesNo("pregnantBreastfeeding", "Pregnant, trying to conceive or breastfeeding?")), hideForMale(yesNo("hrtContraception", "Using HRT or hormonal contraception?")),
@@ -262,13 +263,10 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       { id: "epidermalThickness", label: "Epidermal thickness", type: "select", options: ["Thin", "Medium", "Thick"].map((value) => ({ value, label: value })) },
       f("skinAssessmentNotes", "Skin assessment findings and treatment rationale", "textarea", true),
     ]},
-    { title: "Patch test and recent procedures", description: "Follow the selected product's manufacturer instructions and the clinic's insurer-approved protocol.", fields: [
+    { title: "Recent procedures", fields: [
       yesNo("recentInjectables", "Botulinum toxin or dermal filler in the previous 14 days?"), yesNo("recentLaser", "Laser, IPL or light-based therapy in the previous 14 days?"),
       yesNo("recentDepilation", "Waxing, depilatory treatment or electrolysis in the previous 14 days?"), yesNo("recentMicrodermabrasion", "Microdermabrasion in the previous 14 days?"),
       yesNo("recentFacialSurgery", "Facial surgery in the previous 14 days?"), yesNo("recentPeelNeedling", "Skin peel or microneedling in the previous 14 days?"),
-      f("patchTestDate", "Patch test date, where required", "date"), f("patchTestProductArea", "Patch-test product, strength and area", "textarea"),
-      { id: "patchTestResult", label: "Patch-test decision/result", type: "select", required: true, options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending", "Not required under approved product protocol"].map((value) => ({ value, label: value })) },
-      f("patchTestReaction", "Patch-test reaction or comments", "textarea"),
     ]},
     { title: "Pre-treatment declarations and consent", fields: [
       f("accurateInformation", "I have provided accurate medical and consultation information and disclosed all contraindications", "checkbox", true),
@@ -279,15 +277,20 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       f("resultsNotGuaranteed", "I understand results vary, are not guaranteed and may require a course of treatment", "checkbox", true),
       f("questionsAnswered", "Limitations, alternatives and complications have been discussed and my questions answered", "checkbox", true),
       yesNo("clinicalPhotographyConsent", "Consent to before, during and after photographs for confidential clinical records?"),
-      yesNo("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?"),
+      f("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?", "yes-no"),
       f("consentToTreatment", "I consent to the agreed peel or microneedling treatment and will follow all aftercare instructions", "checkbox", true),
+    ]},
+    { title: "Patch-test assessment", audience: "practitioner", description: "Follow the selected product's manufacturer instructions and the clinic's insurer-approved protocol.", fields: [
+      f("patchTestDate", "Patch test date, where required", "date"), f("patchTestProductArea", "Patch-test product, strength and area", "textarea"),
+      { id: "patchTestResult", label: "Patch-test decision/result", type: "select", required: true, options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending", "Not required under approved product protocol"].map((value) => ({ value, label: value })) },
+      f("patchTestReaction", "Patch-test reaction or comments", "textarea"),
     ]},
     { title: "Procedure record and aftercare", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
       { ...completion("procedureType", "Procedure", "select"), options: ["Medium-depth skin peel", "Microneedling", "Combined protocol"].map((value) => ({ value, label: value })) },
       completion("cleanserUsed", "Cleanser used"), completion("treatmentProductTraceability", "Peel/microneedling products, batch/lot and expiry", "textarea"),
-      f("peelProduct", "Peel product, type and strength", "text"), f("peelApplication", "Application method, layers, end point and treatment area", "textarea"),
-      f("peelTiming", "Peel duration and total treatment time", "text"), f("neutraliser", "Neutralising product, method and time", "textarea"),
-      f("needleDevice", "Microneedling device, sterile cartridge lot, needle depth by zone and passes", "textarea"), f("anaestheticDetails", "Anaesthetic details, where used", "textarea"),
+      { ...f("peelProduct", "Peel product, type and strength", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("peelApplication", "Application method, layers, end point and treatment area", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
+      { ...f("peelTiming", "Peel duration and total treatment time", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("neutraliser", "Neutralising product, method and time", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
+      { ...f("needleDevice", "Microneedling device, sterile cartridge lot, needle depth by zone and passes", "textarea"), hideWhen: { field: "procedureType", values: ["", "Medium-depth skin peel"] } }, f("anaestheticDetails", "Anaesthetic details, where used", "textarea"),
       completion("infectionControlCheck", "Skin preparation and infection-control checks completed", "checkbox"), completion("productsUsed", "Post-procedure products used and areas applied", "textarea"),
       completion("skinReaction", "Skin reaction, observations, complications and actions", "textarea"), { ...yesNo("postProcedurePhoto", "Post-procedure photograph taken and uploaded?"), completionRequired: true },
       completion("aftercareGiven", "Aftercare/home-care programme and products supplied", "textarea"), completion("followUpDate", "Follow-up / review date", "date"),
