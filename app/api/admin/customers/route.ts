@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 import { changedFields, logAdminActivity } from "@/lib/admin/activity-log";
+import { formatLaserSettings, isValidLaserSettings, type LaserAreaSetting } from "@/lib/admin/laser-settings";
 
 export async function PATCH(request: Request) {
   try {
@@ -14,10 +15,7 @@ export async function PATCH(request: Request) {
       sessionNumber?: string;
       totalSessions?: string;
       amount?: string;
-      fluence?: string;
-      hertz?: string;
-      shotsFired?: string;
-      pulse?: string;
+      laserAreas?: LaserAreaSetting[];
       bookingIds?: string[];
       firstName?: string;
       lastName?: string;
@@ -47,11 +45,9 @@ export async function PATCH(request: Request) {
         );
       const amount = body.amount?.trim();
       const isLaserTreatment = /laser/i.test(body.treatmentName);
-      if (isLaserTreatment && (!body.fluence || !body.hertz || !body.shotsFired || !body.pulse))
-        return NextResponse.json({ error: "Complete all laser treatment settings." }, { status: 400 });
-      const laserSettings = isLaserTreatment
-        ? `\n\nLaser settings:\nFluence: ${body.fluence}\nHertz: ${body.hertz}\nShots fired: ${body.shotsFired}\nPulse: ${body.pulse}`
-        : "";
+      if (isLaserTreatment && (!Array.isArray(body.laserAreas) || !isValidLaserSettings(body.laserAreas)))
+        return NextResponse.json({ error: "Add complete laser settings for every treatment area." }, { status: 400 });
+      const laserSettings = isLaserTreatment ? formatLaserSettings(body.laserAreas!) : "";
       const booking = await updateBooking({
         id: body.bookingId,
         treatmentName: body.treatmentName,

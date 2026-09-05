@@ -7,8 +7,26 @@ import { AddressLookup } from "@/components/admin/address-lookup";
 import { TreatmentImages } from "@/components/admin/treatment-images";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 import { SearchableOptionInput } from "@/components/admin/searchable-option-input";
+import { LaserAreaSettings } from "@/components/admin/laser-area-settings";
+import { formatLaserSettings, type LaserAreaSetting } from "@/lib/admin/laser-settings";
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
+const blankLaserArea = (): LaserAreaSetting => ({ area: "", fluence: "", hertz: "", shotsFired: "", pulse: "Auto by machine" });
+
+function courseProgress(customer: CustomerHistory | undefined, treatmentName: string) {
+  if (!customer || !treatmentName.trim()) return undefined;
+  const sessions = customer.bookings
+    .filter((booking) => booking.treatmentName.trim().toLowerCase() === treatmentName.trim().toLowerCase())
+    .map((booking) => booking.notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i))
+    .filter((match): match is RegExpMatchArray => Boolean(match))
+    .map((match) => ({ current: Number(match[1]), total: Number(match[2]) }));
+  if (!sessions.length) return undefined;
+  return {
+    nextSession: Math.max(...sessions.map((session) => session.current)) + 1,
+    totalSessions: Math.max(...sessions.map((session) => session.total)),
+  };
+}
+
 export function AddCustomerHistory({
   customers,
   initialCustomerId = "",
@@ -30,6 +48,7 @@ export function AddCustomerHistory({
   const [showLookup, setShowLookup] = useState(false);
   const [images, setImages] = useState<TreatmentImage[]>([]);
   const [treatmentName, setTreatmentName] = useState("");
+  const [laserAreas, setLaserAreas] = useState<LaserAreaSetting[]>([]);
   const customer = customers.find((c) => c.id === selected);
   const normalizedQuery = customerQuery.trim().toLowerCase();
   const matchingCustomers = normalizedQuery
@@ -42,6 +61,7 @@ export function AddCustomerHistory({
         .slice(0, 8)
         : [];
   const isLaserTreatment = /laser/i.test(treatmentName);
+  const previousCourse = courseProgress(customer, treatmentName);
 
   function selectCustomer(nextCustomer: CustomerHistory) {
     setSelected(nextCustomer.id);
@@ -54,6 +74,13 @@ export function AddCustomerHistory({
     setCustomerQuery("");
     setShowLookup(false);
   }
+
+  function changeTreatment(nextTreatment: string) {
+    setTreatmentName(nextTreatment);
+    if (/full\s*body/i.test(nextTreatment)) {
+      setLaserAreas((current) => current.length ? current : [blankLaserArea(), blankLaserArea()]);
+    }
+  }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
@@ -62,9 +89,7 @@ export function AddCustomerHistory({
     const consultation = String(f.get("consultation") || "").trim();
     const outcome = String(f.get("outcome") || "").trim();
     const amount = String(f.get("amount") || "").trim();
-    const laserSettings = isLaserTreatment
-      ? `\n\nLaser settings:\nFluence: ${f.get("fluence")}\nHertz: ${f.get("hertz")}\nShots fired: ${f.get("shotsFired")}\nPulse: ${f.get("pulse")}`
-      : "";
+    const laserSettings = isLaserTreatment ? formatLaserSettings(laserAreas) : "";
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -103,6 +128,7 @@ export function AddCustomerHistory({
     setCustomerQuery("");
     setImages([]);
     setTreatmentName("");
+    setLaserAreas([]);
     router.refresh();
   }
   return (
@@ -114,6 +140,7 @@ export function AddCustomerHistory({
           setCustomerQuery(initialCustomer?.name || "");
           setShowLookup(false);
           setTreatmentName("");
+          setLaserAreas([]);
           setOpen(true);
         }}
         className="button-primary"
@@ -301,23 +328,28 @@ export function AddCustomerHistory({
                   placeholder="Optional — search or enter a treatment"
                   className={cls}
                   value={treatmentName}
-                  onChange={setTreatmentName}
+                  onChange={changeTreatment}
                 />
               </Field>
               <Field label="Session number">
                 <input
+                  key={`session-${selected}-${treatmentName}`}
                   name="sessionNumber"
                   type="number"
                   min="1"
-                  placeholder="e.g. 3"
+                  defaultValue={previousCourse?.nextSession || ""}
+                  placeholder="e.g. 1"
                   className={cls}
                 />
+                {previousCourse && <small className="font-medium text-black/45">Next session in this course: {previousCourse.nextSession} of {previousCourse.totalSessions}</small>}
               </Field>
               <Field label="Total sessions booked">
                 <input
+                  key={`total-sessions-${selected}-${treatmentName}`}
                   name="totalSessions"
                   type="number"
                   min="1"
+                  defaultValue={previousCourse?.totalSessions || ""}
                   placeholder="e.g. 6"
                   className={cls}
                 />
@@ -328,33 +360,7 @@ export function AddCustomerHistory({
                   <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" placeholder="0.00" className={`${cls} pl-8`} />
                 </span>
               </Field>
-              {isLaserTreatment && (
-                <>
-                  <p className="mt-2 border-t border-black/10 pt-5 text-[10px] font-bold uppercase tracking-[.18em] text-black/40 sm:col-span-2">
-                    Laser treatment settings
-                  </p>
-                  <Field label="Fluence" required>
-                    <select name="fluence" required defaultValue="" className={cls}>
-                      <option value="" disabled>Select fluence</option>
-                      {Array.from({ length: 80 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}
-                    </select>
-                  </Field>
-                  <Field label="Hertz" required>
-                    <select name="hertz" required defaultValue="" className={cls}>
-                      <option value="" disabled>Select hertz</option>
-                      {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}
-                    </select>
-                  </Field>
-                  <Field label="Shots fired" required>
-                    <input name="shotsFired" required type="number" min="0" step="1" inputMode="numeric" placeholder="Enter shots fired" className={cls} />
-                  </Field>
-                  <Field label="Pulse" required>
-                    <select name="pulse" required defaultValue="Auto by machine" className={cls}>
-                      <option value="Auto by machine">Auto by machine</option>
-                    </select>
-                  </Field>
-                </>
-              )}
+              {isLaserTreatment && <LaserAreaSettings value={laserAreas} onChange={setLaserAreas} />}
               <Field label="Consultation sheet / consultation details" wide>
                 <textarea
                   name="consultation"
