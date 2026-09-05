@@ -592,7 +592,7 @@ const laserDevice: ConsultationTemplate = {
       completion("treatmentShotCount", "Treatment shot count", "number"), completion("treatmentEndpoint", "Clinical endpoint, skin response and observations", "textarea"),
       completion("treatmentEyeProtection", "Client and practitioner eye protection confirmed", "checkbox"), completion("adverseEventRecord", "Adverse events, actions and escalation (enter None if none)", "textarea"),
       completion("aftercareGiven", "Aftercare, warning signs and sun precautions given?", "yes-no"), completion("nextSessionPlan", "Next session date", "date"),
-    ]},
+    ].map((field) => ({ ...field, showRequiredMarker: false }))},
     practitioner(),
   ],
 };

@@ -10,13 +10,20 @@ const cls =
 function details(notes: string) {
   const session = notes.match(/^Session:\s*(\d*)\s*of\s*(\d*)/i);
   const match = notes.match(
-    /Consultation:\s*([\s\S]*?)\s*Outcome:\s*([\s\S]*)$/i,
+    /Consultation:\s*([\s\S]*?)\s*Outcome:\s*([\s\S]*?)(?:\s*Amount paid:|\s*Laser settings:|$)/i,
   );
+  const amount = notes.match(/Amount paid:\s*£?([\d.]+)/i);
+  const laserSettings = notes.match(/Laser settings:\s*Fluence:\s*(.+)\s*Hertz:\s*(.+)\s*Shots fired:\s*(.+)\s*Pulse:\s*(.+?)\s*$/i);
   return {
     sessionNumber: session?.[1] || "",
     totalSessions: session?.[2] || "",
     consultation: match?.[1]?.trim() || notes,
     outcome: match?.[2]?.trim() || "",
+    amount: amount?.[1] || "",
+    fluence: laserSettings?.[1]?.trim() || "",
+    hertz: laserSettings?.[2]?.trim() || "",
+    shotsFired: laserSettings?.[3]?.trim() || "",
+    pulse: laserSettings?.[4]?.trim() || "Auto by machine",
   };
 }
 export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Booking; treatmentNames: string[] }) {
@@ -26,6 +33,8 @@ export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Book
   const [error, setError] = useState("");
   const [images, setImages] = useState(booking.images || []);
   const record = details(booking.notes);
+  const [treatmentName, setTreatmentName] = useState(booking.treatmentName);
+  const isLaserTreatment = /laser/i.test(treatmentName);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
@@ -42,6 +51,11 @@ export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Book
         outcome: f.get("outcome"),
         sessionNumber: f.get("sessionNumber"),
         totalSessions: f.get("totalSessions"),
+        amount: f.get("amount"),
+        fluence: f.get("fluence"),
+        hertz: f.get("hertz"),
+        shotsFired: f.get("shotsFired"),
+        pulse: f.get("pulse"),
         images,
       }),
     });
@@ -93,6 +107,8 @@ export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Book
                   name="treatmentName"
                   options={treatmentNames}
                   defaultValue={booking.treatmentName}
+                  value={treatmentName}
+                  onChange={setTreatmentName}
                   placeholder="Search treatments or enter another treatment"
                   className={cls}
                 />
@@ -120,6 +136,19 @@ export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Book
                   />
                 </label>
               </div>
+              <label className="grid gap-2 text-xs font-bold">
+                Amount paid
+                <span className="relative block">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
+                  <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" defaultValue={record.amount} className={`${cls} pl-8`} />
+                </span>
+              </label>
+              {isLaserTreatment && <div className="grid grid-cols-2 gap-4 rounded-xl bg-pink-light/35 p-4">
+                <label className="grid gap-2 text-xs font-bold">Fluence<select name="fluence" required defaultValue={record.fluence} className={cls}><option value="" disabled>Select fluence</option>{Array.from({ length: 80 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+                <label className="grid gap-2 text-xs font-bold">Hertz<select name="hertz" required defaultValue={record.hertz} className={cls}><option value="" disabled>Select hertz</option>{Array.from({ length: 10 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+                <label className="grid gap-2 text-xs font-bold">Shots fired<input name="shotsFired" required type="number" min="0" step="1" inputMode="numeric" defaultValue={record.shotsFired} placeholder="Enter shots fired" className={cls} /></label>
+                <label className="grid gap-2 text-xs font-bold">Pulse<select name="pulse" required defaultValue={record.pulse} className={cls}><option value="Auto by machine">Auto by machine</option></select></label>
+              </div>}
               <label className="grid gap-2 text-xs font-bold">
                 Consultation sheet / consultation details
                 <textarea

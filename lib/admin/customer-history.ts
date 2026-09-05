@@ -55,6 +55,11 @@ function latestConsent(bookings: Booking[]) {
   );
 }
 
+function latestRecordedDateOfBirth(bookings: Booking[]) {
+  return bookings.find((booking) => booking.customerDateOfBirth?.trim())
+    ?.customerDateOfBirth || "";
+}
+
 export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
   const groups = new Map<string, Booking[]>();
   for (const booking of bookings) {
@@ -80,7 +85,10 @@ export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
         postcode: latestBooking.customerPostcode || "",
         gender: latestBooking.customerGender || "",
         occupation: latestBooking.customerOccupation || "",
-        dateOfBirth: latestBooking.customerDateOfBirth || "",
+        // A subsequent booking may omit optional profile fields. Keep the most
+        // recent DOB that was actually recorded so selecting an existing client
+        // reliably pre-populates it in the booking form.
+        dateOfBirth: latestRecordedDateOfBirth(sorted),
         marketingConsent: consentBooking.marketingConsent,
         marketingConsentUpdatedAt: consentBooking.marketingConsentUpdatedAt,
         bookings: sorted,

@@ -29,6 +29,7 @@ export function AddCustomerHistory({
   const [customerQuery, setCustomerQuery] = useState(initialCustomer?.name || "");
   const [showLookup, setShowLookup] = useState(false);
   const [images, setImages] = useState<TreatmentImage[]>([]);
+  const [treatmentName, setTreatmentName] = useState("");
   const customer = customers.find((c) => c.id === selected);
   const normalizedQuery = customerQuery.trim().toLowerCase();
   const matchingCustomers = normalizedQuery
@@ -39,7 +40,8 @@ export function AddCustomerHistory({
           ),
         )
         .slice(0, 8)
-    : [];
+        : [];
+  const isLaserTreatment = /laser/i.test(treatmentName);
 
   function selectCustomer(nextCustomer: CustomerHistory) {
     setSelected(nextCustomer.id);
@@ -59,13 +61,17 @@ export function AddCustomerHistory({
     const f = new FormData(e.currentTarget);
     const consultation = String(f.get("consultation") || "").trim();
     const outcome = String(f.get("outcome") || "").trim();
+    const amount = String(f.get("amount") || "").trim();
+    const laserSettings = isLaserTreatment
+      ? `\n\nLaser settings:\nFluence: ${f.get("fluence")}\nHertz: ${f.get("hertz")}\nShots fired: ${f.get("shotsFired")}\nPulse: ${f.get("pulse")}`
+      : "";
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         branchId: "reading-west-street",
         serviceId: "manual",
-        treatmentName: String(f.get("treatmentName") || "").trim() || "Customer record",
+        treatmentName: treatmentName.trim() || "Customer record",
         durationMinutes: 5,
         staffId: "manual",
         practitionerName: "Historical record",
@@ -80,7 +86,7 @@ export function AddCustomerHistory({
         customerDateOfBirth: f.get("customerDateOfBirth"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
-        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}`,
+        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}${amount ? `\n\nAmount paid: £${Number(amount).toFixed(2)}` : ""}${laserSettings}`,
         historicalRecord: true,
         suppressNotification: true,
         images,
@@ -96,6 +102,7 @@ export function AddCustomerHistory({
     setSelected("");
     setCustomerQuery("");
     setImages([]);
+    setTreatmentName("");
     router.refresh();
   }
   return (
@@ -106,6 +113,7 @@ export function AddCustomerHistory({
           setSelected(initialCustomerId);
           setCustomerQuery(initialCustomer?.name || "");
           setShowLookup(false);
+          setTreatmentName("");
           setOpen(true);
         }}
         className="button-primary"
@@ -292,6 +300,8 @@ export function AddCustomerHistory({
                   options={treatmentNames}
                   placeholder="Optional — search or enter a treatment"
                   className={cls}
+                  value={treatmentName}
+                  onChange={setTreatmentName}
                 />
               </Field>
               <Field label="Session number">
@@ -312,6 +322,39 @@ export function AddCustomerHistory({
                   className={cls}
                 />
               </Field>
+              <Field label="Amount paid">
+                <span className="relative block">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
+                  <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" placeholder="0.00" className={`${cls} pl-8`} />
+                </span>
+              </Field>
+              {isLaserTreatment && (
+                <>
+                  <p className="mt-2 border-t border-black/10 pt-5 text-[10px] font-bold uppercase tracking-[.18em] text-black/40 sm:col-span-2">
+                    Laser treatment settings
+                  </p>
+                  <Field label="Fluence" required>
+                    <select name="fluence" required defaultValue="" className={cls}>
+                      <option value="" disabled>Select fluence</option>
+                      {Array.from({ length: 80 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Hertz" required>
+                    <select name="hertz" required defaultValue="" className={cls}>
+                      <option value="" disabled>Select hertz</option>
+                      {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Shots fired" required>
+                    <input name="shotsFired" required type="number" min="0" step="1" inputMode="numeric" placeholder="Enter shots fired" className={cls} />
+                  </Field>
+                  <Field label="Pulse" required>
+                    <select name="pulse" required defaultValue="Auto by machine" className={cls}>
+                      <option value="Auto by machine">Auto by machine</option>
+                    </select>
+                  </Field>
+                </>
+              )}
               <Field label="Consultation sheet / consultation details" wide>
                 <textarea
                   name="consultation"

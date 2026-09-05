@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
+import { changedFields, logAdminActivity } from "@/lib/admin/activity-log";
 
 export async function PATCH(request: Request) {
   try {
@@ -12,6 +13,11 @@ export async function PATCH(request: Request) {
       outcome?: string;
       sessionNumber?: string;
       totalSessions?: string;
+      amount?: string;
+      fluence?: string;
+      hertz?: string;
+      shotsFired?: string;
+      pulse?: string;
       bookingIds?: string[];
       firstName?: string;
       lastName?: string;
@@ -25,6 +31,7 @@ export async function PATCH(request: Request) {
       marketingConsent?: boolean;
       images?: TreatmentImage[];
     };
+    const existing = await getBookings();
     if (body.action === "treatment") {
       if (
         !body.bookingId ||
@@ -38,12 +45,20 @@ export async function PATCH(request: Request) {
           },
           { status: 400 },
         );
+      const amount = body.amount?.trim();
+      const isLaserTreatment = /laser/i.test(body.treatmentName);
+      if (isLaserTreatment && (!body.fluence || !body.hertz || !body.shotsFired || !body.pulse))
+        return NextResponse.json({ error: "Complete all laser treatment settings." }, { status: 400 });
+      const laserSettings = isLaserTreatment
+        ? `\n\nLaser settings:\nFluence: ${body.fluence}\nHertz: ${body.hertz}\nShots fired: ${body.shotsFired}\nPulse: ${body.pulse}`
+        : "";
       const booking = await updateBooking({
         id: body.bookingId,
         treatmentName: body.treatmentName,
-        notes: `Session: ${body.sessionNumber || ""} of ${body.totalSessions || ""}\n\nConsultation:\n${body.consultation.trim()}\n\nOutcome:\n${body.outcome.trim()}`,
+        notes: `Session: ${body.sessionNumber || ""} of ${body.totalSessions || ""}\n\nConsultation:\n${body.consultation.trim()}\n\nOutcome:\n${body.outcome.trim()}${amount ? `\n\nAmount paid: £${Number(amount).toFixed(2)}` : ""}${laserSettings}`,
         images: body.images || [],
       });
+      await logAdminActivity({ action: "updated", entity: "treatment record", entityId: booking.id, summary: `Treatment record updated for ${booking.customerName}`, changes: changedFields(existing.find((item) => item.id === booking.id) || {}, booking) });
       return NextResponse.json({ booking });
     }
     if (!body.bookingIds?.length || !body.firstName?.trim() || !body.lastName?.trim() || !body.phone?.trim())
@@ -51,7 +66,6 @@ export async function PATCH(request: Request) {
         { error: "Customer first name, last name, phone and record ids are required." },
         { status: 400 },
       );
-    const existing = await getBookings();
     const ids = new Set(body.bookingIds);
     const matches = existing.filter((booking) => ids.has(booking.id));
     if (matches.length !== ids.size)
@@ -82,6 +96,7 @@ export async function PATCH(request: Request) {
         }),
       );
     }
+    await Promise.all(bookings.map((booking) => logAdminActivity({ action: "updated", entity: "customer", entityId: booking.id, summary: `Customer details updated for ${booking.customerName}`, changes: changedFields(existing.find((item) => item.id === booking.id) || {}, booking) })));
     return NextResponse.json({ bookings });
   } catch (error) {
     return NextResponse.json(

@@ -1,0 +1,9 @@
+import { AdminHeader } from "@/components/admin/admin-header";
+import { getActivityLog } from "@/lib/admin/activity-log";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminActivityPage() {
+  const entries = await getActivityLog();
+  return <><AdminHeader /><main className="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-12"><p className="text-[10px] font-bold uppercase tracking-[.2em] text-pink">Admin portal</p><h1 className="mt-2 font-display text-4xl">Activity history</h1><p className="mt-3 text-sm text-black/55">A record of additions, changes and deletions made in the admin portal.</p><section className="mt-8 overflow-hidden rounded-2xl border border-black/10 bg-white">{entries.length ? entries.map((entry) => <article key={entry.id} className="border-b border-black/5 px-5 py-4 last:border-0"><div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold">{entry.summary}</p><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${entry.action === "deleted" ? "bg-red-50 text-red-700" : entry.action === "created" ? "bg-green-50 text-green-700" : "bg-pink-light text-pink-dark"}`}>{entry.action}</span></div><p className="mt-1 text-xs text-black/50">{new Date(entry.createdAt).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })} · {entry.actor} · {entry.entity}</p>{Object.keys(entry.changes).length > 0 && <details className="mt-3"><summary className="cursor-pointer text-xs font-bold text-pink">View recorded changes</summary><pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-cream p-3 text-[11px] leading-5 text-black/65">{JSON.stringify(entry.changes, null, 2)}</pre></details>}</article>) : <p className="p-6 text-sm text-black/50">No admin activity has been recorded yet.</p>}</section></main></>;
+}
