@@ -9,6 +9,8 @@ export function SearchableOptionInput({
   defaultValue,
   placeholder,
   className,
+  value,
+  onChange,
 }: {
   name: string;
   options: string[];
@@ -16,6 +18,8 @@ export function SearchableOptionInput({
   defaultValue?: string;
   placeholder?: string;
   className?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }) {
   const id = useId();
   return (
@@ -24,7 +28,9 @@ export function SearchableOptionInput({
         name={name}
         list={id}
         required={required}
-        defaultValue={defaultValue}
+        value={value}
+        defaultValue={value === undefined ? defaultValue : undefined}
+        onChange={onChange ? (event) => onChange(event.target.value) : undefined}
         placeholder={placeholder}
         autoComplete="off"
         className={className}

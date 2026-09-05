@@ -15,6 +15,7 @@ import type {
 } from "@/lib/admin/booking-types";
 import type { BookingNotificationType } from "@/lib/notifications/types";
 import { sendBookingNotification } from "@/lib/notifications/booking-notifications";
+import { changedFields, logAdminActivity } from "@/lib/admin/activity-log";
 
 async function notifySafely(
   booking: Awaited<ReturnType<typeof createBooking>>,
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
         requirePostcode: !input.historicalRecord,
       },
     );
+    await logAdminActivity({ action: "created", entity: input.historicalRecord ? "treatment record" : "booking", entityId: booking.id, summary: `${input.historicalRecord ? "Treatment record" : "Booking"} added for ${booking.customerName}`, changes: { after: booking } });
     return NextResponse.json(
       {
         booking,
@@ -94,6 +96,7 @@ export async function PATCH(request: Request) {
       (booking) => booking.id === body.id,
     );
     const booking = await updateBooking(body);
+    await logAdminActivity({ action: "updated", entity: "booking", entityId: booking.id, summary: `Booking updated for ${booking.customerName}`, changes: changedFields(previous || {}, booking) });
     const changed =
       previous &&
       [
@@ -144,7 +147,10 @@ export async function DELETE(request: Request) {
         { error: "Booking id is required." },
         { status: 400 },
       );
-    return NextResponse.json({ deleted: await deleteBooking(body.id) });
+    const booking = (await getBookings()).find((item) => item.id === body.id);
+    const deleted = await deleteBooking(body.id);
+    await logAdminActivity({ action: "deleted", entity: "booking", entityId: deleted.id, summary: `Booking deleted${booking ? ` for ${booking.customerName}` : ""}`, changes: { before: booking || {} } });
+    return NextResponse.json({ deleted });
   } catch (error) {
     if (error instanceof BookingValidationError)
       return NextResponse.json({ error: error.message }, { status: 400 });

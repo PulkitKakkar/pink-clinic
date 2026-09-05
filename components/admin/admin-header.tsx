@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageSquareText,
+  History,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -15,22 +16,24 @@ export function AdminHeader() {
   return (
     <header className="border-b border-black/5 bg-white">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:flex-nowrap sm:gap-4 sm:px-8">
-        <Link href="/admin" className="flex shrink-0 items-center gap-3">
-          <Image
-            src="/images/pink-logo.jpeg"
-            alt="Pink Beauty"
-            width={80}
-            height={40}
-            className="h-10 w-20 rounded-md object-cover"
-            priority
-          />
-          <span className="hidden sm:block">
-            <strong className="block text-sm">Pink Admin</strong>
-            <small className="flex items-center gap-1 text-[9px] uppercase tracking-[.16em] text-black/40">
-              <ShieldCheck size={11} /> Staff only
-            </small>
-          </span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link href="/admin" className="flex items-center gap-3">
+            <Image
+              src="/images/pink-logo.jpeg"
+              alt="Pink Beauty"
+              width={80}
+              height={40}
+              className="h-10 w-20 rounded-md object-cover"
+              priority
+            />
+            <span className="hidden sm:block">
+              <strong className="block text-sm">Pink Admin</strong>
+              <small className="flex items-center gap-1 text-[9px] uppercase tracking-[.16em] text-black/40">
+                <ShieldCheck size={11} /> Staff only
+              </small>
+            </span>
+          </Link>
+        </div>
         <nav className="order-3 flex w-full items-center justify-center gap-1 rounded-full bg-cream p-1 text-[10px] font-bold sm:order-none sm:w-auto sm:text-xs">
           <Link
             href="/admin"
@@ -57,7 +60,11 @@ export function AdminHeader() {
             <MessageSquareText size={13} /> SMS
           </Link>
         </nav>
-        <form action="/api/admin/logout" method="post">
+        <div className="flex items-center gap-2">
+          <Link href="/admin/activity" aria-label="View activity history" title="Activity history" className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 text-black/55 transition hover:border-pink hover:text-pink">
+            <History size={16} />
+          </Link>
+          <form action="/api/admin/logout" method="post">
           <button
             aria-label="Sign out"
             className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-black/10 px-3 py-2 text-xs font-bold sm:px-4"
@@ -66,7 +73,8 @@ export function AdminHeader() {
             <LogOut size={14} />
             <span className="hidden sm:inline">Sign out</span>
           </button>
-        </form>
+          </form>
+        </div>
       </div>
     </header>
   );

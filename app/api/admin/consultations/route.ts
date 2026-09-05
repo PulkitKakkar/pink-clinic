@@ -14,6 +14,7 @@ import {
 } from "@/lib/admin/storage";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 import { createBooking } from "@/lib/admin/booking-storage";
+import { changedFields, logAdminActivity } from "@/lib/admin/activity-log";
 
 export async function POST(request: Request) {
   try {
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
       answers: body.answers,
       images: body.images || [],
     });
+    await logAdminActivity({ action: "created", entity: "consultation", entityId: record.id, summary: `${template.title} consultation added`, changes: { after: record } });
     const firstName = String(body.answers.firstName || "").trim();
     const lastName = String(body.answers.lastName || "").trim();
     const phone = String(body.answers.contactNumber || "").trim();
@@ -105,6 +107,8 @@ export async function PATCH(request: Request) {
       : undefined;
     if (Array.isArray(body.images))
       record = await updateConsultationImages(body.id, body.images);
+    if (record)
+      await logAdminActivity({ action: "updated", entity: "consultation", entityId: record.id, summary: `${record.templateTitle} consultation updated`, changes: changedFields(existing || {}, record) });
     if (existing && body.answers && existing.answers.recordStatus === "draft" && body.answers.recordStatus !== "draft") {
       const firstName = String(body.answers.firstName || "").trim();
       const lastName = String(body.answers.lastName || "").trim();

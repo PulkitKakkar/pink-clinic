@@ -5,6 +5,7 @@ import { isMarketingSmsAllowed, normalizePhoneNumber } from "@/lib/notifications
 import { prepareMarketingSms, validateMarketingSms } from "@/lib/notifications/marketing-sms-utils";
 import { sendMarketingSms } from "@/lib/notifications/provider";
 import { completeMarketingSmsCampaign, createMarketingSmsCampaign, updateMarketingSmsDelivery } from "@/lib/notifications/marketing-sms-history";
+import { logAdminActivity } from "@/lib/admin/activity-log";
 
 const MAX_RECIPIENTS = 500;
 
@@ -38,5 +39,6 @@ export async function POST(request: Request) {
     await updateMarketingSmsDelivery(delivery.id, "sent");
   }
   await completeMarketingSmsCampaign(campaign.id, { sent, skipped, failed });
+  await logAdminActivity({ action: "created", entity: "SMS campaign", entityId: campaign.id, summary: `SMS campaign sent to ${sent} customer${sent === 1 ? "" : "s"}`, changes: { recipientCount: recipientIds.length, sent, skipped, failed } });
   return NextResponse.json({ campaignId: campaign.id, sent, skipped, failed });
 }
