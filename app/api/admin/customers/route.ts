@@ -96,7 +96,21 @@ export async function PATCH(request: Request) {
         }),
       );
     }
-    await Promise.all(bookings.map((booking) => logAdminActivity({ action: "updated", entity: "customer", entityId: booking.id, summary: `Customer details updated for ${booking.customerName}`, changes: changedFields(existing.find((item) => item.id === booking.id) || {}, booking) })));
+    await logAdminActivity({
+      action: "updated",
+      entity: "customer",
+      entityId: body.bookingIds[0],
+      summary: `Customer details updated for ${bookings[0].customerName}`,
+      changes: {
+        recordsUpdated: bookings.map((booking) => ({
+          recordId: booking.id,
+          changes: changedFields(
+            existing.find((item) => item.id === booking.id) || {},
+            booking,
+          ),
+        })),
+      },
+    });
     return NextResponse.json({ bookings });
   } catch (error) {
     return NextResponse.json(
