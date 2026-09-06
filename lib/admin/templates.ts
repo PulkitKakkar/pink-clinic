@@ -640,16 +640,16 @@ const briefMedicalScreen = (): ConsultationSection => ({
   ],
 });
 
-const sharedGoals = (brief = false): ConsultationSection => ({
+const sharedGoals = (brief = false, optional = false): ConsultationSection => ({
   title: "Goals and practitioner assessment",
   fields: brief ? [
-    f("serviceRequested", "Service, area and requested result", "textarea", true),
-    f("areaAssessment", "Relevant observations and agreed service plan", "textarea", true),
+    f("serviceRequested", "Service, area and requested result", "textarea", !optional),
+    f("areaAssessment", "Relevant observations and agreed service plan", "textarea", !optional),
   ] : [
-      f("clientGoals", "Main concern, desired outcome and expectations", "textarea", true),
+      f("clientGoals", "Main concern, desired outcome and expectations", "textarea", !optional),
       f("previousTreatment", "Relevant previous treatment and response", "textarea"),
-      f("areaAssessment", "Treatment-area assessment, observations and classification", "textarea", true),
-      f("treatmentPlan", "Proposed treatment, area, product/device and alternatives including no treatment", "textarea", true),
+      f("areaAssessment", "Treatment-area assessment, observations and classification", "textarea", !optional),
+      f("treatmentPlan", "Proposed treatment, area, product/device and alternatives including no treatment", "textarea", !optional),
     ],
 });
 
@@ -674,11 +674,8 @@ const sharedConsent = (title: string, risks: string, brief = false, photography 
   ],
 });
 
-const sharedTreatmentRecord = (injectable = false): ConsultationSection => ({
-  title: "Treatment decision and session record",
-  description: "Practitioner use only. Complete at the treatment appointment.",
-  treatmentImagesAfter: true,
-  fields: [
+const sharedTreatmentRecord = (injectable = false, optional = false): ConsultationSection => {
+  const fields: ConsultationField[] = [
     { id: "suitabilityOutcome", label: "Suitability decision", type: "select", required: true, options: ["Suitable to proceed", "Defer or restrict treatment", "Medical referral required", "Not suitable"].map((value) => ({ value, label: value })) },
     f("decisionNotes", "Clinical reasoning, restriction, referral or refusal details", "textarea"),
     completion("treatmentDate", "Treatment date", "date"), completion("areasTreated", "Area(s) treated", "textarea"),
@@ -687,8 +684,14 @@ const sharedTreatmentRecord = (injectable = false): ConsultationSection => ({
     completion("batchExpiry", "Batch/lot and expiry, where applicable"),
     completion("endpointResponse", "Clinical endpoint, immediate response, adverse event and action taken", "textarea"),
     completion("aftercareFollowUp", "Aftercare supplied, warning signs and follow-up plan", "textarea"),
-  ],
-});
+  ];
+  return {
+    title: "Treatment decision and session record",
+    description: "Practitioner use only. Complete at the treatment appointment.",
+    treatmentImagesAfter: true,
+    fields: fields.map((field) => optional ? { ...field, required: false, completionRequired: false } : field),
+  };
+};
 
 const briefTreatmentRecord = (slug: string): ConsultationSection => {
   const productTraceability = ["lash-brow-tint", "hair-colour", "ear-piercing"].includes(slug);
@@ -724,16 +727,23 @@ function treatmentConsultation(config: {
     sourceFile: "Pink Clinic Consultation Forms.pdf",
     reviewRequired: true,
     version: "2026-08-25.1",
-    conditionalRequirements: [{ whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "decisionNotes", message: "Record the clinical decision and referral/restriction details." }],
+    conditionalRequirements: config.slug === "intramuscular-injections" ? [] : [{ whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "decisionNotes", message: "Record the clinical decision and referral/restriction details." }],
     sections: [
       config.detailed ? details() : briefDetails(),
       config.detailed
         ? focusedMedicalScreen(config.injectable ? "injectable" : ["carbon-peel-facial", "tattoo-removal", "ipl-skin-rejuvenation", "morpheus8"].includes(config.slug) ? "energy" : "skin")
         : briefMedicalScreen(),
-      sharedGoals(!config.detailed),
-      { title: "Treatment-specific screening", description: "Answer every question and add relevant detail to the medical-history or assessment notes.", fields: config.questions.map((question) => yesNo(question.id, question.label)) },
+      sharedGoals(!config.detailed, config.slug === "intramuscular-injections"),
       sharedConsent(config.title, config.risks, !config.detailed, config.slug === "facial"),
-      config.detailed ? sharedTreatmentRecord(config.injectable) : briefTreatmentRecord(config.slug),
+      {
+        title: "Treatment-specific screening",
+        audience: config.slug === "intramuscular-injections" ? "practitioner" : undefined,
+        description: config.slug === "intramuscular-injections"
+          ? "Practitioner use only. Record the medicine-specific checks and add relevant detail to the assessment notes."
+          : "Answer every question and add relevant detail to the medical-history or assessment notes.",
+        fields: config.questions.map((question) => yesNo(question.id, question.label)),
+      },
+      config.detailed ? sharedTreatmentRecord(config.injectable, config.slug === "intramuscular-injections") : briefTreatmentRecord(config.slug),
       practitioner(),
     ],
   };
