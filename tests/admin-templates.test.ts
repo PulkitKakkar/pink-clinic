@@ -51,6 +51,18 @@ describe("consultation templates", () => {
     }
   });
 
+  it("keeps intramuscular injection assessment and session fields optional, with medicine checks for practitioners", () => {
+    const template = getConsultationTemplate("intramuscular-injections")!;
+    const goals = template.sections.find((section) => section.title === "Goals and practitioner assessment")!;
+    const screening = template.sections.find((section) => section.title === "Treatment-specific screening")!;
+    const session = template.sections.find((section) => section.title === "Treatment decision and session record")!;
+
+    expect(goals.fields.every((field) => !field.required && !field.completionRequired)).toBe(true);
+    expect(screening.audience).toBe("practitioner");
+    expect(session.fields.every((field) => !field.required && !field.completionRequired)).toBe(true);
+    expect(template.conditionalRequirements).toEqual([]);
+  });
+
   it("uses unique field identifiers within every form", () => {
     for (const template of consultationTemplates) {
       const ids = template.sections.flatMap((section) => section.fields.map((field) => field.id));
