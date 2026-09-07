@@ -224,7 +224,7 @@ describe("completion controls across consultation forms (excluding Laser and Ant
 
 describe("Skin Peel and Microneedling streamlined questions", () => {
   const item = getConsultationTemplate("skin-peel-microneedling")!;
-  it("keeps optional goals and photography blank and assigns patch assessment to the practitioner", () => {
+  it("keeps optional goals and photography blank without a patch-test assessment", () => {
     render(<ConsultationForm template={item} practitionerNames={[]} treatmentNames={[]} />);
     expect(screen.getByRole<HTMLTextAreaElement>("textbox", { name: /Additional goals/ }).required).toBe(false);
     const photography = screen.getByRole("radiogroup", { name: /Optional consent to use agreed photographs/ });
@@ -232,14 +232,12 @@ describe("Skin Peel and Microneedling streamlined questions", () => {
       expect(radio.required).toBe(false);
       expect(radio.checked).toBe(false);
     }
-    const patchSection = item.sections.find((section) => section.fields.some((field) => field.id === "patchTestResult"))!;
-    expect(isPractitionerConsultationSection(patchSection)).toBe(true);
-    expect(patchSection.fields.map((field) => field.id)).toEqual(["patchTestDate", "patchTestProductArea", "patchTestResult", "patchTestReaction"]);
+    expect(item.sections.some((section) => section.fields.some((field) => field.id === "patchTestResult"))).toBe(false);
     const recent = item.sections.find((section) => section.title === "Recent procedures")!;
     expect(isPractitionerConsultationSection(recent)).toBe(false);
     expect(recent.fields).toHaveLength(6);
     const errors = validateConsultationAnswers(item, { recordStatus: "draft", clientSectionCompletedAt: "saved" });
-    expect(errors.some((error) => /patch-test|Additional goals|Optional consent to use agreed photographs/i.test(error))).toBe(false);
+    expect(errors.some((error) => /Additional goals|Optional consent to use agreed photographs/i.test(error))).toBe(false);
   });
 
   it("switches procedure fields while preserving draft answers and saves unanswered photography as empty", async () => {

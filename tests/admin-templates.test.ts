@@ -8,6 +8,11 @@ import { consultationTemplates, getConsultationTemplate, preserveLockedClientAns
 import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
 
 describe("consultation templates", () => {
+  it("lists consultation forms alphabetically", () => {
+    expect(consultationTemplates.map((template) => template.title)).toEqual(
+      [...consultationTemplates.map((template) => template.title)].sort((a, b) => a.localeCompare(b)),
+    );
+  });
   it("uses split client names and defaults unfinished records to draft", () => {
     const answers = { firstName: "Harpreet", lastName: "Batra" };
     expect(consultationClientName(answers)).toBe("Harpreet Batra");
@@ -395,11 +400,12 @@ describe("consultation templates", () => {
     expect(template?.sourceFile).toBe("L5 Consultation Form.pdf");
     expect(ids).toEqual(expect.arrayContaining([
       "fitzpatrickType",
-      "patchTestResult",
       "contraActions",
       "peelProduct",
       "needleDevice",
+      "allergyDetails",
     ]));
+    expect(ids).not.toContain("patchTestResult");
   });
 
   it("adds a prescriber-led Mounjaro consultation and administration record", () => {

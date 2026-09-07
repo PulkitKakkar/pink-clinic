@@ -6,6 +6,7 @@ import { buildCustomerHistories } from "@/lib/admin/customer-history";
 import { consultationTemplates } from "@/lib/admin/templates";
 import { getConsultations } from "@/lib/admin/storage";
 import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
+import { ConsultationTemplatePicker } from "@/components/admin/consultation-template-picker";
 
 export const dynamic = "force-dynamic";
 
@@ -75,28 +76,7 @@ export default async function AdminDashboard() {
         </div>
         <section className="mt-10">
           <h2 className="font-display text-3xl">Start a consultation</h2>
-          <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {consultationTemplates.map((template) => (
-              <Link
-                key={template.slug}
-                href={`/admin/consultations/${template.slug}`}
-                className="group rounded-2xl border border-black/5 bg-white p-5 shadow-soft transition hover:-translate-y-1"
-              >
-                <p className="text-[9px] font-bold uppercase tracking-[.18em] text-pink">
-                  Client consultation
-                </p>
-                <h3 className="mt-3 font-display text-2xl leading-none">
-                  {template.title}
-                </h3>
-                <p className="mt-3 text-xs leading-5 text-black/45">
-                  {template.description}
-                </p>
-                <span className="mt-5 flex items-center gap-2 text-xs font-bold text-pink">
-                  Open form <ArrowRight size={14} />
-                </span>
-              </Link>
-            ))}
-          </div>
+          <ConsultationTemplatePicker templates={consultationTemplates} />
         </section>
         <section className="mt-10">
           <h2 className="font-display text-3xl">Recent consultation records</h2>

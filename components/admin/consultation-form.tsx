@@ -73,6 +73,11 @@ export function ConsultationForm({
   const datesSynchronized = useRef(false);
   const manuallySelectedFitzpatrick = useRef(new Set<string>());
   const today = new Date().toLocaleDateString("en-CA");
+  const defaultExpiryDate = (() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    return date.toLocaleDateString("en-CA");
+  })();
   const initialValue = (name: string) => initialAnswers[name];
   const [recordStatus, setRecordStatus] = useState(String(initialValue("recordStatus") || "draft"));
   const [clientSectionLocked, setClientSectionLocked] = useState(
@@ -205,7 +210,9 @@ export function ConsultationForm({
     ) {
       event.currentTarget
         .querySelectorAll<HTMLInputElement>('input[type="date"]:not([name="dateOfBirth"])')
-        .forEach((field) => { field.value = target.value; });
+        .forEach((field) => {
+          if (!/expiry/i.test(field.name)) field.value = target.value;
+        });
       datesSynchronized.current = true;
     }
   }
@@ -259,9 +266,6 @@ export function ConsultationForm({
       inert={clientSectionLocked}
     >
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
-      </section>
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
         <h2 className="font-display text-2xl">Customer agreement</h2>
         <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
           <input
@@ -294,6 +298,9 @@ export function ConsultationForm({
             time.
           </span>
         </label>
+      </section>
+      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
       </section>
     </div>
   );
@@ -351,7 +358,7 @@ export function ConsultationForm({
                 {field.type !== "checkbox" && (
                   <FieldHeading>
                     {field.label}
-                    {field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 text-pink" aria-hidden="true">*</span>}
+                    {field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 inline-block align-middle text-pink" aria-hidden="true">*</span>}
                   </FieldHeading>
                 )}
                 {field.id === "address" ? (
@@ -453,8 +460,12 @@ export function ConsultationForm({
                     max={field.max}
                     defaultValue={
                       String(initialValue(field.id) || "") ||
-                      (!recordId && field.type === "date" && field.id !== "dateOfBirth"
-                        ? today
+                      (!recordId && field.type === "date"
+                        ? /expiry/i.test(field.id) || /expiry/i.test(field.label)
+                          ? defaultExpiryDate
+                          : field.id !== "dateOfBirth"
+                            ? today
+                            : undefined
                         : undefined)
                     }
                     className={inputClass}
