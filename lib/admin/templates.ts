@@ -95,7 +95,7 @@ const comprehensiveMedicalScreen = (): ConsultationSection => ({
     yesNo("woundsBruising", "Open wounds, recent scar tissue, abrasions, cuts, bruising, sunburn, or unexplained pain/swelling in the treatment area?"),
     yesNo("healingScarring", "Impaired healing or a history of keloid or hypertrophic scarring?"),
     yesNo("oedema", "Medical oedema or significant swelling?"), yesNo("tattoosMoles", "Tattoos, permanent makeup or moles in the proposed treatment area?"),
-    f("medicalHistoryDetails", "Details of every Yes answer, current medication and allergies (enter None known when applicable)", "textarea"),
+    f("medicalHistoryDetails", "Details of every Yes answer, current medication and allergies (enter None known when applicable)", "textarea", true),
   ],
 });
 const lifestyleAndSkin = (): ConsultationSection => ({
@@ -105,7 +105,8 @@ const lifestyleAndSkin = (): ConsultationSection => ({
     yesNo("smokesOrVapes", "Smoke or vape?"), f("smokingAmount", "Cigarettes/vaping frequency", "text"),
     yesNo("drinksAlcohol", "Drink alcohol?"), boundedNumber("alcoholUnits", "Approximate alcohol units per week", 0, 200),
     boundedNumber("workStress", "Work stress level (0–10)", 0, 10), boundedNumber("homeStress", "Home stress level (0–10)", 0, 10),
-    f("morningSkincare", "Morning skincare routine and products", "textarea", true), f("eveningSkincare", "Evening skincare routine and products", "textarea", true),
+    options("morningSkincare", "Morning skincare routine and products", ["Cleanser", "Vitamin C / antioxidant serum", "Hyaluronic acid / hydrating serum", "Niacinamide", "Moisturiser", "SPF 30+ sunscreen", "Eye cream", "Other"], true),
+    options("eveningSkincare", "Evening skincare routine and products", ["Cleanser", "Make-up remover / cleansing balm", "Exfoliating acid (AHA/BHA/PHA)", "Retinol / retinoid", "Hydrating serum", "Moisturiser", "Face oil", "Eye cream", "Other"], true),
     f("skinConcerns", "Specific skin concerns", "textarea"),
     options("skinCharacteristics", "Current skin characteristics", ["Normal", "Dry", "Oily", "Combination", "Sensitive", "Dehydrated", "Mature", "Congested", "Acne", "Erythema", "Pigmentation", "Scarring", "Broken capillaries", "Large/open pores", "Dark circles"]),
   ],
@@ -203,7 +204,7 @@ const dermalFillers: ConsultationTemplate = {
   sections: [
     details(),
     { title: "Consultation goals and previous treatment", fields: [
-      f("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", "textarea", true), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
+      options("objectivesConcerns", "Objectives, concerns, expectations and desired outcome", ["Reduce wrinkles", "Soften fine lines", "Prevent deeper lines", "Look refreshed / less tired", "Create facial balance", "Subtle, natural-looking result", "Confidence boost", "Lift or shape the brows", "Slim or soften the jawline", "Reduce excessive sweating", "Other"]), f("alternativesDiscussed", "Alternative treatment options discussed", "textarea"),
       yesNo("previousFillers", "Previous dermal filler, cosmetic procedure or implant in the proposed area?"), f("previousFillersDetails", "Previous product, areas, dates, results and complications", "textarea"),
       yesNo("lidocaineHyaluronicAllergy", "Allergy or reaction to lidocaine, local anaesthetic, hyaluronic acid or dermal filler?"),
       yesNo("dentalWork", "Recent or planned dental work, dental procedure or oral infection?"),
@@ -225,9 +226,8 @@ const dermalFillers: ConsultationTemplate = {
 };
 
 const skinPeelMicroneedling: ConsultationTemplate = {
-  slug: "skin-peel-microneedling", title: "Skin Peel and Microneedling Consultation", description: "Level 5-informed assessment, Fitzpatrick classification, patch testing, consent and procedure record for medium-depth peels and microneedling.",
+  slug: "skin-peel-microneedling", title: "Skin Peel and Microneedling Consultation", description: "Level 5-informed assessment, Fitzpatrick classification, consent and procedure record for medium-depth peels and microneedling.",
   sourceFile: "L5 Consultation Form.pdf", reviewRequired: true,
-  completionBlockers: [{ field: "patchTestResult", values: ["Positive — do not proceed", "Pending"], message: "Treatment cannot be completed while the patch test is positive or pending." }],
   conditionalRequirements: [
     { whenField: "procedureType", values: ["Medium-depth skin peel", "Combined protocol"], requiredField: "peelProduct", message: "Record the peel product, type and strength." },
     { whenField: "procedureType", values: ["Microneedling", "Combined protocol"], requiredField: "needleDevice", message: "Record the microneedling device, cartridge and depth by zone." },
@@ -237,7 +237,8 @@ const skinPeelMicroneedling: ConsultationTemplate = {
     details(),
     { title: "Consultation goals and skincare", fields: [
       f("alternativesDiscussed", "Alternative treatment options discussed", "textarea", true),
-      f("morningSkincare", "Morning skincare routine, active ingredients and products", "textarea", true), f("eveningSkincare", "Evening skincare routine, active ingredients and products", "textarea", true),
+      options("morningSkincare", "Morning skincare routine and products", ["Cleanser", "Vitamin C / antioxidant serum", "Hyaluronic acid / hydrating serum", "Niacinamide", "Moisturiser", "SPF 30+ sunscreen", "Eye cream", "Other"], true),
+      options("eveningSkincare", "Evening skincare routine and products", ["Cleanser", "Make-up remover / cleansing balm", "Exfoliating acid (AHA/BHA/PHA)", "Retinol / retinoid", "Hydrating serum", "Moisturiser", "Face oil", "Eye cream", "Other"], true),
       options("treatmentGoals", "Treatment goals", ["General skin rejuvenation", "Improved hydration", "Superficial blemishes", "Improved texture", "Scarring", "Pigmentation", "Other"], true),
       f("objectivesConcerns", "Additional goals, concerns or desired outcome (optional)", "textarea"),
     ]},
@@ -253,9 +254,10 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       yesNo("asthma", "Asthma?"), yesNo("mentalHealth", "Severe anxiety or diagnosed nervous/mental-health condition relevant to treatment?"),
       yesNo("burnsLesions", "Burns, open wounds, moles, tattoos or permanent makeup in the proposed area?"), yesNo("recentTan", "Sunburn, significant sun exposure, sunbed use or fake tan in the previous 14 days?"),
       f("medicalHistoryDetails", "Details of every Yes answer, medication, supplements, allergies and relevant dates", "textarea"),
-      options("allergies", "Known allergies", ["Apples", "Aspirin / salicylic acid", "Citrus", "Grapes", "Milk", "Penicillin", "Cosmetic products", "Other", "None known"], true),
+      options("allergies", "Known allergies", ["Apples", "Aspirin / salicylic acid", "Citrus", "Grapes", "Milk", "Penicillin", "Latex", "Cosmetic products", "Other", "None known"], true),
+      f("allergyDetails", "Please specify any known allergies", "textarea"),
     ]},
-    { title: "Skin classification and assessment", description: "Practitioner use only.", fields: [
+    { title: "Skin classification and assessment", audience: "practitioner", description: "Practitioner use only.", fields: [
       { id: "fitzpatrickType", label: "Fitzpatrick skin type", type: "select", required: true, options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: `Type ${value}` })) },
       f("ethnicBackground", "Ethnic background relevant to skin assessment", "text"),
       options("skinCharacteristics", "Skin characteristics", ["Normal", "Combination", "Oily", "Sensitive", "Dehydrated", "Mature", "Acne", "Hyperpigmentation", "Hypopigmentation", "Broken capillaries", "Open/large pores", "Dark circles", "Erythema"], true),
@@ -280,20 +282,15 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       f("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?", "yes-no"),
       f("consentToTreatment", "I consent to the agreed peel or microneedling treatment and will follow all aftercare instructions", "checkbox", true),
     ]},
-    { title: "Patch-test assessment", audience: "practitioner", description: "Follow the selected product's manufacturer instructions and the clinic's insurer-approved protocol.", fields: [
-      f("patchTestDate", "Patch test date, where required", "date"), f("patchTestProductArea", "Patch-test product, strength and area", "textarea"),
-      { id: "patchTestResult", label: "Patch-test decision/result", type: "select", required: true, options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending", "Not required under approved product protocol"].map((value) => ({ value, label: value })) },
-      f("patchTestReaction", "Patch-test reaction or comments", "textarea"),
-    ]},
     { title: "Procedure record and aftercare", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
       { ...completion("procedureType", "Procedure", "select"), options: ["Medium-depth skin peel", "Microneedling", "Combined protocol"].map((value) => ({ value, label: value })) },
-      completion("cleanserUsed", "Cleanser used"), completion("treatmentProductTraceability", "Peel/microneedling products, batch/lot and expiry", "textarea"),
+      f("cleanserUsed", "Cleanser used"), f("treatmentProductTraceability", "Peel/microneedling products, batch/lot and expiry", "textarea"),
       { ...f("peelProduct", "Peel product, type and strength", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("peelApplication", "Application method, layers, end point and treatment area", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
       { ...f("peelTiming", "Peel duration and total treatment time", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("neutraliser", "Neutralising product, method and time", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
       { ...f("needleDevice", "Microneedling device, sterile cartridge lot, needle depth by zone and passes", "textarea"), hideWhen: { field: "procedureType", values: ["", "Medium-depth skin peel"] } }, f("anaestheticDetails", "Anaesthetic details, where used", "textarea"),
       completion("infectionControlCheck", "Skin preparation and infection-control checks completed", "checkbox"), completion("productsUsed", "Post-procedure products used and areas applied", "textarea"),
       completion("skinReaction", "Skin reaction, observations, complications and actions", "textarea"), { ...yesNo("postProcedurePhoto", "Post-procedure photograph taken and uploaded?"), completionRequired: true },
-      completion("aftercareGiven", "Aftercare/home-care programme and products supplied", "textarea"), completion("followUpDate", "Follow-up / review date", "date"),
+      { ...yesNo("aftercareGiven", "Aftercare/home-care programme and products supplied?"), completionRequired: true }, completion("followUpDate", "Follow-up / review date", "date"),
     ]},
     practitioner(),
   ],
@@ -816,7 +813,8 @@ const requestedTreatmentConsultations: ConsultationTemplate[] = [
 ];
 
 export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice, ...requestedTreatmentConsultations]
-  .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }));
+  .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }))
+  .sort((a, b) => a.title.localeCompare(b.title));
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
 
 export function isPractitionerConsultationSection(

@@ -12,18 +12,34 @@ import { formatLaserSettings, type LaserAreaSetting } from "@/lib/admin/laser-se
 const cls =
   "w-full rounded-xl border border-black/10 bg-cream px-4 py-3 text-sm outline-none focus:border-pink";
 const blankLaserArea = (): LaserAreaSetting => ({ area: "", fluence: "", hertz: "", shotsFired: "", pulse: "Auto by machine" });
+const laserAreasByTreatment: Array<[RegExp, string]> = [
+  [/upper\s*lip/i, "Upper lip"], [/underarm/i, "Underarms"], [/hands?|fingers?/i, "Hands / fingers"],
+  [/feet|toes/i, "Feet / toes"], [/bikini/i, "Bikini line"], [/brazilian/i, "Brazilian"],
+  [/hollywood/i, "Hollywood"], [/jawline/i, "Jawline"], [/buttocks?|bum/i, "Buttocks"],
+  [/abdomen|stomach|tummy/i, "Abdomen"], [/chest/i, "Chest"], [/back/i, "Back"],
+  [/arms?/i, "Arms"], [/legs?/i, "Legs"], [/neck/i, "Neck"], [/chin/i, "Chin"], [/face|facial/i, "Face"],
+];
+
+function suggestedLaserAreas(treatmentName: string) {
+  if (!/laser/i.test(treatmentName)) return [];
+  if (/full\s*body/i.test(treatmentName)) return [blankLaserArea(), blankLaserArea()];
+  const area = laserAreasByTreatment.find(([pattern]) => pattern.test(treatmentName))?.[1];
+  return area ? [{ ...blankLaserArea(), area }] : [];
+}
 
 function courseProgress(customer: CustomerHistory | undefined, treatmentName: string) {
   if (!customer || !treatmentName.trim()) return undefined;
   const sessions = customer.bookings
     .filter((booking) => booking.treatmentName.trim().toLowerCase() === treatmentName.trim().toLowerCase())
-    .map((booking) => booking.notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i))
-    .filter((match): match is RegExpMatchArray => Boolean(match))
-    .map((match) => ({ current: Number(match[1]), total: Number(match[2]) }));
+    .map((booking) => ({ booking, match: booking.notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i) }))
+    .filter((item): item is { booking: CustomerHistory["bookings"][number]; match: RegExpMatchArray } => Boolean(item.match))
+    .map(({ booking, match }) => ({ current: Number(match[1]), total: Number(match[2]), amount: booking.notes.match(/Amount paid:\s*£?([\d.]+)/i)?.[1] || "", payAsYouGo: /Payment type:\s*Pay as you go/i.test(booking.notes) }));
   if (!sessions.length) return undefined;
   return {
     nextSession: Math.max(...sessions.map((session) => session.current)) + 1,
     totalSessions: Math.max(...sessions.map((session) => session.total)),
+    amount: sessions.find((session) => session.amount)?.amount || "",
+    payAsYouGo: sessions.some((session) => session.payAsYouGo),
   };
 }
 
@@ -49,6 +65,7 @@ export function AddCustomerHistory({
   const [images, setImages] = useState<TreatmentImage[]>([]);
   const [treatmentName, setTreatmentName] = useState("");
   const [laserAreas, setLaserAreas] = useState<LaserAreaSetting[]>([]);
+  const [payAsYouGo, setPayAsYouGo] = useState(false);
   const customer = customers.find((c) => c.id === selected);
   const normalizedQuery = customerQuery.trim().toLowerCase();
   const matchingCustomers = normalizedQuery
@@ -62,24 +79,28 @@ export function AddCustomerHistory({
         : [];
   const isLaserTreatment = /laser/i.test(treatmentName);
   const previousCourse = courseProgress(customer, treatmentName);
+  const activePayAsYouGo = payAsYouGo || Boolean(previousCourse?.payAsYouGo);
+  const sessionNumber = previousCourse?.nextSession || (activePayAsYouGo ? 1 : "");
+  const totalSessions = activePayAsYouGo ? sessionNumber : previousCourse?.totalSessions || "";
 
   function selectCustomer(nextCustomer: CustomerHistory) {
     setSelected(nextCustomer.id);
     setCustomerQuery(nextCustomer.name);
     setShowLookup(false);
+    setPayAsYouGo(Boolean(courseProgress(nextCustomer, treatmentName)?.payAsYouGo));
   }
 
   function useNewCustomer() {
     setSelected("");
     setCustomerQuery("");
     setShowLookup(false);
+    setPayAsYouGo(false);
   }
 
   function changeTreatment(nextTreatment: string) {
     setTreatmentName(nextTreatment);
-    if (/full\s*body/i.test(nextTreatment)) {
-      setLaserAreas((current) => current.length ? current : [blankLaserArea(), blankLaserArea()]);
-    }
+    setLaserAreas(suggestedLaserAreas(nextTreatment));
+    setPayAsYouGo(Boolean(courseProgress(customer, nextTreatment)?.payAsYouGo));
   }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -111,7 +132,7 @@ export function AddCustomerHistory({
         customerDateOfBirth: f.get("customerDateOfBirth"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
-        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}${amount ? `\n\nAmount paid: £${Number(amount).toFixed(2)}` : ""}${laserSettings}`,
+        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}${f.get("payAsYouGo") === "on" ? "\nPayment type: Pay as you go" : ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}${amount ? `\n\nAmount paid: £${Number(amount).toFixed(2)}` : ""}${laserSettings}`,
         historicalRecord: true,
         suppressNotification: true,
         images,
@@ -141,6 +162,7 @@ export function AddCustomerHistory({
           setShowLookup(false);
           setTreatmentName("");
           setLaserAreas([]);
+          setPayAsYouGo(false);
           setOpen(true);
         }}
         className="button-primary"
@@ -333,32 +355,39 @@ export function AddCustomerHistory({
               </Field>
               <Field label="Session number">
                 <input
-                  key={`session-${selected}-${treatmentName}`}
+                  key={`session-${selected}-${treatmentName}-${activePayAsYouGo}`}
                   name="sessionNumber"
                   type="number"
                   min="1"
-                  defaultValue={previousCourse?.nextSession || ""}
+                  defaultValue={sessionNumber}
+                  readOnly={Boolean(previousCourse) || activePayAsYouGo}
                   placeholder="e.g. 1"
                   className={cls}
                 />
-                {previousCourse && <small className="font-medium text-black/45">Next session in this course: {previousCourse.nextSession} of {previousCourse.totalSessions}</small>}
+                {previousCourse && <small className="font-medium text-black/45">Next session in this course: {sessionNumber} of {totalSessions}</small>}
               </Field>
               <Field label="Total sessions booked">
                 <input
-                  key={`total-sessions-${selected}-${treatmentName}`}
+                  key={`total-sessions-${selected}-${treatmentName}-${activePayAsYouGo}`}
                   name="totalSessions"
                   type="number"
                   min="1"
-                  defaultValue={previousCourse?.totalSessions || ""}
+                  defaultValue={totalSessions}
+                  readOnly={Boolean(previousCourse) || activePayAsYouGo}
                   placeholder="e.g. 6"
                   className={cls}
                 />
               </Field>
+              <label className="flex gap-3 rounded-xl bg-pink-light/35 p-4 text-xs sm:col-span-2">
+                <input name="payAsYouGo" type="checkbox" checked={activePayAsYouGo} onChange={(event) => setPayAsYouGo(event.target.checked)} className="mt-1 accent-pink" />
+                <span><strong className="block">Pay as you go</strong>Record each visit as its own session. The next visit for this treatment will continue as 2 of 2, then 3 of 3.</span>
+              </label>
               <Field label="Amount paid">
                 <span className="relative block">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
-                  <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" placeholder="0.00" className={`${cls} pl-8`} />
+                  <input key={`amount-${selected}-${treatmentName}`} name="amount" type="text" inputMode="decimal" pattern="^\\d*(?:\\.\\d{0,2})?$" defaultValue={previousCourse?.amount || ""} readOnly={Boolean(previousCourse && !activePayAsYouGo)} placeholder="0.00" className={`${cls} pl-8 ${previousCourse && !activePayAsYouGo ? "bg-pink-light/35" : ""}`} />
                 </span>
+                {previousCourse && !activePayAsYouGo && <small className="font-medium text-black/45">Amount from the booked course is fixed.</small>}
               </Field>
               {isLaserTreatment && <LaserAreaSettings value={laserAreas} onChange={setLaserAreas} />}
               <Field label="Consultation sheet / consultation details" wide>
