@@ -330,21 +330,34 @@ export function BookingCalendar({
     [cursorDate],
   );
   const eligibleStaff = useMemo(
-    () =>
-      staff.filter(
+    () => {
+      const branchStaff = staff.filter((member) => member.branchIds.includes(formBranch));
+      const treatmentStaff = branchStaff.filter(
         (member) =>
-          member.branchIds.includes(formBranch) &&
-          (formService === MANUAL || formService.startsWith("catalog:") || member.serviceIds.includes(formService)),
-      ),
+          formService === MANUAL ||
+          formService.startsWith("catalog:") ||
+          member.serviceIds.includes(formService),
+      );
+
+      // Always offer the practitioners at the selected branch. A catalogue item
+      // may not have a legacy service ID, and an empty selector is not useful
+      // when staff are creating an appointment.
+      return treatmentStaff.length ? treatmentStaff : branchStaff;
+    },
     [formBranch, formService, staff],
   );
   const editEligibleStaff = useMemo(
-    () =>
-      staff.filter(
+    () => {
+      const branchStaff = staff.filter((member) => member.branchIds.includes(editBranch));
+      const treatmentStaff = branchStaff.filter(
         (member) =>
-          member.branchIds.includes(editBranch) &&
-          (editService === MANUAL || editService.startsWith("catalog:") || member.serviceIds.includes(editService)),
-      ),
+          editService === MANUAL ||
+          editService.startsWith("catalog:") ||
+          member.serviceIds.includes(editService),
+      );
+
+      return treatmentStaff.length ? treatmentStaff : branchStaff;
+    },
     [editBranch, editService, staff],
   );
   const filteredBookings = useMemo(
