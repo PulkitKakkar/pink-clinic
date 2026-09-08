@@ -164,7 +164,7 @@ function TreatmentPicker({ services, value, onChange }: TreatmentPickerProps) {
   return (
     <span className="relative block">
       <input type="hidden" name="serviceId" value={value} />
-      <span className="relative block">
+      <span className="relative block w-full self-start">
         <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" size={16} />
         <input
           required
@@ -729,7 +729,7 @@ export function BookingCalendar({
             <legend className="px-1 text-xs font-bold text-black/55">Customer details</legend>
             <div className="grid gap-2 text-xs font-bold">
               <label htmlFor="bookingCustomerLookup">Find an existing customer</label>
-              <span className="relative">
+              <span className="relative w-full self-start">
                 <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" />
                 <input
                   id="bookingCustomerLookup"
