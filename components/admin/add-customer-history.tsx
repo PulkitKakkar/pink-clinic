@@ -33,12 +33,19 @@ function courseProgress(customer: CustomerHistory | undefined, treatmentName: st
     .filter((booking) => booking.treatmentName.trim().toLowerCase() === treatmentName.trim().toLowerCase())
     .map((booking) => ({ booking, match: booking.notes.match(/^Session:\s*(\d+)\s*of\s*(\d+)/i) }))
     .filter((item): item is { booking: CustomerHistory["bookings"][number]; match: RegExpMatchArray } => Boolean(item.match))
-    .map(({ booking, match }) => ({ current: Number(match[1]), total: Number(match[2]), amount: booking.notes.match(/Amount paid:\s*£?([\d.]+)/i)?.[1] || "", payAsYouGo: /Payment type:\s*Pay as you go/i.test(booking.notes) }));
+    .map(({ booking, match }) => ({
+      current: Number(match[1]),
+      total: Number(match[2]),
+      coursePrice: booking.notes.match(/Course price:\s*£?([\d.]+)/i)?.[1] || "",
+      payment: booking.notes.match(/Payment received this visit:\s*£?([\d.]+)/i)?.[1] || booking.notes.match(/Amount paid:\s*£?([\d.]+)/i)?.[1] || "",
+      payAsYouGo: /Payment type:\s*Pay as you go/i.test(booking.notes),
+    }));
   if (!sessions.length) return undefined;
   return {
     nextSession: Math.max(...sessions.map((session) => session.current)) + 1,
     totalSessions: Math.max(...sessions.map((session) => session.total)),
-    amount: sessions.find((session) => session.amount)?.amount || "",
+    coursePrice: sessions.find((session) => session.coursePrice)?.coursePrice || "",
+    totalPaid: sessions.reduce((sum, session) => sum + (Number(session.payment) || 0), 0),
     payAsYouGo: sessions.some((session) => session.payAsYouGo),
   };
 }
@@ -48,11 +55,13 @@ export function AddCustomerHistory({
   initialCustomerId = "",
   label = "Add customer record",
   treatmentNames,
+  catalogueCourseFees = [],
 }: {
   customers: CustomerHistory[];
   initialCustomerId?: string;
   label?: string;
   treatmentNames: string[];
+  catalogueCourseFees?: Array<{ treatmentName: string; label: string; price: number }>;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -66,6 +75,9 @@ export function AddCustomerHistory({
   const [treatmentName, setTreatmentName] = useState("");
   const [laserAreas, setLaserAreas] = useState<LaserAreaSetting[]>([]);
   const [payAsYouGo, setPayAsYouGo] = useState(false);
+  const [coursePrice, setCoursePrice] = useState("");
+  const [catalogueCourseFee, setCatalogueCourseFee] = useState("");
+  const [amount, setAmount] = useState("");
   const customer = customers.find((c) => c.id === selected);
   const normalizedQuery = customerQuery.trim().toLowerCase();
   const matchingCustomers = normalizedQuery
@@ -79,15 +91,25 @@ export function AddCustomerHistory({
         : [];
   const isLaserTreatment = /laser/i.test(treatmentName);
   const previousCourse = courseProgress(customer, treatmentName);
+  const matchingCatalogueCourseFees = catalogueCourseFees.filter(
+    (fee) => fee.treatmentName.trim().toLowerCase() === treatmentName.trim().toLowerCase(),
+  );
   const activePayAsYouGo = payAsYouGo || Boolean(previousCourse?.payAsYouGo);
   const sessionNumber = previousCourse?.nextSession || (activePayAsYouGo ? 1 : "");
   const totalSessions = activePayAsYouGo ? sessionNumber : previousCourse?.totalSessions || "";
+  const activeCoursePrice = previousCourse?.coursePrice || coursePrice;
+  const remainingBalance = activePayAsYouGo || !activeCoursePrice
+    ? undefined
+    : Math.max(0, Number(activeCoursePrice) - (previousCourse?.totalPaid || 0) - (Number(amount) || 0));
 
   function selectCustomer(nextCustomer: CustomerHistory) {
     setSelected(nextCustomer.id);
     setCustomerQuery(nextCustomer.name);
     setShowLookup(false);
     setPayAsYouGo(Boolean(courseProgress(nextCustomer, treatmentName)?.payAsYouGo));
+    setCoursePrice("");
+    setCatalogueCourseFee("");
+    setAmount("");
   }
 
   function useNewCustomer() {
@@ -95,12 +117,18 @@ export function AddCustomerHistory({
     setCustomerQuery("");
     setShowLookup(false);
     setPayAsYouGo(false);
+    setCoursePrice("");
+    setCatalogueCourseFee("");
+    setAmount("");
   }
 
   function changeTreatment(nextTreatment: string) {
     setTreatmentName(nextTreatment);
     setLaserAreas(suggestedLaserAreas(nextTreatment));
     setPayAsYouGo(Boolean(courseProgress(customer, nextTreatment)?.payAsYouGo));
+    setCoursePrice("");
+    setCatalogueCourseFee("");
+    setAmount("");
   }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -109,7 +137,11 @@ export function AddCustomerHistory({
     const f = new FormData(e.currentTarget);
     const consultation = String(f.get("consultation") || "").trim();
     const outcome = String(f.get("outcome") || "").trim();
-    const amount = String(f.get("amount") || "").trim();
+    const amountPaid = String(f.get("amount") || "").trim();
+    const coursePriceValue = String(f.get("coursePrice") || "").trim();
+    const newRemainingBalance = coursePriceValue
+      ? Math.max(0, Number(coursePriceValue) - (previousCourse?.totalPaid || 0) - (Number(amountPaid) || 0))
+      : undefined;
     const laserSettings = isLaserTreatment ? formatLaserSettings(laserAreas) : "";
     const response = await fetch("/api/admin/bookings", {
       method: "POST",
@@ -132,7 +164,7 @@ export function AddCustomerHistory({
         customerDateOfBirth: f.get("customerDateOfBirth"),
         marketingConsent: f.get("marketingConsent") === "on",
         startsAt: new Date().toISOString(),
-        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}${f.get("payAsYouGo") === "on" ? "\nPayment type: Pay as you go" : ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}${amount ? `\n\nAmount paid: £${Number(amount).toFixed(2)}` : ""}${laserSettings}`,
+        notes: `Session: ${f.get("sessionNumber") || ""} of ${f.get("totalSessions") || ""}${f.get("payAsYouGo") === "on" ? "\nPayment type: Pay as you go" : "\nPayment type: Course"}${coursePriceValue ? `\nCourse price: £${Number(coursePriceValue).toFixed(2)}` : ""}${amountPaid ? `\nPayment received this visit: £${Number(amountPaid).toFixed(2)}` : ""}${newRemainingBalance !== undefined ? `\nRemaining balance: £${newRemainingBalance.toFixed(2)}` : ""}\n\nConsultation:\n${consultation || "Not recorded"}\n\nOutcome:\n${outcome || "Not recorded"}${laserSettings}`,
         historicalRecord: true,
         suppressNotification: true,
         images,
@@ -163,6 +195,9 @@ export function AddCustomerHistory({
           setTreatmentName("");
           setLaserAreas([]);
           setPayAsYouGo(false);
+          setCoursePrice("");
+          setCatalogueCourseFee("");
+          setAmount("");
           setOpen(true);
         }}
         className="button-primary"
@@ -379,16 +414,40 @@ export function AddCustomerHistory({
                 />
               </Field>
               <label className="flex gap-3 rounded-xl bg-pink-light/35 p-4 text-xs sm:col-span-2">
-                <input name="payAsYouGo" type="checkbox" checked={activePayAsYouGo} onChange={(event) => setPayAsYouGo(event.target.checked)} className="mt-1 accent-pink" />
+                <input name="payAsYouGo" type="checkbox" checked={activePayAsYouGo} onChange={(event) => { setPayAsYouGo(event.target.checked); if (event.target.checked) { setCoursePrice(""); setCatalogueCourseFee(""); setAmount(""); } }} className="mt-1 accent-pink" />
                 <span><strong className="block">Pay as you go</strong>Record each visit as its own session. The next visit for this treatment will continue as 2 of 2, then 3 of 3.</span>
               </label>
-              <Field label="Amount paid">
+              {!activePayAsYouGo && <Field label="Course price">
                 <span className="relative block">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
-                  <input key={`amount-${selected}-${treatmentName}`} name="amount" type="text" inputMode="decimal" pattern="^\\d*(?:\\.\\d{0,2})?$" defaultValue={previousCourse?.amount || ""} readOnly={Boolean(previousCourse && !activePayAsYouGo)} placeholder="0.00" className={`${cls} pl-8 ${previousCourse && !activePayAsYouGo ? "bg-pink-light/35" : ""}`} />
+                  <input name="coursePrice" type="number" min="0" step="0.01" inputMode="decimal" value={activeCoursePrice} onChange={(event) => setCoursePrice(event.target.value)} readOnly={Boolean(previousCourse?.coursePrice)} placeholder="0.00" className={`${cls} pl-8 ${previousCourse?.coursePrice ? "bg-pink-light/35" : ""}`} />
                 </span>
-                {previousCourse && !activePayAsYouGo && <small className="font-medium text-black/45">Amount from the booked course is fixed.</small>}
+                {matchingCatalogueCourseFees.length > 0 && !previousCourse?.coursePrice && (
+                  <select
+                    value={catalogueCourseFee}
+                    onChange={(event) => {
+                      const selectedFee = matchingCatalogueCourseFees.find((fee) => `${fee.label}:${fee.price}` === event.target.value);
+                      setCatalogueCourseFee(event.target.value);
+                      if (selectedFee) setCoursePrice(String(selectedFee.price));
+                    }}
+                    className={cls}
+                    aria-label="Choose catalogue course fee"
+                  >
+                    <option value="">Choose a website catalogue fee</option>
+                    {matchingCatalogueCourseFees.map((fee) => <option key={`${fee.label}:${fee.price}`} value={`${fee.label}:${fee.price}`}>{fee.label} — £{fee.price.toFixed(2)}</option>)}
+                  </select>
+                )}
+                {matchingCatalogueCourseFees.length > 0 && !previousCourse?.coursePrice && <small className="font-medium text-black/45">Selecting a catalogue fee fills the price above; you can edit it for a discount.</small>}
+              </Field>}
+              <Field label={activePayAsYouGo ? "Amount paid" : "Payment received this visit"}>
+                <span className="relative block">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
+                  <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="0.00" className={`${cls} pl-8`} />
+                </span>
               </Field>
+              {!activePayAsYouGo && activeCoursePrice && <Field label="Remaining balance">
+                <output className={`${cls} block bg-pink-light/35 pl-8`} aria-live="polite">£{remainingBalance?.toFixed(2)}</output>
+              </Field>}
               {isLaserTreatment && <LaserAreaSettings value={laserAreas} onChange={setLaserAreas} />}
               <Field label="Consultation sheet / consultation details" wide>
                 <textarea
