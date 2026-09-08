@@ -239,7 +239,7 @@ export function AddCustomerHistory({
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2 text-xs font-bold sm:col-span-2">
                 <label htmlFor="customerLookup">Find an existing customer</label>
-                <span className="relative">
+                <span className="relative w-full self-start">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35">
                     <Search size={16} />
                   </span>
@@ -418,7 +418,7 @@ export function AddCustomerHistory({
                 <span><strong className="block">Pay as you go</strong>Record each visit as its own session. The next visit for this treatment will continue as 2 of 2, then 3 of 3.</span>
               </label>
               {!activePayAsYouGo && <Field label="Course price">
-                <span className="relative block">
+                <span className="relative block w-full self-start">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
                   <input name="coursePrice" type="number" min="0" step="0.01" inputMode="decimal" value={activeCoursePrice} onChange={(event) => setCoursePrice(event.target.value)} readOnly={Boolean(previousCourse?.coursePrice)} placeholder="0.00" className={`${cls} pl-8 ${previousCourse?.coursePrice ? "bg-pink-light/35" : ""}`} />
                 </span>
@@ -440,7 +440,7 @@ export function AddCustomerHistory({
                 {matchingCatalogueCourseFees.length > 0 && !previousCourse?.coursePrice && <small className="font-medium text-black/45">Selecting a catalogue fee fills the price above; you can edit it for a discount.</small>}
               </Field>}
               <Field label={activePayAsYouGo ? "Amount paid" : "Payment received this visit"}>
-                <span className="relative block">
+                <span className="relative block w-full self-start">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
                   <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="0.00" className={`${cls} pl-8`} />
                 </span>

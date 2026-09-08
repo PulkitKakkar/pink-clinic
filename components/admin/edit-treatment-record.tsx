@@ -141,7 +141,7 @@ export function EditTreatmentRecord({ booking, treatmentNames }: { booking: Book
               </div>
               <label className="grid gap-2 text-xs font-bold">
                 Amount paid
-                <span className="relative block">
+                <span className="relative block w-full self-start">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black/55">£</span>
                   <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" defaultValue={record.amount} className={`${cls} pl-8`} />
                 </span>
