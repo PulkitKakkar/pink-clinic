@@ -22,6 +22,7 @@ import {
 import { EditTreatmentRecord } from "@/components/admin/edit-treatment-record";
 import { CustomerSearch } from "@/components/admin/customer-search";
 import { getAdminTreatmentNames } from "@/lib/admin/lookup-options";
+import { getBranchCatalog } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,13 @@ export default async function AdminCustomersPage({
 }) {
   const query = ((await searchParams).q || "").trim().toLowerCase();
   const treatmentNames = await getAdminTreatmentNames();
+  const catalogueCourseFees = (await getBranchCatalog("reading-west-st"))
+    .filter((item) => item.kind === "service")
+    .flatMap((item) =>
+      item.variants
+        .filter((variant) => /(?:[2-9]|[1-9]\d+)\s*sessions?|course|package/i.test(variant.name))
+        .map((variant) => ({ treatmentName: item.title, label: variant.name, price: variant.price })),
+    );
   const result = await getBookings()
     .then((bookings) => ({
       customers: buildCustomerHistories(bookings),
@@ -66,7 +74,7 @@ export default async function AdminCustomersPage({
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="mb-5 flex flex-wrap justify-end gap-2">
           <Link href="/admin/sms-campaigns" className="button-primary inline-flex items-center gap-2"><MessageSquareText size={15} /> Create SMS campaign</Link>
-          <AddCustomerHistory customers={customers} treatmentNames={treatmentNames} />
+          <AddCustomerHistory customers={customers} treatmentNames={treatmentNames} catalogueCourseFees={catalogueCourseFees} />
         </div>
         <CustomerSearch key={query} customers={allCustomers} initialQuery={query} />
         <form className="hidden" action="/admin/customers">
@@ -169,6 +177,7 @@ export default async function AdminCustomersPage({
                         initialCustomerId={customer.id}
                         label="Add treatment record"
                         treatmentNames={treatmentNames}
+                        catalogueCourseFees={catalogueCourseFees}
                       />
                       <div
                         className={`rounded-xl px-4 py-3 text-xs font-bold ${customer.marketingConsent ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
