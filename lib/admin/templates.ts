@@ -95,7 +95,7 @@ const comprehensiveMedicalScreen = (): ConsultationSection => ({
     yesNo("woundsBruising", "Open wounds, recent scar tissue, abrasions, cuts, bruising, sunburn, or unexplained pain/swelling in the treatment area?"),
     yesNo("healingScarring", "Impaired healing or a history of keloid or hypertrophic scarring?"),
     yesNo("oedema", "Medical oedema or significant swelling?"), yesNo("tattoosMoles", "Tattoos, permanent makeup or moles in the proposed treatment area?"),
-    f("medicalHistoryDetails", "Details of every Yes answer, current medication and allergies (enter None known when applicable)", "textarea", true),
+    f("medicalHistoryDetails", "Details of every Yes answer, current medication and allergies", "textarea"),
   ],
 });
 const lifestyleAndSkin = (): ConsultationSection => ({
@@ -177,7 +177,8 @@ const antiWrinkle: ConsultationTemplate = {
       yesNo("neuromuscularDisorder", "Neuromuscular disorder, including myasthenia gravis, Lambert-Eaton syndrome, ALS, facial palsy or swallowing difficulty?"),
       yesNo("specialEvents", "Special event or travel planned in the next 2 weeks?"), f("specialEventDetails", "Event or travel details", "textarea"),
     ]},
-    comprehensiveMedicalScreen(), lifestyleAndSkin(),
+    comprehensiveMedicalScreen(),
+    lifestyleAndSkin(),
     { title: "Pre-treatment risk confirmations", description: "The client must confirm each statement before treatment.", audience: "client-consent", fields: [
       f("toxinCommonRisks", "Common and material risks including pain/bruising, headache, asymmetry, brow/eyelid ptosis, dry eye or visual symptoms and local weakness have been discussed", "checkbox", true),
       f("toxinUrgentSymptoms", "Urgent symptoms of distant toxin spread, including swallowing, speech or breathing difficulty, and the emergency action required have been discussed", "checkbox", true),
@@ -352,6 +353,7 @@ const mounjaro: ConsultationTemplate = {
     { whenField: "previousGlp1", values: ["Yes"], requiredField: "previousGlp1Details", message: "Record previous GLP-1/GIP treatment, response and adverse effects." },
     { whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "clinicalDecisionNotes", message: "Record the clinical decision and referral/restriction details." },
   ],
+  detailGroups: [{ fields: ["tirzepatideAllergy", "pregnantTryingBreastfeeding", "pregnancyPotential", "oralContraception", "previousGlp1", "diabetes", "diabetesMedication", "pancreatitisHistory", "acutePancreatitisSymptoms", "gallbladderDisease", "severeGastrointestinalDisease", "kidneyDisease", "liverDisease", "eatingDisorder", "mentalHealthRisk", "plannedProcedure", "otherMedication"], requiredField: "medicalMedicationDetails", message: "Explain every Yes answer in the medical-history details field." }],
   completionBlockers: [
     { field: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], message: "Mounjaro administration cannot be completed unless the client is suitable to proceed." },
     { field: "pregnantTryingBreastfeeding", values: ["Yes"], message: "Mounjaro administration cannot be completed during pregnancy, while trying to conceive or while breastfeeding." },
@@ -381,7 +383,7 @@ const mounjaro: ConsultationTemplate = {
       yesNo("mentalHealthRisk", "Mental-health condition, suicidal thoughts, self-harm risk or medicine misuse concern requiring assessment?"),
       yesNo("plannedProcedure", "Planned surgery, procedure, sedation or general anaesthetic?"),
       yesNo("otherMedication", "Taking any other prescribed, over-the-counter or herbal medicines?"),
-      f("medicalMedicationDetails", "Details of every Yes answer, allergies, current medicines and relevant investigations", "textarea", true),
+      f("medicalMedicationDetails", "Details of every Yes answer, allergies, current medicines and relevant investigations", "textarea"),
     ]},
     referralDecision(),
     { title: "Prescription, counselling and informed consent", fields: [
@@ -624,7 +626,7 @@ const focusedMedicalScreen = (profile: "skin" | "energy" | "injectable"): Consul
       yesNo("needleReaction", "Needle phobia, fainting episode or previous injection/blood-draw complication?"),
       yesNo("activeSystemicInfection", "Current infection, fever, antibiotics for an active infection or feeling acutely unwell?"),
     ] : []),
-    f("medicalHistoryDetails", "Details of every Yes answer, current medicines and allergies (enter None known when applicable)", "textarea", true),
+    f("medicalHistoryDetails", "Details of every Yes answer, current medicines and allergies", "textarea"),
   ],
 });
 
@@ -633,7 +635,7 @@ const briefMedicalScreen = (): ConsultationSection => ({
   description: "A short catch-all screen for information not covered by the service-specific questions below.",
   fields: [
     yesNo("otherRelevantHealthInformation", "Any other medical condition, medicine, allergy, pregnancy or recent treatment that could affect this service?"),
-    f("medicalHistoryDetails", "Relevant details (enter None known when applicable)", "textarea", true),
+    f("medicalHistoryDetails", "Relevant details", "textarea"),
   ],
 });
 
@@ -717,6 +719,21 @@ function treatmentConsultation(config: {
   risks: string;
   questions: TreatmentQuestion[];
 }): ConsultationTemplate {
+  const medicalScreenFieldIds = [
+    "pregnantBreastfeeding",
+    "underMedicalCare",
+    "medication",
+    "allergies",
+    "bleedingRisk",
+    "diabetesHealing",
+    "immuneCancer",
+    "lightSensitiveCondition",
+    "abnormalScarring",
+    "needleReaction",
+    "activeSystemicInfection",
+    "otherRelevantHealthInformation",
+    ...config.questions.map((question) => question.id),
+  ];
   return {
     slug: config.slug,
     title: `${config.title} Consultation`,
@@ -725,6 +742,7 @@ function treatmentConsultation(config: {
     reviewRequired: true,
     version: "2026-08-25.1",
     conditionalRequirements: config.slug === "intramuscular-injections" ? [] : [{ whenField: "suitabilityOutcome", values: ["Medical referral required", "Defer or restrict treatment", "Not suitable"], requiredField: "decisionNotes", message: "Record the clinical decision and referral/restriction details." }],
+    detailGroups: [{ fields: medicalScreenFieldIds, requiredField: "medicalHistoryDetails", message: "Explain every Yes answer in the medical-history details field." }],
     sections: [
       config.detailed ? details() : briefDetails(),
       config.detailed

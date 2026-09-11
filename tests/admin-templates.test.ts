@@ -374,10 +374,39 @@ describe("consultation templates", () => {
     const fields = template.sections.flatMap((section) => section.fields);
     expect(fields.find((field) => field.id === "objectivesConcerns")?.type).toBe("multi-checkbox");
     expect(fields.find((field) => field.id === "alternativesDiscussed")?.required).not.toBe(true);
+    expect(fields.find((field) => field.id === "medicalHistoryDetails")?.required).not.toBe(true);
     expect(fields.find((field) => field.id === "areasTreated")?.type).toBe("multi-checkbox");
     expect(fields.find((field) => field.id === "aftercareGiven")?.type).toBe("yes-no");
     expect(fields.some((field) => field.id === "labelUse")).toBe(false);
     expect(fields.filter((field) => ["tryingToConceive", "pregnant", "breastfeeding", "hrtContraception"].includes(field.id)).every((field) => field.hideWhen?.values.includes("Male"))).toBe(true);
+  });
+
+  it("requires anti-wrinkle medical details only when a medical answer is Yes", () => {
+    const template = getConsultationTemplate("anti-wrinkle")!;
+
+    expect(
+      validateConsultationAnswers(template, {
+        recordStatus: "ready-for-treatment",
+        medicalHistoryDetails: "",
+      }),
+    ).not.toContain("Details of every Yes answer, current medication and allergies is required.");
+    expect(
+      validateConsultationAnswers(template, {
+        recordStatus: "ready-for-treatment",
+        asthma: "Yes",
+        medicalHistoryDetails: "",
+      }),
+    ).toContain("Explain every Yes answer in the medical-history details field.");
+  });
+
+  it("does not require a None entry in medical-details fields on other consultations", () => {
+    for (const template of consultationTemplates) {
+      const fields = template.sections.flatMap((section) => section.fields);
+      for (const field of fields.filter((item) => ["medicalHistoryDetails", "medicalMedicationDetails"].includes(item.id))) {
+        expect(field.required, `${template.slug}: ${field.id}`).not.toBe(true);
+        expect(field.label, `${template.slug}: ${field.id}`).not.toMatch(/none known/i);
+      }
+    }
   });
 
   it("hides female-specific questions for male clients across applicable forms", () => {
