@@ -52,8 +52,8 @@
     ],
     "variants": [
       {
-        "name": "£399.00",
-        "price": 399,
+        "name": "£400.00",
+        "price": 400,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -80,8 +80,8 @@
     ],
     "variants": [
       {
-        "name": "£699.00",
-        "price": 699,
+        "name": "£700.00",
+        "price": 700,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -445,7 +445,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 60,
+        "price": 45,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -501,7 +501,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 80,
+        "price": 65,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -529,7 +529,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 100,
+        "price": 75,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -588,7 +588,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -616,7 +616,7 @@
         "price": 70,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -3670,14 +3670,14 @@
         "price": 110,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       },
       {
         "name": "3 Session",
         "price": 330,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -4046,7 +4046,7 @@
   },
   {
     "handle": "chicks-threading",
-    "title": "Men's Chicks Threading / Waxing",
+    "title": "Men's Cheeks Threading / Waxing",
     "description": "",
     "kind": "service",
     "tags": [
@@ -4700,14 +4700,14 @@
     "variants": [
       {
         "name": "1 Session",
-        "price": 300,
+        "price": 400,
         "compareAtPrice": null,
         "sku": null,
         "available": true
       },
       {
         "name": "3 Sessions",
-        "price": 900,
+        "price": 1200,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5275,7 +5275,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 30,
+        "price": 40,
         "compareAtPrice": 50,
         "sku": null,
         "available": true
@@ -5343,7 +5343,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 30,
         "compareAtPrice": 50,
         "sku": null,
         "available": true

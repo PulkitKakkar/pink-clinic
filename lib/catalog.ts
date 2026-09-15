@@ -8,6 +8,7 @@ export type CatalogVariant = {
   name: string;
   price: number;
   compareAtPrice?: number | null;
+  available?: boolean;
   sku?: string | null;
   gtin?: string | null;
   mpn?: string | null;
@@ -324,7 +325,11 @@ function consolidateLemonBottle(items: CatalogItem[]): CatalogItem[] {
 }
 
 function prepareCatalog(items: CatalogItem[]) {
-  return consolidateLemonBottle(items.map(normalizeItem));
+  const availableItems = items.flatMap((item) => {
+    const variants = item.variants.filter((variant) => variant.available !== false);
+    return variants.length ? [{ ...item, variants }] : [];
+  });
+  return consolidateLemonBottle(availableItems.map(normalizeItem));
 }
 
 export async function getBranchCatalog(
