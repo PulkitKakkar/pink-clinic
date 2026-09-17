@@ -448,7 +448,7 @@
         "price": 45,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -476,7 +476,7 @@
         "price": 30,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -504,7 +504,7 @@
         "price": 65,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -532,7 +532,7 @@
         "price": 75,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -560,7 +560,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -644,7 +644,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -672,7 +672,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -700,7 +700,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
