@@ -389,7 +389,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -414,7 +414,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 30,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1116,7 +1116,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 30,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1144,7 +1144,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 15,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1200,7 +1200,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 20,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1263,7 +1263,7 @@
       },
       {
         "name": "Indian Head and Neck Massage",
-        "price": 35,
+        "price": 25,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1359,7 +1359,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 15,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1422,7 +1422,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 15,
+        "price": 12,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1449,7 +1449,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 60,
+        "price": 50,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1476,7 +1476,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 60,
+        "price": 50,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1503,7 +1503,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 60,
+        "price": 50,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1665,7 +1665,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 70,
+        "price": 60,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -1750,7 +1750,7 @@
         "price": 60,
         "compareAtPrice": null,
         "sku": null,
-        "available": true
+        "available": false
       }
     ]
   },
@@ -2293,7 +2293,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 35,
+        "price": 37,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -2489,7 +2489,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 15,
+        "price": 10,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4182,7 +4182,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 25,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4210,7 +4210,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 30,
+        "price": 25,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4238,14 +4238,14 @@
     "variants": [
       {
         "name": "Hands",
-        "price": 25,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
       },
       {
         "name": "Feet",
-        "price": 25,
+        "price": 20,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4618,7 +4618,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 3,
+        "price": 2,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -4947,7 +4947,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 37,
+        "price": 27,
         "compareAtPrice": null,
         "sku": null,
         "available": true
@@ -5352,7 +5352,7 @@
     "variants": [
       {
         "name": "Standard",
-        "price": 9,
+        "price": 7,
         "compareAtPrice": null,
         "sku": null,
         "available": true

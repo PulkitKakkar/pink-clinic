@@ -8,6 +8,7 @@ export type CatalogVariant = {
   name: string;
   price: number;
   compareAtPrice?: number | null;
+  available?: boolean;
   sku?: string | null;
   gtin?: string | null;
   mpn?: string | null;
