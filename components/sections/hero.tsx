@@ -10,7 +10,7 @@ export function Hero() {
         alt="Pink Beauty team welcoming clients at the Reading clinic"
         fill
         priority
-        className="object-cover object-center opacity-75"
+        className="object-cover object-center opacity-75 -scale-x-100"
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
