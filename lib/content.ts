@@ -39,7 +39,7 @@ export const offers: Offer[] = [
     eyebrow: "Course package",
     title: "Smooth skin starts here.",
     description: "Begin your tailored laser hair removal course with our advanced clinic team.",
-    image: "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=2000&q=90",
+    image: "/images/photoshoot/laser-treatment.jpg",
     price: "Course offers available",
     action: "buy",
     href: "/contact?type=offer&offer=laser-course",
@@ -76,7 +76,7 @@ export const services: Service[] = [
     excerpt: "Advanced, comfortable laser technology for beautifully smooth, lasting results.",
     description: "A safe and effective programme using advanced laser technology, delivered by trained professionals after a detailed consultation.",
     duration: "15–60 minutes",
-    image: "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=1400&q=85",
+    image: "/images/photoshoot/laser-treatment.jpg",
     benefits: ["Long-lasting results", "All skin types", "Tailored course plans"],
   },
   {
