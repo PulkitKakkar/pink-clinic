@@ -50,8 +50,8 @@ export async function POST(request: Request) {
         status: input.historicalRecord ? "completed" : "confirmed",
       },
       {
-        requireAddress: !input.historicalRecord,
-        requirePostcode: !input.historicalRecord,
+        requireAddress: false,
+        requirePostcode: false,
       },
     );
     await logAdminActivity({ action: "created", entity: input.historicalRecord ? "treatment record" : "booking", entityId: booking.id, summary: `${input.historicalRecord ? "Treatment record" : "Booking"} added for ${booking.customerName}`, changes: { after: booking } });

@@ -30,9 +30,9 @@ export async function normalizeBookingInput(
     throw new BookingValidationError(
       "Customer first name, last name and phone number are required.",
     );
-  if (options.requireAddress !== false && !input.customerAddress?.trim())
+  if (options.requireAddress && !input.customerAddress?.trim())
     throw new BookingValidationError("Customer address is required.");
-  if (options.requirePostcode !== false && !input.customerPostcode?.trim())
+  if (options.requirePostcode && !input.customerPostcode?.trim())
     throw new BookingValidationError(
       "Customer postcode is required.",
     );
