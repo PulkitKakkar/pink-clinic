@@ -161,6 +161,12 @@ function TreatmentPicker({ services, value, onChange }: TreatmentPickerProps) {
     setOpen(false);
   }
 
+  function chooseManualTreatment() {
+    onChange(MANUAL);
+    setQuery("Other / enter manually");
+    setOpen(false);
+  }
+
   return (
     <span className="relative block">
       <input type="hidden" name="serviceId" value={value} />
@@ -230,11 +236,7 @@ function TreatmentPicker({ services, value, onChange }: TreatmentPickerProps) {
             role="option"
             aria-selected={value === MANUAL}
             onMouseDown={(event) => event.preventDefault()}
-            onClick={() => {
-              onChange(MANUAL);
-              setQuery("Other / enter manually");
-              setOpen(false);
-            }}
+            onClick={chooseManualTreatment}
             className="mt-1 block w-full rounded-lg border-t border-black/5 px-3 py-2.5 text-left text-sm font-bold text-pink hover:bg-pink-light/40"
           >
             Other / enter manually
@@ -242,6 +244,15 @@ function TreatmentPicker({ services, value, onChange }: TreatmentPickerProps) {
         </span>
       )}
       {selected && <small className="mt-1.5 block font-medium text-black/45">Selected: {selected.title}</small>}
+      {value !== MANUAL && (
+        <button
+          type="button"
+          onClick={chooseManualTreatment}
+          className="mt-2 text-xs font-bold text-pink hover:text-pink-dark"
+        >
+          Treatment not listed? Enter it manually
+        </button>
+      )}
     </span>
   );
 }
@@ -801,7 +812,6 @@ export function BookingCalendar({
               <textarea
                 key={`address-${selectedCustomer}`}
                 name="customerAddress"
-                required
                 autoComplete="street-address"
                 rows={2}
                 defaultValue={customer?.address || ""}
@@ -810,7 +820,7 @@ export function BookingCalendar({
             </label>
             <label className="grid gap-2 text-xs font-bold">
               Customer postcode
-              <input key={`postcode-${selectedCustomer}`} name="customerPostcode" required autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${inputClass} uppercase`} />
+              <input key={`postcode-${selectedCustomer}`} name="customerPostcode" autoComplete="postal-code" defaultValue={customer?.postcode || ""} className={`${inputClass} uppercase`} />
             </label>
             <label className="grid gap-2 text-xs font-bold">
               Occupation
@@ -1180,7 +1190,6 @@ export function BookingCalendar({
                 Customer address
                 <textarea
                   name="customerAddress"
-                  required
                   autoComplete="street-address"
                   rows={2}
                   defaultValue={editing.customerAddress}
@@ -1189,7 +1198,7 @@ export function BookingCalendar({
               </label>
               <label className="grid gap-2 text-xs font-bold">
                 Customer postcode
-                <input name="customerPostcode" required autoComplete="postal-code" defaultValue={editing.customerPostcode} className={`${inputClass} uppercase`} />
+                <input name="customerPostcode" autoComplete="postal-code" defaultValue={editing.customerPostcode} className={`${inputClass} uppercase`} />
               </label>
               <label className="grid gap-2 text-xs font-bold">
                 Occupation
