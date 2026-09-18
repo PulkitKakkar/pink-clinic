@@ -4,11 +4,11 @@ import { locations } from "@/lib/content";
 import { getInstagramPosts, type InstagramPost } from "@/lib/instagram";
 
 const fallbackImages = [
-  "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=800&q=80",
+  "/images/photoshoot/salon-interior.jpg",
+  "/images/photoshoot/team.jpg",
+  "/images/photoshoot/pink-details.jpg",
+  "/images/photoshoot/clinic-exterior.jpg",
+  "/images/photoshoot/courses.jpg",
 ];
 
 export async function InstagramFeed() {

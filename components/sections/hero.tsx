@@ -6,8 +6,8 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
       <Image
-        src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=2200&q=90"
-        alt="Luxury Pink Beauty salon"
+        src="/images/photoshoot/home-hero.jpg"
+        alt="Pink Beauty team welcoming clients at the Reading clinic"
         fill
         priority
         className="object-cover object-center opacity-75"

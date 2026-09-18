@@ -13,6 +13,7 @@ const links = [
   ["Treatments", "/products-services"],
   ["Find a Treatment", "/treatment-finder"],
   ["Academy Courses", "/courses"],
+  ["Gallery", "/gallery"],
   ["Reviews", "/#reviews"],
   ["Locations", "/locations"],
 ];

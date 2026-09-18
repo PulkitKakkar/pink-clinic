@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/treatment-finder",
     "/treatments/select-branch",
     "/courses",
+    "/gallery",
     "/contact",
     "/locations",
     "/privacy",
