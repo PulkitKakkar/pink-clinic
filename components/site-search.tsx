@@ -3,11 +3,9 @@
 import Link from "next/link";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useBranch } from "@/components/providers/branch-provider";
 import { searchSite, type SearchItem } from "@/lib/search";
 
 export function SiteSearch({ mobile = false, lightHeader = false, onNavigate }: { mobile?: boolean; lightHeader?: boolean; onNavigate?: () => void }) {
-  const { selectedBranch } = useBranch();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -31,9 +29,7 @@ export function SiteSearch({ mobile = false, lightHeader = false, onNavigate }: 
     if (open) window.setTimeout(() => inputRef.current?.focus(), 0);
   }, [open]);
 
-  function hrefFor(item: SearchItem) {
-    return item.serviceSlug && selectedBranch ? `/treatments/${selectedBranch.slug}/${item.serviceSlug}` : item.href;
-  }
+  function hrefFor(item: SearchItem) { return item.href; }
 
   function close() {
     setOpen(false);

@@ -9,7 +9,7 @@ import type { BookingIntent } from "@/lib/booking/types";
 export function BookingLink({ intent, label = "Book appointment", className = "button-primary" }: { intent?: BookingIntent; label?: string; className?: string }) {
   const { selectedBranch } = useBranch();
   if (!selectedBranch && !intent?.branchId) {
-    const href = intent?.serviceSlug ? `/treatments/select-branch?service=${intent.serviceSlug}` : "/treatments/select-branch";
+    const href = intent?.serviceSlug ? `/contact?serviceSlug=${intent.serviceSlug}` : "/contact";
     return <Link href={href} className={className}>{label}<ArrowUpRight size={16} /></Link>;
   }
   const bookingIntent = selectedBranch ? { branchId: selectedBranch.id, branchSlug: selectedBranch.slug, ...intent } : intent;

@@ -72,6 +72,21 @@ describe("treatment concern assignments", () => {
     }
   });
 
+  it("lists Hydrafacial for booking at both branches", async () => {
+    const originalProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = "replace-me";
+
+    try {
+      for (const branch of ["reading-west-st", "reading-watlington-st"]) {
+        const items = await getBranchCatalog(branch);
+        expect(items.some((item) => item.handle === "hydrafacial"), branch).toBe(true);
+      }
+    } finally {
+      if (originalProjectId === undefined) delete process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+      else process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = originalProjectId;
+    }
+  });
+
   it("provides complete guidance for every concern", () => {
     for (const concern of treatmentConcerns) {
       expect(concernDecisionGuides[concern.slug], concern.slug).toBeDefined();
