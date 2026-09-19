@@ -6,12 +6,20 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
       <Image
+        src="/gallery/photos/8J4A1210.jpg"
+        alt="Chandni, founder of Pink Beauty"
+        fill
+        priority
+        className="object-cover object-[center_20%] opacity-75 scale-[1.3] translate-x-[18%] lg:hidden"
+        sizes="100vw"
+      />
+      <Image
         src="/images/photoshoot/home-hero.jpg"
         alt="Pink Beauty team welcoming clients at the Reading clinic"
         fill
         priority
-        className="object-cover object-center opacity-75 -scale-x-100"
-        sizes="100vw"
+        className="hidden object-cover object-center opacity-75 -scale-x-100 lg:block"
+        sizes="(min-width: 1024px) 100vw, 0px"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
       <div className="noise absolute inset-0 opacity-40" />
