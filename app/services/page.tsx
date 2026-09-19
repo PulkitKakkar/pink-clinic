@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function ServicesPage() {
-  redirect("/treatments/select-branch");
+  redirect("/products-services");
 }

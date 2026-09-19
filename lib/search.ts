@@ -13,6 +13,8 @@ export type SearchItem = {
 };
 
 const courses = ["VTCT Beauty Therapy", "Laser & IPL", "Semi-Permanent Makeup", "Facial & Skincare", "Waxing", "Gel Manicure & Pedicure"];
+const canonicalServiceSlugs = new Set(services.map((service) => service.slug));
+const catalogHandles = new Set((westStreetCatalog as Array<{ handle: string }>).map((item) => item.handle));
 
 export const searchItems: SearchItem[] = [
   ...services.map((service) => ({
@@ -20,8 +22,9 @@ export const searchItems: SearchItem[] = [
     title: service.title,
     description: service.excerpt,
     category: "Treatment",
-    href: `/treatments/select-branch?service=${service.slug}`,
-    serviceSlug: service.slug,
+    href: catalogHandles.has(service.slug)
+      ? `/products-services/item/${service.slug}`
+      : `/contact?serviceSlug=${service.slug}`,
     keywords: [service.category, service.description, ...service.benefits],
   })),
   ...branches.map((branch) => ({
@@ -45,10 +48,14 @@ export const searchItems: SearchItem[] = [
     title: offer.title,
     description: offer.description,
     category: "Offer",
-    href: offer.action === "book" && offer.serviceSlug ? `/treatments/select-branch?service=${offer.serviceSlug}` : offer.href || "/#offers",
+    href: offer.action === "book" && offer.serviceSlug ? `/contact?serviceSlug=${offer.serviceSlug}` : offer.href || "/#offers",
     keywords: [offer.eyebrow, offer.price || "", "deal", "promotion", "special"],
   })),
-  ...(westStreetCatalog as Array<{ handle: string; title: string; description?: string; kind: string; tags: string[] }>).map((item) => ({
+  ...(westStreetCatalog as Array<{ handle: string; title: string; description?: string; kind: string; tags: string[] }>)
+    // The main treatment page is the canonical search destination when a
+    // catalogue service has the same handle. Keep separately named offers.
+    .filter((item) => !canonicalServiceSlugs.has(item.handle))
+    .map((item) => ({
     id: `catalog-${item.handle}`,
     title: item.title,
     description: item.description || `Available from Pink Beauty West Street in ${item.tags[0] || item.kind}.`,

@@ -6,12 +6,20 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
       <Image
+        src="/gallery/photos/8J4A1210.jpg"
+        alt="Chandni, founder of Pink Beauty"
+        fill
+        priority
+        className="object-cover object-[center_20%] opacity-75 scale-[1.3] translate-x-[18%] lg:hidden"
+        sizes="100vw"
+      />
+      <Image
         src="/images/photoshoot/home-hero.jpg"
         alt="Pink Beauty team welcoming clients at the Reading clinic"
         fill
         priority
-        className="object-cover object-center opacity-75 -scale-x-100"
-        sizes="100vw"
+        className="hidden object-cover object-center opacity-75 -scale-x-100 lg:block"
+        sizes="(min-width: 1024px) 100vw, 0px"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
       <div className="noise absolute inset-0 opacity-40" />
@@ -36,11 +44,20 @@ export function Hero() {
           <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
             Advanced skin and aesthetic treatments across two Reading locations
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
-            <Link href="/#treatment-concerns" className="button-primary">
-              Explore by concern
+          <div className="mt-6 grid max-w-2xl gap-2 sm:mt-8 sm:grid-cols-2">
+            <Link href="/products-services#catalog-results" className="button-primary justify-center">
+              Browse by concern
             </Link>
-            <Link href="/treatment-finder" className="button-outline">
+            <Link href="/products-services?browse=area#catalog-results" className="button-outline justify-center">
+              Browse by body area
+            </Link>
+            <Link href="/products-services?browse=treatment-type#catalog-results" className="button-outline justify-center">
+              Browse by treatment type
+            </Link>
+            <Link href="/products-services?browse=all#catalog-results" className="button-outline justify-center">
+              View all treatments
+            </Link>
+            <Link href="/treatment-finder" className="button-outline justify-center sm:col-span-2">
               Help me choose
             </Link>
           </div>

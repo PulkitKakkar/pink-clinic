@@ -4,7 +4,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ConsultationForm } from "@/components/admin/consultation-form";
-import { consultationTemplates, getConsultationTemplate, preserveLockedClientAnswers, validateConsultationAnswers } from "@/lib/admin/templates";
+import { consultationTemplates, getConsultationTemplate, isPractitionerConsultationSection, preserveLockedClientAnswers, validateConsultationAnswers } from "@/lib/admin/templates";
 import { consultationClientName, consultationStatus } from "@/lib/admin/consultation-display";
 
 describe("consultation templates", () => {
@@ -179,6 +179,17 @@ describe("consultation templates", () => {
       if (lastCustomerConsent >= 0)
         expect(lastCustomerConsent, template.slug).toBeLessThan(firstPractitioner);
     }
+  });
+
+  it("separates Mounjaro client consent from prescriber and administration records", () => {
+    const sections = getConsultationTemplate("mounjaro")!.sections;
+    const clientConsent = sections.findIndex((section) => section.title === "Mounjaro counselling and informed consent");
+    const firstPractitioner = sections.findIndex(isPractitionerConsultationSection);
+
+    expect(sections[clientConsent]?.audience).toBe("client-consent");
+    expect(sections.find((section) => section.title === "Prescriber authorisation and treatment plan")?.audience).toBe("practitioner");
+    expect(sections.find((section) => section.title === "Administration and supply record")?.audience).toBe("practitioner");
+    expect(clientConsent).toBeLessThan(firstPractitioner);
   });
 
   it("renders signature and agreement before the client save boundary and images at the client handover", () => {

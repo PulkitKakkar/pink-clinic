@@ -6057,5 +6057,33 @@
         "available": true
       }
     ]
+  },
+  {
+    "handle": "hydrafacial",
+    "title": "Hydrafacial",
+    "description": "Experience the ultimate in hydration with our Hydrafacial, a premium treatment that delivers deep cleansing and nourishment for a radiant complexion. This advanced facial combines gentle exfoliation, extraction, and infusion of hydrating serums to revitalise and rejuvenate your skin.",
+    "kind": "service",
+    "tags": [
+      "Advanced Skincare",
+      "Facials"
+    ],
+    "collections": [
+      {
+        "handle": "advanced-skincare",
+        "title": "Advanced Skincare"
+      }
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0784/7696/8266/files/Hydrafacial.jpg?v=1744029166"
+    ],
+    "variants": [
+      {
+        "name": "Standard",
+        "price": 120,
+        "compareAtPrice": null,
+        "sku": null,
+        "available": true
+      }
+    ]
   }
 ]

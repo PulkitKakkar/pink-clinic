@@ -258,20 +258,12 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       options("allergies", "Known allergies", ["Apples", "Aspirin / salicylic acid", "Citrus", "Grapes", "Milk", "Penicillin", "Latex", "Cosmetic products", "Other", "None known"], true),
       f("allergyDetails", "Please specify any known allergies", "textarea"),
     ]},
-    { title: "Skin classification and assessment", audience: "practitioner", description: "Practitioner use only.", fields: [
-      { id: "fitzpatrickType", label: "Fitzpatrick skin type", type: "select", required: true, options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: `Type ${value}` })) },
-      f("ethnicBackground", "Ethnic background relevant to skin assessment", "text"),
-      options("skinCharacteristics", "Skin characteristics", ["Normal", "Combination", "Oily", "Sensitive", "Dehydrated", "Mature", "Acne", "Hyperpigmentation", "Hypopigmentation", "Broken capillaries", "Open/large pores", "Dark circles", "Erythema"], true),
-      { id: "skinHealing", label: "Observed skin healing response", type: "select", options: ["Brown pigmentation", "Pink / fades to white", "Not yet assessed"].map((value) => ({ value, label: value })) },
-      { id: "epidermalThickness", label: "Epidermal thickness", type: "select", options: ["Thin", "Medium", "Thick"].map((value) => ({ value, label: value })) },
-      f("skinAssessmentNotes", "Skin assessment findings and treatment rationale", "textarea", true),
-    ]},
     { title: "Recent procedures", fields: [
       yesNo("recentInjectables", "Botulinum toxin or dermal filler in the previous 14 days?"), yesNo("recentLaser", "Laser, IPL or light-based therapy in the previous 14 days?"),
       yesNo("recentDepilation", "Waxing, depilatory treatment or electrolysis in the previous 14 days?"), yesNo("recentMicrodermabrasion", "Microdermabrasion in the previous 14 days?"),
       yesNo("recentFacialSurgery", "Facial surgery in the previous 14 days?"), yesNo("recentPeelNeedling", "Skin peel or microneedling in the previous 14 days?"),
     ]},
-    { title: "Pre-treatment declarations and consent", fields: [
+    { title: "Pre-treatment declarations and consent", audience: "client-consent", fields: [
       f("accurateInformation", "I have provided accurate medical and consultation information and disclosed all contraindications", "checkbox", true),
       f("preTreatmentRestrictions", "I understand the restrictions on injectables, peels, microneedling, laser/IPL, depilation, active skincare and topical medication before treatment", "checkbox", true),
       f("isotretinoinDeclaration", "I confirm I have not used isotretinoin/Roaccutane in the previous 6 months", "checkbox", true),
@@ -283,7 +275,15 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       f("marketingPhotographyConsent", "Optional consent to use agreed photographs for education or marketing?", "yes-no"),
       f("consentToTreatment", "I consent to the agreed peel or microneedling treatment and will follow all aftercare instructions", "checkbox", true),
     ]},
-    { title: "Procedure record and aftercare", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
+    { title: "Skin classification and assessment", audience: "practitioner", description: "Practitioner use only.", fields: [
+      { id: "fitzpatrickType", label: "Fitzpatrick skin type", type: "select", required: true, options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: `Type ${value}` })) },
+      f("ethnicBackground", "Ethnic background relevant to skin assessment", "text"),
+      options("skinCharacteristics", "Skin characteristics", ["Normal", "Combination", "Oily", "Sensitive", "Dehydrated", "Mature", "Acne", "Hyperpigmentation", "Hypopigmentation", "Broken capillaries", "Open/large pores", "Dark circles", "Erythema"], true),
+      { id: "skinHealing", label: "Observed skin healing response", type: "select", options: ["Brown pigmentation", "Pink / fades to white", "Not yet assessed"].map((value) => ({ value, label: value })) },
+      { id: "epidermalThickness", label: "Epidermal thickness", type: "select", options: ["Thin", "Medium", "Thick"].map((value) => ({ value, label: value })) },
+      f("skinAssessmentNotes", "Skin assessment findings and treatment rationale", "textarea", true),
+    ]},
+    { title: "Procedure record and aftercare", audience: "practitioner", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
       { ...completion("procedureType", "Procedure", "select"), options: ["Medium-depth skin peel", "Microneedling", "Combined protocol"].map((value) => ({ value, label: value })) },
       f("cleanserUsed", "Cleanser used"), f("treatmentProductTraceability", "Peel/microneedling products, batch/lot and expiry", "textarea"),
       { ...f("peelProduct", "Peel product, type and strength", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("peelApplication", "Application method, layers, end point and treatment area", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
@@ -316,21 +316,21 @@ const ivTherapy: ConsultationTemplate = {
       yesNo("persistentNauseaVomiting", "Recently experienced persistent nausea or vomiting?"), f("otherSymptoms", "Other concerning symptoms", "textarea"),
       hideForMale(yesNo("pregnant", "Currently pregnant?")), hideForMale(yesNo("breastfeeding", "Currently breastfeeding?")),
     ]},
-    { title: "Baseline observations and clinical decision", description: "Clinician use only. The automatic blood-pressure flag is advisory; use the clinic's approved observation and escalation protocol.", fields: [
-      { ...boundedNumber("systolic", "Pre-treatment systolic (mmHg)", 40, 260), required: true }, { ...boundedNumber("diastolic", "Pre-treatment diastolic (mmHg)", 25, 160), required: true },
-      { id: "bloodPressureClassification", label: "Blood pressure classification", type: "select", required: true, options: [
-        { value: "normal", label: "Normal (90/60 to 120/80 mmHg)" }, { value: "elevated", label: "Elevated (121/81 to 129/84 mmHg)" },
-        { value: "high", label: "High blood pressure (130/85 mmHg or above)" }, { value: "low", label: "Low blood pressure (below 90/60 mmHg)" },
-      ]}, boundedNumber("baselinePulse", "Baseline pulse (bpm)", 25, 220), boundedNumber("baselineSpO2", "Baseline oxygen saturation (%)", 50, 100),
-      f("observationDecision", "Clinician interpretation, suitability decision and escalation/override reason", "textarea", true),
-    ]},
-    { title: "IV therapy consent", fields: [
+    { title: "IV therapy consent", audience: "client-consent", fields: [
       f("accurateHistory", "Accurate and complete medical history and current health status provided", "checkbox", true),
       f("ivNatureRisks", "Nature, potential benefits and risks of IV therapy explained", "checkbox", true),
       f("questionsAnswered", "Opportunity to ask questions and satisfactory answers received", "checkbox", true),
       f("withdrawConsent", "Understands consent can be withdrawn at any time", "checkbox", true),
       f("reportReactions", "Agrees to immediately report adverse reactions or concerns", "checkbox", true),
       f("dataProtection", "Understands this form will be retained as a medical record under data protection law", "checkbox", true),
+    ]},
+    { title: "Baseline observations and clinical decision", audience: "practitioner", description: "Clinician use only. The automatic blood-pressure flag is advisory; use the clinic's approved observation and escalation protocol.", fields: [
+      { ...boundedNumber("systolic", "Pre-treatment systolic (mmHg)", 40, 260), required: true }, { ...boundedNumber("diastolic", "Pre-treatment diastolic (mmHg)", 25, 160), required: true },
+      { id: "bloodPressureClassification", label: "Blood pressure classification", type: "select", required: true, options: [
+        { value: "normal", label: "Normal (90/60 to 120/80 mmHg)" }, { value: "elevated", label: "Elevated (121/81 to 129/84 mmHg)" },
+        { value: "high", label: "High blood pressure (130/85 mmHg or above)" }, { value: "low", label: "Low blood pressure (below 90/60 mmHg)" },
+      ]}, boundedNumber("baselinePulse", "Baseline pulse (bpm)", 25, 220), boundedNumber("baselineSpO2", "Baseline oxygen saturation (%)", 50, 100),
+      f("observationDecision", "Clinician interpretation, suitability decision and escalation/override reason", "textarea", true),
     ]},
     { ...practitioner([
       completion("treatmentIndication", "Treatment indication and expected benefit", "textarea"), completion("treatmentAdministered", "Treatment administered"),
@@ -385,11 +385,7 @@ const mounjaro: ConsultationTemplate = {
       yesNo("otherMedication", "Taking any other prescribed, over-the-counter or herbal medicines?"),
       f("medicalMedicationDetails", "Details of every Yes answer, allergies, current medicines and relevant investigations", "textarea"),
     ]},
-    referralDecision(),
-    { title: "Prescription, counselling and informed consent", fields: [
-      f("prescriberName", "Prescriber name, professional registration and prescription reference", "textarea", true),
-      { id: "plannedDose", label: "Planned starting/current dose", type: "select", required: true, options: ["2.5 mg", "5 mg", "7.5 mg", "10 mg", "12.5 mg", "15 mg"].map((value) => ({ value, label: value })) },
-      f("doseSchedule", "Dose schedule, titration plan and review criteria", "textarea", true),
+    { title: "Mounjaro counselling and informed consent", audience: "client-consent", fields: [
       f("licensedUseConfirmed", "Licensed indication, alternatives, expected benefits, limitations and the role of diet and physical activity have been discussed", "checkbox", true),
       f("commonEffectsDiscussed", "Common gastrointestinal effects, injection-site reactions, dehydration risk and practical management have been discussed", "checkbox", true),
       f("pancreatitisWarning", "Pancreatitis warning symptoms and the need to stop treatment and seek urgent medical help have been discussed", "checkbox", true),
@@ -400,7 +396,13 @@ const mounjaro: ConsultationTemplate = {
       f("questionsAnswered", "Questions have been answered and the client has had enough time to decide", "checkbox", true),
       f("consentToTreatment", "I consent to the agreed Mounjaro treatment and monitoring plan", "checkbox", true),
     ]},
-    { title: "Administration and supply record", description: "Practitioner use only. Complete for a dose administered or supplied by the clinic.", treatmentImagesAfter: true, fields: [
+    referralDecision(),
+    { title: "Prescriber authorisation and treatment plan", audience: "practitioner", description: "Practitioner use only. Complete after the client has reviewed and consented to the treatment plan.", fields: [
+      f("prescriberName", "Prescriber name, professional registration and prescription reference", "textarea", true),
+      { id: "plannedDose", label: "Planned starting/current dose", type: "select", required: true, options: ["2.5 mg", "5 mg", "7.5 mg", "10 mg", "12.5 mg", "15 mg"].map((value) => ({ value, label: value })) },
+      f("doseSchedule", "Dose schedule, titration plan and review criteria", "textarea", true),
+    ]},
+    { title: "Administration and supply record", audience: "practitioner", description: "Practitioner use only. Complete for a dose administered or supplied by the clinic.", treatmentImagesAfter: true, fields: [
       completion("administrationDateTime", "Administration / supply date and time"),
       completion("doseGiven", "Dose administered or supplied"), completion("penPresentation", "Pen strength and presentation"),
       completion("batchNumber", "Batch / lot number"), completion("expiryDate", "Expiry date", "date"),
@@ -443,8 +445,7 @@ const lemonBottle: ConsultationTemplate = {
       yesNo("previousComplications", "Previously experienced complications from cosmetic treatments?"), f("complicationDetails", "Complication details", "textarea"),
       f("expectations", "Expectations for fat dissolving treatment", "textarea", true),
     ]},
-    referralDecision(),
-    { title: "Lemon Bottle consent", fields: [
+    { title: "Lemon Bottle consent", audience: "client-consent", fields: [
       f("purposeBenefitsRisks", "The product's intended use, evidence, limitations, alternatives and insurer-approved risks including swelling, bruising, tenderness and infection have been explained without guaranteed claims", "checkbox", true),
       f("multipleSessions", "Variable results and possible need for several sessions understood", "checkbox", true),
       f("questionsAnswered", "Concerns discussed and questions answered", "checkbox", true), f("followAftercare", "Agrees to follow post-treatment care instructions", "checkbox", true),
@@ -453,7 +454,8 @@ const lemonBottle: ConsultationTemplate = {
       yesNo("marketingPhotographyConsent", "Optional consent to agreed photographs for education or marketing?"),
       f("clientDeclaration", "Client confirms information is accurate and consents to treatment", "checkbox", true),
     ]},
-    { title: "Procedure record and aftercare", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
+    referralDecision(),
+    { title: "Procedure record and aftercare", audience: "practitioner", description: "Practitioner use only. Complete at the treatment appointment.", treatmentImagesAfter: true, fields: [
       completion("supplierProductVerification", "Supplier, product authenticity and packaging verification", "textarea"), completion("productIngredients", "Product name and ingredients"),
       completion("batchNumber", "Batch / lot number"), completion("expiryDate", "Expiry date", "date"), completion("quantityUsed", "Total amount used and amount by area"),
       completion("injectionRecord", "Treatment areas, injection points, needle/device and technique", "textarea"), completion("immediateReaction", "Immediate response, complications and actions", "textarea"),
@@ -469,7 +471,7 @@ const spmu: ConsultationTemplate = {
   completionBlockers: [{ field: "patchTestResult", values: ["Positive — do not proceed", "Pending"], message: "SPMU cannot be completed while the patch test is positive or pending." }],
   sections: [
     details([f("city", "City", "text"), f("countyState", "County / state", "text"), f("homePhone", "Home phone", "tel")]),
-    { title: "Semi-permanent makeup informed consent", fields: [
+    { title: "Semi-permanent makeup informed consent", audience: "client-consent", fields: [
       f("allergyRisk", "Known allergies disclosed and possible pigment, dye or topical reaction risk accepted", "checkbox", true),
       f("aftercareComplications", "Responsibility for complications if post-procedure instructions are not followed accepted", "checkbox", true),
       f("uniqueSkinReaction", "Understands individual skin reaction cannot be predicted", "checkbox", true),
@@ -500,7 +502,7 @@ const spmu: ConsultationTemplate = {
       yesNo("diabetes", "Diabetes?"), yesNo("anticoagulants", "Taking anticoagulants or affected by a bleeding disorder?"), yesNo("immunosuppression", "Immunosuppression or autoimmune disease?"),
       yesNo("activeSkinCondition", "Active infection, cold sore, lesion, eczema, psoriasis or dermatitis in the treatment area?"), yesNo("healingScarring", "Impaired healing or keloid/hypertrophic scarring?"),
     ]},
-    { title: "Patch test and procedure record", description: "Practitioner use only. Follow pigment, anaesthetic, insurer and local infection-control requirements.", treatmentImagesAfter: true, fields: [
+    { title: "Patch test and procedure record", audience: "practitioner", description: "Practitioner use only. Follow pigment, anaesthetic, insurer and local infection-control requirements.", treatmentImagesAfter: true, fields: [
       f("patchTestDate", "Patch-test date, where required", "date"), f("patchTestProducts", "Pigment/anaesthetic products patch tested", "textarea"),
       { ...completion("patchTestResult", "Patch-test result/decision", "select"), options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending", "Not required under approved protocol"].map((value) => ({ value, label: value })) },
       completion("approvedDesign", "Approved treatment area, mapped design and colour", "textarea"), completion("pigmentTraceability", "Pigment brand, colour, batch/lot and expiry", "textarea"),
@@ -570,7 +572,7 @@ const laserDevice: ConsultationTemplate = {
       ]}, f("fitzpatrickOverrideReason", "Clinician override reason, if the selected type differs from the calculated score", "textarea"),
       { id: "hairType", label: "Hair type", type: "select", required: true, options: ["Fine", "Medium", "Coarse", "Mixed"].map((value) => ({ value, label: value })) },
     ]},
-    { title: "Laser consent and consultation checklist", fields: [
+    { title: "Laser consent and consultation checklist", audience: "client-consent", fields: [
       yesNo("risksAccepted", "Laser hair removal risks explained and accepted?"), yesNo("aftercareReceived", "Aftercare instructions and warning signs received?"),
       yesNo("patchTestWait", "Patch-test waiting interval and booking restriction explained?"), yesNo("eyeProtection", "Eye protection requirement understood?"),
       yesNo("clinicalPhotographyConsent", "Consent to treatment photographs for the confidential clinical record?"), yesNo("marketingPhotographyConsent", "Optional consent to agreed photographs for education or marketing?"), yesNo("healthAssessmentCompleted", "Health assessment completed?"),
@@ -580,13 +582,13 @@ const laserDevice: ConsultationTemplate = {
       f("prepaidSessionCancellationAgreement", "I understand that if I buy multiple or prepaid sessions, I must give Pink Beauty at least 48 hours’ notice to cancel or reschedule a booked session. If I give less notice or do not attend, Pink Beauty may treat the appointment as a no-show and deduct it as a used session.", "checkbox", true),
       yesNo("clientAuthorisation", "Client authorises and consents to laser hair removal?"),
     ]},
-    { title: "Test Patch Settings", description: "Practitioner use only.", fields: [
+    { title: "Test Patch Settings", audience: "practitioner", description: "Practitioner use only.", fields: [
       completion("testPatchDate", "Test patch date", "date"), { ...completion("testPatchFitzpatrick", "Fitzpatrick setting", "select"), options: ["I", "II", "III", "IV", "V", "VI"].map((value) => ({ value, label: value })) },
       completion("testPatchArea", "Laser hair removal patch-test area"), completion("fluence", "Test-patch fluence"), completion("hz", "Test-patch HZ"), completion("pulse", "Test-patch pulse"),
       { ...completion("result", "Patch-test result", "select"), options: ["Negative — suitable to proceed", "Positive — do not proceed", "Pending"].map((value) => ({ value, label: value })) }, completion("shotsFired", "Test-patch shots fired", "number"), completion("practitionerEyewear", "Protective eyewear worn by practitioner", "checkbox"),
       completion("patientEyewear", "Protective eyewear worn by patient", "checkbox"), f("concernsComments", "Concerns and comments", "textarea"),
     ]},
-    { title: "Laser treatment session record", description: "Complete for the actual treatment session, separately from test-patch settings.", treatmentImagesAfter: true, fields: [
+    { title: "Laser treatment session record", audience: "practitioner", description: "Complete for the actual treatment session, separately from test-patch settings.", treatmentImagesAfter: true, fields: [
       completion("deviceDetails", "Device name, serial number, handpiece and wavelength/mode", "textarea"), completion("treatmentAreasSettings", "Treatment areas and area-by-area fluence, pulse, frequency and cooling", "textarea"),
       completion("treatmentShotCount", "Treatment shot count", "number"), completion("treatmentEndpoint", "Clinical endpoint, skin response and observations", "textarea"),
       completion("treatmentEyeProtection", "Client and practitioner eye protection confirmed", "checkbox"), completion("adverseEventRecord", "Adverse events, actions and escalation (enter None if none)", "textarea"),
@@ -686,6 +688,7 @@ const sharedTreatmentRecord = (injectable = false, optional = false): Consultati
   ];
   return {
     title: "Treatment decision and session record",
+    audience: "practitioner",
     description: "Practitioner use only. Complete at the treatment appointment.",
     treatmentImagesAfter: true,
     fields: fields.map((field) => optional ? { ...field, required: false, completionRequired: false } : field),
@@ -696,6 +699,7 @@ const briefTreatmentRecord = (slug: string): ConsultationSection => {
   const productTraceability = ["lash-brow-tint", "hair-colour", "ear-piercing"].includes(slug);
   return {
     title: "Service decision and record",
+    audience: "practitioner",
     description: "Practitioner use only. Record what was actually provided.",
     treatmentImagesAfter: true,
     fields: [
