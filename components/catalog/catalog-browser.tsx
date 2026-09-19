@@ -24,6 +24,26 @@ const typeLabels: Record<string, string> = {
   product: "Products",
   course: "Academy",
 };
+const browseModes = [
+  { id: "concern", label: "By concern", description: "Start with what you would like to improve." },
+  { id: "area", label: "By body area", description: "Start with the part of you you would like to treat." },
+  { id: "treatment-type", label: "By treatment type", description: "Browse facial, aesthetic, product and academy options." },
+  { id: "all", label: "All treatments", description: "See every available service, product and course." },
+] as const;
+type BrowseMode = (typeof browseModes)[number]["id"];
+type Audience = "all" | "women" | "men";
+const audienceLabels: Record<Audience, string> = {
+  all: "All clients",
+  women: "Women",
+  men: "Men",
+};
+
+function itemAudience(item: Pick<CatalogItem, "title" | "tags">): Exclude<Audience, "all"> | "everyone" {
+  const searchable = `${item.title} ${item.tags.join(" ")}`.toLowerCase();
+  if (/(\bmen\b|men's|male|gents|gentleman)/.test(searchable)) return "men";
+  if (/(\bwomen\b|female|ladies|lady's)/.test(searchable)) return "women";
+  return "everyone";
+}
 
 function getPriceDisplay(item: CatalogItem, alwaysFrom = false) {
   const pricedVariants = item.variants.filter(
@@ -78,6 +98,8 @@ export function CatalogBrowser({
     [items],
   );
   const [type, setType] = useState("all");
+  const [audience, setAudience] = useState<Audience>("all");
+  const [browseMode, setBrowseMode] = useState<BrowseMode>("concern");
   const [collection, setCollection] = useState("all");
   const [concern, setConcern] = useState("all");
   const [serviceArea, setServiceArea] = useState("all");
@@ -89,20 +111,28 @@ export function CatalogBrowser({
   const [addedItem, setAddedItem] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const resultsRef = useRef<HTMLElement>(null);
+  const hasScrolledToResultsHash = useRef(false);
   const filtered = useMemo(
     () =>
-      items.filter(
-        (item) =>
-          (type === "all" || item.kind === type) &&
-          (collection === "all" || item.tags.includes(collection)) &&
-          (concern === "all" || matchesConcern(item, concern)) &&
-          (serviceArea === "all" ||
-            matchesBeautyServiceArea(item, serviceArea)) &&
-          `${item.title} ${item.tags.join(" ")}`
-            .toLowerCase()
-            .includes(query.toLowerCase()),
-      ),
-    [collection, concern, items, query, serviceArea, type],
+      items
+        .filter(
+          (item) =>
+            (type === "all" || item.kind === type) &&
+            (audience === "all" || itemAudience(item) === audience) &&
+            (collection === "all" || item.tags.includes(collection)) &&
+            (concern === "all" || matchesConcern(item, concern)) &&
+            (serviceArea === "all" ||
+              matchesBeautyServiceArea(item, serviceArea)) &&
+            `${item.title} ${item.tags.join(" ")}`
+              .toLowerCase()
+              .includes(query.toLowerCase()),
+        )
+        .sort((left, right) => {
+          if (audience !== "all") return left.title.localeCompare(right.title);
+          const rank = { women: 0, men: 1, everyone: 2 } as const;
+          return rank[itemAudience(left)] - rank[itemAudience(right)] || left.title.localeCompare(right.title);
+        }),
+    [audience, collection, concern, items, query, serviceArea, type],
   );
   const collectionCards = useMemo(
     () =>
@@ -140,23 +170,33 @@ export function CatalogBrowser({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const savedType = params.get("catalogType");
+    const savedAudience = params.get("audience");
+    const savedBrowseMode = params.get("browse");
     const savedCollection = params.get("catalogCollection");
     const frame = window.requestAnimationFrame(() => {
       if (savedType && savedType in typeLabels) setType(savedType);
+      if (savedAudience === "women" || savedAudience === "men")
+        setAudience(savedAudience);
+      if (browseModes.some((mode) => mode.id === savedBrowseMode))
+        setBrowseMode(savedBrowseMode as BrowseMode);
       if (savedCollection && collections.includes(savedCollection))
         setCollection(savedCollection);
       const savedConcern = params.get("concern");
       if (
         savedConcern &&
         treatmentConcerns.some((entry) => entry.slug === savedConcern)
-      )
+      ) {
         setConcern(savedConcern);
+        setBrowseMode("concern");
+      }
       const savedServiceArea = params.get("serviceArea");
       if (
         savedServiceArea &&
         beautyServiceAreas.some((entry) => entry.slug === savedServiceArea)
-      )
+      ) {
         setServiceArea(savedServiceArea);
+        setBrowseMode("area");
+      }
       setQuery(params.get("catalogSearch") || "");
       setFiltersRestored(true);
     });
@@ -168,6 +208,8 @@ export function CatalogBrowser({
     const url = new URL(window.location.href);
     if (type === "all") url.searchParams.delete("catalogType");
     else url.searchParams.set("catalogType", type);
+    if (audience === "all") url.searchParams.delete("audience");
+    else url.searchParams.set("audience", audience);
     if (collection === "all") url.searchParams.delete("catalogCollection");
     else url.searchParams.set("catalogCollection", collection);
     if (concern === "all") url.searchParams.delete("concern");
@@ -176,8 +218,25 @@ export function CatalogBrowser({
     else url.searchParams.set("serviceArea", serviceArea);
     if (query) url.searchParams.set("catalogSearch", query);
     else url.searchParams.delete("catalogSearch");
+    if (browseMode === "concern") url.searchParams.delete("browse");
+    else url.searchParams.set("browse", browseMode);
     window.history.replaceState(window.history.state, "", url);
-  }, [collection, concern, filtersRestored, query, serviceArea, type]);
+  }, [audience, browseMode, collection, concern, filtersRestored, query, serviceArea, type]);
+
+  useEffect(() => {
+    if (
+      !filtersRestored ||
+      hasScrolledToResultsHash.current ||
+      window.location.hash !== "#catalog-results"
+    ) return;
+    hasScrolledToResultsHash.current = true;
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [filtersRestored]);
 
   function addCatalogItem(
     item: CatalogItem,
@@ -232,7 +291,36 @@ export function CatalogBrowser({
             className="min-w-0 flex-1 bg-transparent text-sm outline-none"
           />
         </label>
-        {!hideTypeFilters && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-1 text-[10px] font-bold uppercase tracking-[.12em] text-black/45">
+            For
+          </span>
+          {(Object.keys(audienceLabels) as Audience[]).map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={audience === value}
+              onClick={() => {
+                setAudience(value);
+                setVisibleCount(12);
+              }}
+              className={`min-h-11 rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[.12em] transition ${audience === value ? "bg-pink text-white" : "bg-white text-black/55 hover:text-pink"}`}
+            >
+              {audienceLabels[value]}
+            </button>
+          ))}
+        </div>
+        {combined && showDiscovery && !query && (
+          <div className="grid gap-3 border-t border-pink/15 pt-4">
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Browse treatments">
+              {browseModes.map((mode) => (
+                <button key={mode.id} type="button" role="tab" aria-selected={browseMode === mode.id} onClick={() => updateFilterAndShowResults(() => { setBrowseMode(mode.id); setConcern("all"); setServiceArea("all"); setCollection("all"); setType("all"); setVisibleCount(12); })} className={`min-h-11 rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[.12em] transition ${browseMode === mode.id ? "bg-pink text-white" : "bg-white text-black/55 hover:text-pink"}`}>{mode.label}</button>
+              ))}
+            </div>
+            <p className="text-xs text-black/50">{browseModes.find((mode) => mode.id === browseMode)?.description}</p>
+          </div>
+        )}
+        {(!combined || browseMode === "treatment-type") && !hideTypeFilters && (
           <div className="flex flex-wrap gap-2">
             {Object.entries(typeLabels)
               .filter(
@@ -256,7 +344,7 @@ export function CatalogBrowser({
           </div>
         )}
       </div>
-      {combined && showDiscovery && !query && type === "all" && (
+      {combined && showDiscovery && !query && type === "all" && browseMode === "concern" && (
         <section className="mt-8">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -308,20 +396,19 @@ export function CatalogBrowser({
           </div>
         </section>
       )}
-      {combined && showDiscovery && !query && type === "all" && (
+      {combined && showDiscovery && !query && type === "all" && browseMode === "area" && (
         <section
           id="beauty-wellness"
           className="mt-12 scroll-mt-24 rounded-[2rem] bg-white p-5 shadow-soft sm:p-8"
         >
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Salon services</p>
+              <p className="eyebrow">Start with an area</p>
               <h2 className="font-display text-4xl">
-                Browse everyday services
+                Treatments by body area
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-black/50">
-                Hair, beauty and maintenance appointments that do not sit
-                naturally under a treatment concern.
+                Browse treatments around the area you would like to focus on.
               </p>
             </div>
             {serviceArea !== "all" && (
@@ -375,7 +462,7 @@ export function CatalogBrowser({
           </div>
         </section>
       )}
-      {!query && type === "all" && showDiscovery && (
+      {!query && type === "all" && showDiscovery && (!combined || browseMode === "all") && (
         <section className="mt-8">
           <div className="flex items-end justify-between gap-4">
             <div>

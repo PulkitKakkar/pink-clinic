@@ -70,7 +70,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <Hero />
-      <TreatmentConcerns concerns={concerns} popularTreatments={popularTreatments} />
+      <TreatmentConcerns concerns={concerns} popularTreatments={popularTreatments} catalog={fullCatalog} />
       <TreatmentFinderPrompt />
       <AcademyShowcase courses={courses} />
       <Reviews />

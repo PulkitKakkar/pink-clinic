@@ -44,11 +44,20 @@ export function Hero() {
           <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
             Advanced skin and aesthetic treatments across two Reading locations
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
-            <Link href="/#treatment-concerns" className="button-primary">
-              Explore by concern
+          <div className="mt-6 grid max-w-2xl gap-2 sm:mt-8 sm:grid-cols-2">
+            <Link href="/products-services#catalog-results" className="button-primary justify-center">
+              Browse by concern
             </Link>
-            <Link href="/treatment-finder" className="button-outline">
+            <Link href="/products-services?browse=area#catalog-results" className="button-outline justify-center">
+              Browse by body area
+            </Link>
+            <Link href="/products-services?browse=treatment-type#catalog-results" className="button-outline justify-center">
+              Browse by treatment type
+            </Link>
+            <Link href="/products-services?browse=all#catalog-results" className="button-outline justify-center">
+              View all treatments
+            </Link>
+            <Link href="/treatment-finder" className="button-outline justify-center sm:col-span-2">
               Help me choose
             </Link>
           </div>
