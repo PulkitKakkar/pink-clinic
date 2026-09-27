@@ -10,7 +10,7 @@ export function Hero() {
         alt="Chandni, founder of Pink Beauty, at reception"
         fill
         priority
-        className="object-cover object-[center_30%] opacity-75 scale-[1.25] translate-x-[16%] -translate-y-[6%] lg:hidden"
+        className="object-cover object-[center_24%] opacity-75 scale-[1.18] translate-x-[4%] -translate-y-[10%] lg:hidden"
         sizes="100vw"
       />
       <Image
@@ -42,22 +42,28 @@ export function Hero() {
             locations.
           </p>
           <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
-            VTCT-qualified • Fully insured • Expert practitioners
+            VTCT-qualified • Fully insured • Expert practitioners • Accredited academy
           </p>
-          <div className="mt-6 grid max-w-2xl gap-2 sm:mt-8 sm:grid-cols-2">
-            <Link href="/products-services?audience=women#catalog-results" className="button-primary justify-center">
+          <div className="mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:mt-8">
+            <Link href="/products-services?audience=women#catalog-results" className="button-primary min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Browse by concern
             </Link>
-            <Link href="/products-services?browse=area#catalog-results" className="button-outline justify-center">
+            <Link href="/products-services?audience=women&browse=area#catalog-results" className="button-outline min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Browse by body area
             </Link>
-            <Link href="/products-services?browse=treatment-type#catalog-results" className="button-outline justify-center">
+            <Link href="/products-services?audience=women&browse=treatment-type#catalog-results" className="button-outline min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Browse by treatment type
             </Link>
-            <Link href="/products-services?browse=all#catalog-results" className="button-outline justify-center">
+            <Link href="/products-services?audience=women&browse=all#catalog-results" className="button-outline min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               View all treatments
             </Link>
-            <Link href="/treatment-finder" className="button-outline justify-center sm:col-span-2">
+            <Link
+              href="/courses"
+              className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full bg-pink-light px-4 py-2 text-[11px] font-bold text-pink-dark shadow-[0_14px_32px_rgba(228,1,127,.18)] transition hover:-translate-y-0.5 hover:bg-white sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm"
+            >
+              Want to learn? Explore our academy
+            </Link>
+            <Link href="/treatment-finder" className="button-outline col-span-2 min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Help me choose
             </Link>
           </div>

@@ -40,11 +40,8 @@ export function TreatmentConcerns({
     all: { eyebrow: "All treatments", title: "Explore everything Pink Beauty offers.", copy: "See the full range of treatments, products, services and courses across both locations.", href: "/products-services?browse=all", link: "View the complete catalogue" },
   }[browseMode];
   return (
-    <section
-      id="treatment-concerns"
-      className="section-shell scroll-mt-12 bg-white"
-    >
-      <div className="container-site">
+    <section className="section-shell bg-white">
+      <div id="treatment-concerns" className="container-site">
         <div className="section-header grid gap-5 lg:grid-cols-[1fr_.7fr] lg:items-end">
           <div>
             <p className="eyebrow">{modeContent.eyebrow}</p>
