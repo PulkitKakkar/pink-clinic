@@ -6,19 +6,19 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
       <Image
-        src="/gallery/photos/8J4A1210.jpg"
-        alt="Chandni, founder of Pink Beauty"
+        src="/images/photoshoot/founder-reception-hero.jpg"
+        alt="Chandni, founder of Pink Beauty, at reception"
         fill
         priority
-        className="object-cover object-[center_20%] opacity-75 scale-[1.3] translate-x-[18%] lg:hidden"
+        className="object-cover object-[center_30%] opacity-75 scale-[1.25] translate-x-[16%] -translate-y-[6%] lg:hidden"
         sizes="100vw"
       />
       <Image
-        src="/images/photoshoot/home-hero.jpg"
-        alt="Pink Beauty team welcoming clients at the Reading clinic"
+        src="/images/photoshoot/founder-reception-hero.jpg"
+        alt="Chandni, founder of Pink Beauty, at reception"
         fill
         priority
-        className="hidden object-cover object-center opacity-75 -scale-x-100 lg:block"
+        className="hidden object-cover object-[center_60%] opacity-75 scale-[1.12] translate-x-[10%] -translate-y-[10%] lg:block"
         sizes="(min-width: 1024px) 100vw, 0px"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
@@ -29,23 +29,23 @@ export function Hero() {
             <span className="h-px w-8 bg-pink" />
             Our story
           </div>
-          <h1 className="font-display text-[clamp(3.6rem,10vw,8rem)] leading-[.82] tracking-[-.065em]">
-            Born in Reading.
+          <h1 className="font-display text-[clamp(3rem,7.5vw,6.4rem)] leading-[.87] tracking-[-.055em]">
+            <span className="font-sans text-[.74em] tracking-[-.07em]">18</span>{" "}years of
             <br />
-            <span className="text-pink">Built around</span>
+            <span className="text-pink">expertise. Built</span>
             <br />
-            confidence.
+            around confidence.
           </h1>
           <p className="mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">
-            From our first Reading salon to two specialist destinations, Pink
-            brings together advanced aesthetics and expert beauty with one
-            personal standard of care.
+            Since 2008, Pink has delivered advanced aesthetics and expert
+            beauty with a personal standard of care across two Reading
+            locations.
           </p>
           <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
-            Advanced skin and aesthetic treatments across two Reading locations
+            VTCT-qualified • Fully insured • Expert practitioners
           </p>
           <div className="mt-6 grid max-w-2xl gap-2 sm:mt-8 sm:grid-cols-2">
-            <Link href="/products-services#catalog-results" className="button-primary justify-center">
+            <Link href="/products-services?audience=women#catalog-results" className="button-primary justify-center">
               Browse by concern
             </Link>
             <Link href="/products-services?browse=area#catalog-results" className="button-outline justify-center">

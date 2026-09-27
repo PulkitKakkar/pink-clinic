@@ -90,6 +90,26 @@ export function TreatmentConcerns({
               />
             </Link>
           ))}
+          <Link
+            href="/contact?interest=Booking%20a%20treatment"
+            className="group relative min-h-[220px] overflow-hidden rounded-2xl bg-pink-berry p-4 text-white shadow-soft sm:min-h-[360px] sm:rounded-[1.5rem] sm:p-7"
+          >
+            <span className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(228,1,127,.72),transparent_42%)]" />
+            <span className="relative flex h-full flex-col justify-end">
+              <span className="text-[8px] font-bold uppercase tracking-[.12em] text-pink-light sm:text-[9px] sm:tracking-[.2em]">
+                Consultation-led care
+              </span>
+              <span className="mt-2 block font-display text-2xl leading-none sm:text-4xl">
+                Skin Tag &amp; Tattoo Removal
+              </span>
+              <span className="mt-3 hidden text-xs leading-5 text-white/70 sm:block">
+                Professional options for unwanted skin tags and tattoos, with suitability confirmed before treatment.
+              </span>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[.1em] sm:mt-5 sm:gap-2 sm:text-[10px] sm:tracking-[.15em]">
+                Enquire now <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+              </span>
+            </span>
+          </Link>
           {popularTreatments[0] && (
             <Link
               href="/products-services"
