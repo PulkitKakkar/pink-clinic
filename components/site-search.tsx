@@ -54,8 +54,9 @@ export function SiteSearch({ mobile = false, lightHeader = false, onNavigate }: 
 
   return (
     <>
-      <button ref={triggerRef} onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : `grid h-11 w-11 place-items-center rounded-full border transition ${lightHeader ? "border-black/15 text-ink hover:border-pink hover:text-pink" : "border-white/30 text-white hover:bg-white hover:text-ink"}`} aria-label="Search Pink Beauty" aria-expanded={open}>
-        <Search size={mobile ? 18 : 16} />{mobile && "Search"}
+      <button ref={triggerRef} onClick={() => setOpen(true)} className={mobile ? "flex w-full items-center gap-3 border-b border-black/5 py-4 font-semibold" : `flex h-12 w-64 items-center gap-3 rounded-full border px-5 text-left text-sm font-medium shadow-soft transition ${lightHeader ? "border-pink/30 bg-white text-ink/75 hover:border-pink hover:text-pink" : "border-white/60 bg-white/95 text-ink/70 hover:border-pink hover:text-pink"}`} aria-label="Search Pink Beauty" aria-expanded={open}>
+        <Search size={mobile ? 18 : 16} className="shrink-0" />
+        {mobile ? "Search" : <span className="truncate">Search treatments, courses &amp; more</span>}
       </button>
       {open && <div role="dialog" aria-modal="true" aria-label="Search Pink Beauty" className="fixed inset-0 z-[100] bg-[#16010d]/75 p-3 text-ink backdrop-blur-md sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
         <div className="mx-auto mt-12 max-w-2xl overflow-hidden rounded-2xl bg-white shadow-luxe sm:mt-20 sm:rounded-[2rem]">

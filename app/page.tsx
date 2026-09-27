@@ -3,11 +3,10 @@ import { AppointmentCta } from "@/components/sections/cta";
 import { AcademyShowcase } from "@/components/sections/academy-showcase";
 import { Hero } from "@/components/sections/hero";
 import { LocationComparison } from "@/components/sections/location-comparison";
-import { OffersCarousel } from "@/components/sections/offers-carousel";
 import { Reviews } from "@/components/sections/reviews";
 import { TreatmentConcerns } from "@/components/sections/treatment-concerns";
 import { TreatmentFinderPrompt } from "@/components/sections/treatment-finder-prompt";
-import { locations, offers } from "@/lib/content";
+import { locations } from "@/lib/content";
 import { getCombinedCatalog } from "@/lib/catalog";
 import { matchesConcern, treatmentConcerns } from "@/lib/concerns";
 
@@ -74,7 +73,6 @@ export default async function Home() {
       <TreatmentFinderPrompt />
       <AcademyShowcase courses={courses} />
       <Reviews />
-      <OffersCarousel offers={offers} />
       <LocationComparison />
       <AppointmentCta />
     </main>

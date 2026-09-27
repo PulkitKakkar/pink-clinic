@@ -51,7 +51,7 @@ export function Header({ offers = [] }: { offers?: Promotion[] }) {
               alt="Pink Beauty"
               width={128}
               height={64}
-              className="h-16 w-32 rounded-md object-cover xl:h-[72px] xl:w-36"
+              className="h-14 w-28 rounded-md object-cover"
               priority
             />
           </Link>

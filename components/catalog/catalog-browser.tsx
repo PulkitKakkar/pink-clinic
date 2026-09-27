@@ -2,13 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, Search, ShoppingBag } from "lucide-react";
+import { Check, Search, ShoppingBag } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBasket } from "@/components/providers/basket-provider";
-import {
-  ConcernCardContent,
-  concernCardClassName,
-} from "@/components/catalog/concern-card-content";
 import type { CatalogItem } from "@/lib/catalog";
 import { getCatalogImage } from "@/lib/catalog-images";
 import {
@@ -40,8 +36,8 @@ const audienceLabels: Record<Audience, string> = {
 
 function itemAudience(item: Pick<CatalogItem, "title" | "tags">): Exclude<Audience, "all"> | "everyone" {
   const searchable = `${item.title} ${item.tags.join(" ")}`.toLowerCase();
-  if (/(\bmen\b|men's|male|gents|gentleman)/.test(searchable)) return "men";
   if (/(\bwomen\b|female|ladies|lady's)/.test(searchable)) return "women";
+  if (/(\bmen\b|men's|male|gents|gentleman)/.test(searchable)) return "men";
   return "everyone";
 }
 
@@ -118,7 +114,9 @@ export function CatalogBrowser({
         .filter(
           (item) =>
             (type === "all" || item.kind === type) &&
-            (audience === "all" || itemAudience(item) === audience) &&
+            (audience === "all" ||
+              itemAudience(item) === audience ||
+              (audience === "women" && itemAudience(item) !== "men")) &&
             (collection === "all" || item.tags.includes(collection)) &&
             (concern === "all" || matchesConcern(item, concern)) &&
             (serviceArea === "all" ||
@@ -179,6 +177,7 @@ export function CatalogBrowser({
         setAudience(savedAudience);
       if (browseModes.some((mode) => mode.id === savedBrowseMode))
         setBrowseMode(savedBrowseMode as BrowseMode);
+      if (!savedAudience && savedBrowseMode === "area") setAudience("women");
       if (savedCollection && collections.includes(savedCollection))
         setCollection(savedCollection);
       const savedConcern = params.get("concern");
@@ -277,7 +276,7 @@ export function CatalogBrowser({
   }
 
   return (
-    <div>
+    <div id="catalog-browser" className="scroll-mt-8">
       <div className="grid gap-4 rounded-2xl bg-pink-light/45 p-4 sm:p-5">
         <label className="flex min-h-12 min-w-0 items-center gap-2 rounded-full bg-white px-4 sm:w-96">
           <Search size={16} className="text-pink" />
@@ -345,7 +344,7 @@ export function CatalogBrowser({
         )}
       </div>
       {combined && showDiscovery && !query && type === "all" && browseMode === "concern" && (
-        <section className="mt-8">
+        <section className="mt-8 rounded-[2rem] bg-white p-5 shadow-soft sm:p-8">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Start with your concern</p>
@@ -364,8 +363,8 @@ export function CatalogBrowser({
               </button>
             )}
           </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-            {concernCards.map(({ slug, shortName, description, item }, index) => (
+          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
+            {concernCards.map(({ slug, shortName, description, item }) => (
               <div key={slug} className="grid gap-2">
                 <button
                   type="button"
@@ -376,14 +375,30 @@ export function CatalogBrowser({
                     setCollection("all");
                     setVisibleCount(12);
                   })}
-                  className={`${concernCardClassName} ring-offset-2 transition ${concern === slug ? "ring-2 ring-pink" : ""}`}
+                  className={`group grid min-h-24 grid-cols-[64px_1fr] overflow-hidden rounded-2xl border text-left transition sm:min-h-28 sm:grid-cols-[88px_1fr] ${concern === slug ? "border-pink bg-pink-light/40 ring-2 ring-pink ring-offset-2" : "border-black/5 bg-cream hover:border-pink/30"}`}
                 >
-                  <ConcernCardContent
-                    concern={{ shortName, description }}
-                    image={item ? getCatalogImage(item.images) : undefined}
-                    priority={index === 0}
-                    actionLabel="Show matching treatments"
-                  />
+                  <span className="relative bg-pink-light">
+                    {item && (
+                      <Image
+                        src={getCatalogImage(item.images)}
+                        alt=""
+                        fill
+                        className="object-cover transition group-hover:scale-105"
+                        sizes="(min-width: 640px) 88px, 64px"
+                      />
+                    )}
+                  </span>
+                  <span className="p-3 sm:p-4">
+                    <span className="block text-[8px] font-bold uppercase tracking-[.12em] text-pink">
+                      Concern guide
+                    </span>
+                    <span className="mt-1 block font-display text-lg leading-none sm:text-xl">
+                      {shortName}
+                    </span>
+                    <span className="mt-2 hidden text-[10px] leading-4 text-black/45 sm:block">
+                      {description}
+                    </span>
+                  </span>
                 </button>
                 <Link
                   href={`/concerns/${slug}`}
@@ -395,21 +410,26 @@ export function CatalogBrowser({
             ))}
             <Link
               href="/contact?interest=Booking%20a%20treatment"
-              className="group relative min-h-[220px] overflow-hidden rounded-2xl bg-pink-berry p-4 text-white shadow-soft sm:min-h-[360px] sm:rounded-[1.5rem] sm:p-7"
+              className="group grid min-h-24 grid-cols-[64px_1fr] overflow-hidden rounded-2xl border border-black/5 bg-cream text-left transition hover:border-pink/30 sm:min-h-28 sm:grid-cols-[88px_1fr]"
             >
-              <span className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(228,1,127,.72),transparent_42%)]" />
-              <span className="relative flex h-full flex-col justify-end">
-                <span className="text-[8px] font-bold uppercase tracking-[.12em] text-pink-light sm:text-[9px] sm:tracking-[.2em]">
+              <span className="relative bg-pink-light">
+                <Image
+                  src="/images/photoshoot/laser-treatment.jpg"
+                  alt=""
+                  fill
+                  className="object-cover transition group-hover:scale-105"
+                  sizes="(min-width: 640px) 88px, 64px"
+                />
+              </span>
+              <span className="p-3 sm:p-4">
+                <span className="block text-[8px] font-bold uppercase tracking-[.12em] text-pink">
                   Consultation-led care
                 </span>
-                <span className="mt-2 block font-display text-2xl leading-none sm:text-4xl">
+                <span className="mt-1 block font-display text-lg leading-none sm:text-xl">
                   Skin Tag &amp; Tattoo Removal
                 </span>
-                <span className="mt-3 hidden text-xs leading-5 text-white/70 sm:block">
-                  Professional options for unwanted skin tags and tattoos, with suitability confirmed before treatment.
-                </span>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[.1em] sm:mt-5 sm:gap-2 sm:text-[10px] sm:tracking-[.15em]">
-                  Enquire now <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+                <span className="mt-2 hidden text-[10px] leading-4 text-black/45 sm:block">
+                  Professional options for unwanted skin tags and tattoos.
                 </span>
               </span>
             </Link>
@@ -444,7 +464,7 @@ export function CatalogBrowser({
               </button>
             )}
           </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
             {serviceAreaCards.map(({ slug, name, description, item }) => (
               <button
                 key={slug}
@@ -456,7 +476,7 @@ export function CatalogBrowser({
                   setCollection("all");
                   setVisibleCount(12);
                 })}
-                className={`group grid min-h-28 grid-cols-[88px_1fr] overflow-hidden rounded-2xl border text-left transition ${serviceArea === slug ? "border-pink bg-pink-light/40" : "border-black/5 bg-cream hover:border-pink/30"}`}
+                className={`group grid min-h-24 grid-cols-[64px_1fr] overflow-hidden rounded-2xl border text-left transition sm:min-h-28 sm:grid-cols-[88px_1fr] ${serviceArea === slug ? "border-pink bg-pink-light/40" : "border-black/5 bg-cream hover:border-pink/30"}`}
               >
                 <span className="relative bg-pink-light">
                   {item && (
@@ -465,15 +485,15 @@ export function CatalogBrowser({
                       alt=""
                       fill
                       className="object-cover transition group-hover:scale-105"
-                      sizes="88px"
+                      sizes="(min-width: 640px) 88px, 64px"
                     />
                   )}
                 </span>
-                <span className="p-4">
-                  <span className="block font-display text-xl leading-none">
+                <span className="p-3 sm:p-4">
+                  <span className="block font-display text-lg leading-none sm:text-xl">
                     {name}
                   </span>
-                  <span className="mt-2 block text-[10px] leading-4 text-black/45">
+                  <span className="mt-2 hidden text-[10px] leading-4 text-black/45 sm:block">
                     {description}
                   </span>
                 </span>
@@ -578,11 +598,19 @@ export function CatalogBrowser({
         </section>
       )}
       <section ref={resultsRef} id="catalog-results" className="scroll-mt-24 pt-px">
-      <p className="my-5 text-xs text-black/45" aria-live="polite">
-        {filtered.length} result{filtered.length === 1 ? "" : "s"} · showing{" "}
-        {Math.min(visibleCount, filtered.length)}
-      </p>
-      <div className={`grid gap-3 sm:gap-4 ${resultsColumns === "two" ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
+      <div className="my-5 flex items-center justify-between gap-4">
+        <p className="text-xs text-black/45" aria-live="polite">
+          {filtered.length} result{filtered.length === 1 ? "" : "s"} · showing{" "}
+          {Math.min(visibleCount, filtered.length)}
+        </p>
+        <a
+          href="#catalog-browser"
+          className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-pink/25 bg-white px-4 text-[10px] font-bold uppercase tracking-[.12em] text-pink transition hover:border-pink hover:bg-pink-light"
+        >
+          Change filters
+        </a>
+      </div>
+      <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${resultsColumns === "two" ? "" : "lg:grid-cols-3 xl:grid-cols-4"}`}>
         {filtered.slice(0, visibleCount).map((item, index) => {
           const itemHref = combined
             ? `/products-services/item/${item.handle}`
@@ -614,14 +642,14 @@ export function CatalogBrowser({
                   fill
                   priority={index === 0}
                   className="object-cover transition duration-500 group-hover:scale-105"
-                  sizes={resultsColumns === "two" ? "50vw" : "(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"}
+                  sizes={resultsColumns === "two" ? "50vw" : "(min-width: 1280px) 25vw, 50vw"}
                 />
               </Link>
-              <div className={`flex flex-1 flex-col ${resultsColumns === "two" ? "p-3 sm:p-5" : "p-5"}`}>
+              <div className="flex flex-1 flex-col p-3 sm:p-5">
                 <p className="text-[9px] font-bold uppercase tracking-[.16em] text-pink">
                   {item.tags[0] || typeLabels[item.kind]}
                 </p>
-                <h2 className={`mt-2 font-display leading-none ${resultsColumns === "two" ? "text-xl sm:text-2xl" : "text-2xl"}`}>
+                <h2 className="mt-2 font-display text-xl leading-none sm:text-2xl">
                   <Link href={itemHref} className="transition hover:text-pink">
                     {item.title}
                   </Link>
