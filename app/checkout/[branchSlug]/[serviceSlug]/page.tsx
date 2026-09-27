@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PaymentCheckoutMockup } from "@/components/checkout/payment-checkout-mockup";
+import { StripeTreatmentCheckout } from "@/components/checkout/stripe-treatment-checkout";
 import { branches, getBranchBySlug } from "@/lib/branches";
 import { services } from "@/lib/content";
-import { getBranchPaymentConfig } from "@/lib/payments/providers";
 import { pricingProvider } from "@/lib/pricing";
 
 export const metadata: Metadata = { title: "Checkout preview", robots: { index: false, follow: false } };
@@ -19,8 +18,7 @@ export default async function CheckoutPreviewPage({ params }: { params: Promise<
   if (!branch || !service) notFound();
 
   const treatmentPrice = pricingProvider.getTreatmentPrice(service.id, branch.id);
-  const payment = getBranchPaymentConfig(branch.id);
-  if (!payment || treatmentPrice?.price == null) notFound();
+  if (treatmentPrice?.price == null) notFound();
 
-  return <main className="min-h-screen bg-pink-light/30 pt-20 sm:pt-24"><PaymentCheckoutMockup branch={branch} service={service} price={treatmentPrice.price} payment={payment} /></main>;
+  return <main className="min-h-screen bg-pink-light/30 pt-20 sm:pt-24"><StripeTreatmentCheckout branch={branch} service={service} price={treatmentPrice.price} /></main>;
 }
