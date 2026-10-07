@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   CalendarDays,
+  CreditCard,
   LayoutDashboard,
   LogOut,
   MessageSquareText,
@@ -34,7 +35,7 @@ export function AdminHeader() {
             </span>
           </Link>
         </div>
-        <nav className="order-3 flex w-full items-center justify-center gap-1 rounded-full bg-cream p-1 text-[10px] font-bold sm:order-none sm:w-auto sm:text-xs">
+        <nav className="order-3 flex w-full flex-wrap items-center justify-center gap-1 rounded-full bg-cream p-1 text-[10px] font-bold sm:order-none sm:w-auto sm:text-xs">
           <Link
             href="/admin"
             className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"
@@ -47,6 +48,7 @@ export function AdminHeader() {
           >
             <CalendarDays size={13} /> Bookings
           </Link>
+          <Link href="/admin/orders" className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"><CreditCard size={13} /> Orders</Link>
           <Link
             href="/admin/customers"
             className="flex items-center gap-1.5 rounded-full px-2 py-2 transition hover:bg-white sm:px-3"

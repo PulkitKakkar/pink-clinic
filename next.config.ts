@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
     ],
   },
+  async headers() {
+    return [{ source: "/checkout/:path*", headers: [
+      { key: "Referrer-Policy", value: "no-referrer" },
+      { key: "Cache-Control", value: "private, no-store" },
+    ] }];
+  },
   async redirects() {
     const legacyLemonBottleHandles = [
       "lemon-bottle-back",

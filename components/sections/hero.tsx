@@ -1,50 +1,34 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, Star } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
-      <Image
-        src="/images/photoshoot/founder-reception-hero.jpg"
-        alt="Chandni, founder of Pink Beauty, at reception"
-        fill
-        priority
-        className="object-cover object-[center_24%] opacity-75 scale-[1.18] translate-x-[4%] -translate-y-[10%] lg:hidden"
-        sizes="100vw"
-      />
-      <Image
-        src="/images/photoshoot/founder-reception-hero.jpg"
-        alt="Chandni, founder of Pink Beauty, at reception"
-        fill
-        priority
-        className="hidden object-cover object-[center_60%] opacity-75 scale-[1.12] translate-x-[10%] -translate-y-[10%] lg:block"
-        sizes="(min-width: 1024px) 100vw, 0px"
-      />
+    <section className="home-hero relative overflow-hidden bg-[#230013] text-white lg:min-h-[720px]">
+      <div className="hero-portrait absolute inset-0" role="img" aria-label="Chandni, founder of Pink Beauty, at reception" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,0,19,.92)_0%,rgba(72,0,42,.64)_48%,rgba(228,1,127,.28)_100%)]" />
       <div className="noise absolute inset-0 opacity-40" />
       <div className="container-site relative flex pb-10 sm:pb-14 lg:min-h-[720px] lg:items-start lg:pb-32">
-        <div className="max-w-3xl">
+        <div className="flex w-full flex-col lg:block lg:max-w-[54%]">
           <div className="mb-5 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[.28em] text-white/75 sm:mb-8 sm:text-[10px]">
             <span className="h-px w-8 bg-pink" />
             Our story
           </div>
-          <h1 className="font-display text-[clamp(3rem,7.5vw,6.4rem)] leading-[.87] tracking-[-.055em]">
+          <h1 className="font-display text-[clamp(3rem,7.5vw,6.4rem)] sm:text-[clamp(3rem,7.5vw,3.5rem)] lg:text-[clamp(3rem,4.5vw,6.4rem)] leading-[.87] tracking-[-.055em]">
             <span className="font-sans text-[.74em] tracking-[-.07em]">18</span>{" "}years of
             <br />
             <span className="text-pink">expertise. Built</span>
             <br />
             around confidence.
           </h1>
-          <p className="mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">
+          <p className="order-2 mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">
             Since 2008, Pink has delivered advanced aesthetics and expert
             beauty with a personal standard of care across two Reading
             locations.
           </p>
-          <p className="mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
+          <p className="order-2 mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
             VTCT-qualified • Fully insured • Expert practitioners • Accredited academy
           </p>
-          <div className="mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:mt-8">
+          <div className="order-1 mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:mt-8">
             <Link href="/products-services?audience=women#catalog-results" className="button-primary min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Browse by concern
             </Link>
@@ -67,7 +51,7 @@ export function Hero() {
               Help me choose
             </Link>
           </div>
-          <div className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs">
+          <div className="order-3 mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs">
             <span className="flex text-[#ffcb69]">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} size={12} fill="currentColor" />

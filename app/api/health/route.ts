@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkPaymentOrderStorageHealth } from "@/lib/payments/order-storage";
 import { checkBookingStorageHealth } from "@/lib/admin/booking-storage";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,7 @@ function configured(value: string | undefined, minimumLength = 1) {
 
 export async function GET() {
   const configuration = {
+    payments: configured(process.env.STRIPE_SECRET_KEY) && configured(process.env.STRIPE_WEBHOOK_SECRET),
     database: configured(process.env.DATABASE_URL),
     admin: configured(process.env.ADMIN_EMAIL) && configured(process.env.ADMIN_PASSWORD, 12) && configured(process.env.ADMIN_SESSION_TOKEN, 32),
     academy: configured(process.env.ACADEMY_ADMIN_EMAIL) && configured(process.env.ACADEMY_ADMIN_PASSWORD, 12) && configured(process.env.ACADEMY_ADMIN_SESSION_TOKEN, 32),
@@ -31,6 +33,8 @@ export async function GET() {
   } catch {
     configuration.database = false;
   }
+
+  try { await checkPaymentOrderStorageHealth(); } catch { configuration.payments = false; }
 
   const healthy = Object.values(configuration).every(Boolean);
   return NextResponse.json(

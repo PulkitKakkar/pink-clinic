@@ -28,6 +28,7 @@ export type CalendarService = {
 };
 
 export type Booking = {
+  stripePaymentKey?: string;
   id: string;
   branchId: string;
   staffId: string;
@@ -57,6 +58,6 @@ export type Booking = {
 
 export type CreateBookingInput = Omit<
   Booking,
-  "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt" | "images" | "customerName" | "customerGender" | "customerOccupation" | "customerDateOfBirth"
+  "stripePaymentKey" | "id" | "endsAt" | "createdAt" | "marketingConsentUpdatedAt" | "images" | "customerName" | "customerGender" | "customerOccupation" | "customerDateOfBirth"
 > & { customerGender?: string; customerOccupation?: string; customerDateOfBirth?: string; marketingConsentUpdatedAt?: string | null; images?: TreatmentImage[] };
 export type UpdateBookingInput = Partial<CreateBookingInput> & { id: string };

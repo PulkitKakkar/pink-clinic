@@ -154,3 +154,41 @@ npm run release:push
 Pushing the version tag starts the GitHub release workflow. It runs linting, typechecking, and a production build, then creates a GitHub Release with generated notes and a `release-info.json` attachment.
 
 Use patch releases for small fixes, minor releases for new features, and major releases for breaking changes or major rebuilds.
+
+## Online payments (Stripe)
+
+Stripe is the only online payment provider for both branches. Basket and
+catalogue checkout redirect to Stripe-hosted Checkout; customer card fields are
+never rendered or processed by this app. Prices, variants, quantities and delivery
+charges are resolved on the server. Product delivery is UK-only, £4.99 below a
+£75 product subtotal and free at or above £75; services do not count towards that
+threshold. Gift cards do not incur parcel delivery charges and are arranged by staff.
+
+Before enabling checkout:
+
+1. Run `npm run db:migrate` against the production database. Migration
+   `009_stripe_orders.sql` adds durable orders and a unique paid-appointment key.
+2. Set `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` and
+   `NEXT_PUBLIC_SITE_URL` in Amplify. Both Stripe secrets are in the build allowlist.
+   Use test keys on staging and live keys only for the production launch.
+3. Register `https://<hosting-domain>/api/stripe/webhook` in Stripe for
+   `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+   Set the signing secret for that exact endpoint; test and live endpoints have
+   different secrets.
+4. Enable successful-payment email receipts in the Stripe Dashboard and verify
+   business details, payout settings and branding.
+5. Test a successful payment, decline, cancellation, repeat webhook, refreshed
+   receipt and multiple purchased treatments on staging before changing to live keys.
+
+Paid basket/catalogue treatments are scheduled from the verified order receipt.
+Each purchased treatment quantity authorises one appointment; cancelled bookings
+cannot reuse the same entitlement. Standalone treatment checkout selects a time
+before paying. If that time is taken before payment finishes, the receipt lets the
+customer choose another time without paying again. Refreshing a receipt or retrying
+a webhook cannot create a second booking for the same entitlement.
+
+Paid orders, including product shipping details and courses requiring staff follow-up,
+are visible to authenticated staff at `/admin/orders`. Use Stripe for refunds,
+disputes and payment reconciliation. The server rechecks Stripe before accepting a
+booking and rejects refunded or disputed payments. Pending/unpaid sessions cannot
+clear the basket or create appointments.

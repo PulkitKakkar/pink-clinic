@@ -115,3 +115,59 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
     display: none;
   }
 }
+
+/* Reserve the portrait's face above the copy on smaller screens. */
+.hero-portrait {
+  background-image: linear-gradient(to bottom, transparent 650px, #230013 1000px), url('/images/photoshoot/founder-reception-hero.jpg');
+  background-size: 100% 100%, auto 1400px;
+  background-position: center, 62% -400px;
+  background-repeat: no-repeat;
+  opacity: .75;
+}
+
+#main-content > main > .home-hero:first-of-type {
+  padding-top: 440px;
+}
+
+@media (max-width: 639px) {
+  .hero-portrait {
+    background-image: linear-gradient(to bottom, transparent 460px, #230013 640px), url('/images/photoshoot/founder-reception-hero.jpg');
+    background-size: 100% 100%, auto 800px;
+    background-position: center, 62% -160px;
+  }
+  #main-content > main > .home-hero:first-of-type {
+    padding-top: 320px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-portrait {
+    background-image: linear-gradient(to bottom, transparent calc(171px + 40vw), #230013 calc(171px + 73vw)), url('/images/photoshoot/founder-reception-hero.jpg');
+    background-size: 100% 100%, 100% auto;
+    background-position: center, center calc(171px - 51.8vw);
+  }
+  #main-content > main > .home-hero:first-of-type {
+    padding-top: calc(200px + 19.3vw);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-portrait {
+    background-image: url('/images/photoshoot/founder-reception-hero.jpg');
+    background-size: cover;
+    /* Anchor her face beside the heading as the cover image grows with viewport width. */
+    background-position: center calc(230px - 51.8vw);
+  }
+  #main-content > main > .home-hero:first-of-type {
+    padding-top: 10rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-portrait {
+    background-position: center calc(278px - 51.8vw);
+  }
+  #main-content > main > .home-hero:first-of-type {
+    padding-top: 13rem;
+  }
+}
