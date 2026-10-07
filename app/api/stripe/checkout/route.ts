@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       payment_intent_data: { metadata: { branch_id: branch.id, pink_checkout: "v1" } },
     });
     if (!session.url) throw new Error("Stripe did not return a Checkout URL.");
-    await savePaymentOrder({ sessionId: session.id, source: input.serviceSlug ? "treatment" : input.catalogHandle ? "catalog" : "basket", branchId: branch.id, branchSlug: branch.slug, items, amountTotal: totals.amountTotal, shippingAmount: totals.shippingAmount, status: "pending", customer: null, shippingAddress: "", createdAt: new Date().toISOString(), startsAt });
+    await savePaymentOrder({ sessionId: session.id, livemode: session.livemode, source: input.serviceSlug ? "treatment" : input.catalogHandle ? "catalog" : "basket", branchId: branch.id, branchSlug: branch.slug, items, amountTotal: totals.amountTotal, shippingAmount: totals.shippingAmount, status: "pending", customer: null, shippingAddress: "", createdAt: new Date().toISOString(), startsAt });
     return NextResponse.json({ url: session.url });
   } catch (error) {
     if (error instanceof CheckoutValidationError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });

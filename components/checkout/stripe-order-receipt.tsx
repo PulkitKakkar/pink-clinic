@@ -22,9 +22,10 @@ export function StripeOrderReceipt({ order, branch, bookedKeys }: { order: Payme
   }, [items, order, removePurchasedItems]);
 
   return <main className="min-h-screen bg-pink-light/30 pt-28"><section className="container-site max-w-4xl py-10 sm:py-16">
-    <p className="text-[10px] font-bold uppercase tracking-[.25em] text-pink">Stripe payment received</p>
+    <p className="text-[10px] font-bold uppercase tracking-[.25em] text-pink">{order.livemode ? "Stripe payment received" : "Stripe test payment received"}</p>
     <h1 className="mt-3 font-display text-5xl sm:text-6xl">Thank you for your order.</h1>
-    <p className="mt-4 text-sm leading-6 text-black/60">Your payment of £{(order.amountTotal / 100).toFixed(2)} for {branch.name} has been verified.</p>
+    <p className="mt-4 text-sm leading-6 text-black/60">Your {order.livemode ? "payment" : "test payment"} of £{(order.amountTotal / 100).toFixed(2)} for {branch.name} has been verified.</p>
+    {!order.livemode && <p className="mt-4 rounded-xl bg-amber-50 p-4 text-sm font-bold text-amber-900">Sandbox order: no real money was charged. This order is for testing only.</p>}
     <div className="mt-6 rounded-2xl bg-white p-5 text-sm shadow-soft">
       {order.items.map((item, index) => <div key={index} className="flex justify-between gap-4 border-b border-black/5 py-3"><span>{item.quantity} × {item.title}{item.variantName && <small className="block text-black/60">{item.variantName}</small>}</span><strong>£{(item.unitAmount * item.quantity / 100).toFixed(2)}</strong></div>)}
       {order.items.some((item) => item.requiresShipping) && <p className="mt-4">Delivery: {order.shippingAmount ? `£${(order.shippingAmount / 100).toFixed(2)}` : "Free"}. Your products will be sent by Royal Mail 48 to {order.shippingAddress}.</p>}

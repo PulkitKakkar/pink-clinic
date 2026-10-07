@@ -12,6 +12,7 @@ export type PaymentCustomer = {
 };
 export type PaymentOrder = {
   sessionId: string;
+  livemode: boolean;
   source: "basket" | "catalog" | "treatment";
   branchId: string;
   branchSlug: string;
