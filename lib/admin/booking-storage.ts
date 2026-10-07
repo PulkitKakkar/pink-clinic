@@ -19,12 +19,14 @@ const dataFile = path.join(dataDirectory, "bookings.json");
 const databaseUrl = process.env.DATABASE_URL;
 let writeQueue = Promise.resolve();
 
+export class PaymentAlreadyBookedError extends Error {}
 export class BookingConflictError extends Error {}
 export class BookingConfigurationError extends Error {}
 export { BookingValidationError };
 export const bookingStorageMode = databaseUrl ? "postgres" : "local";
 
 type BookingRow = {
+  stripe_payment_key?: string;
   id: string;
   branch_id: string;
   staff_id: string;
@@ -62,6 +64,7 @@ function assertProductionStorage() {
 function fromRow(row: BookingRow): Booking {
   return {
     id: row.id,
+    stripePaymentKey: row.stripe_payment_key || undefined,
     branchId: row.branch_id,
     staffId: row.staff_id,
     practitionerName: row.practitioner_name,
@@ -163,18 +166,20 @@ export async function checkBookingStorageHealth() {
 
 export async function createBooking(
   input: CreateBookingInput,
-  options?: { requireAddress?: boolean; requirePostcode?: boolean },
+  options?: { requireAddress?: boolean; requirePostcode?: boolean; paymentKey?: string },
 ) {
   const candidate = await normalizeBookingInput(input, options);
   assertProductionStorage();
   if (sql) {
     try {
       const rows = await sql<BookingRow[]>`
-        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_first_name, customer_last_name, customer_email, customer_phone, customer_address, customer_postcode, customer_gender, customer_occupation, customer_date_of_birth, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes, images)
-        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerFirstName}, ${candidate.customerLastName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.customerPostcode}, ${candidate.customerGender}, ${candidate.customerOccupation}, ${candidate.customerDateOfBirth || null}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes}, ${sql.json(candidate.images)})
+        INSERT INTO bookings (id, branch_id, staff_id, practitioner_name, service_id, treatment_name, duration_minutes, customer_name, customer_first_name, customer_last_name, customer_email, customer_phone, customer_address, customer_postcode, customer_gender, customer_occupation, customer_date_of_birth, marketing_consent, marketing_consent_updated_at, starts_at, ends_at, status, notes, images, stripe_payment_key)
+        VALUES (${randomUUID()}, ${candidate.branchId}, ${candidate.staffId}, ${candidate.practitionerName}, ${candidate.serviceId}, ${candidate.treatmentName}, ${candidate.durationMinutes}, ${candidate.customerName}, ${candidate.customerFirstName}, ${candidate.customerLastName}, ${candidate.customerEmail}, ${candidate.customerPhone}, ${candidate.customerAddress}, ${candidate.customerPostcode}, ${candidate.customerGender}, ${candidate.customerOccupation}, ${candidate.customerDateOfBirth || null}, ${candidate.marketingConsent}, ${candidate.marketingConsentUpdatedAt}, ${candidate.startsAt}, ${candidate.endsAt}, ${candidate.status}, ${candidate.notes}, ${sql.json(candidate.images)}, ${options?.paymentKey || null})
         RETURNING *`;
       return fromRow(rows[0]);
     } catch (error) {
+      if (options?.paymentKey && (error as { code?: string; constraint_name?: string }).code === "23505" && (error as { constraint_name?: string }).constraint_name === "bookings_stripe_payment_key_idx")
+        throw new PaymentAlreadyBookedError("This paid appointment has already been booked.");
       if (isConflict(error))
         throw new BookingConflictError(
           "This practitioner already has a booking during that time.",
@@ -185,12 +190,15 @@ export async function createBooking(
 
   const operation = writeQueue.then(async () => {
     const bookings = await getLocalBookings();
+    if (options?.paymentKey && bookings.some((booking) => booking.stripePaymentKey === options.paymentKey))
+      throw new PaymentAlreadyBookedError("This paid appointment has already been booked.");
     if (hasOverlap(bookings, candidate))
       throw new BookingConflictError(
         "This practitioner already has a booking during that time.",
       );
     const booking: Booking = {
       ...candidate,
+      stripePaymentKey: options?.paymentKey,
       id: randomUUID(),
       createdAt: new Date().toISOString(),
     };

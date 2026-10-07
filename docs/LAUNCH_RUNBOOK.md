@@ -52,3 +52,20 @@ serves Shopify, so preserve its DNS records for rollback before replacing them.
 - A business owner checks prices, descriptions, offers, opening hours, staff, courses, locations and branch availability against the source of truth.
 - The relevant business/legal owner approves privacy, cookie, cancellation, delivery, returns and terms wording against the integrations actually enabled in production.
 - Submit the sitemap in Google Search Console, inspect the production homepage URL and confirm ownership for the canonical domain.
+
+## Stripe payment release gate
+
+- Stripe is the only online provider. Run migration `009_stripe_orders.sql` before
+  deploying checkout, configure the live secret key and the live webhook signing
+  secret in Amplify, and verify both are available at runtime.
+- Configure Stripe events `checkout.session.completed` and
+  `checkout.session.async_payment_succeeded` for `/api/stripe/webhook`.
+- On staging, verify a card decline, customer cancellation, successful basket
+  checkout, a product with delivery, course purchase, multiple treatments, webhook
+  redelivery and receipt refresh. Confirm order records in `/admin/orders` and
+  exactly one booking per paid appointment in `/admin/bookings`.
+- Confirm UK delivery costs (£4.99 below £75 of products; free at £75), enable Stripe
+  email receipts and test notification delivery with designated test recipients.
+- Change staging/test credentials to production/live credentials only after these
+  journeys pass. Verify `/api/health`, and do a controlled live payment and refund
+  before opening checkout to customers.

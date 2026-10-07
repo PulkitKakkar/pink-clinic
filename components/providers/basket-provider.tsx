@@ -13,6 +13,7 @@ type BasketContextValue = {
   updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
   clearBasket: () => void;
+  removePurchasedItems: (purchased: { branchId: string; handle: string; variantName: string; quantity: number }[]) => void;
 };
 
 const BasketContext = createContext<BasketContextValue | undefined>(undefined);
@@ -50,8 +51,14 @@ export function BasketProvider({ children }: { children: React.ReactNode }) {
 
   const updateQuantity = useCallback((id: string, quantity: number) => save(quantity < 1 ? items.filter((item) => item.id !== id) : items.map((item) => item.id === id ? { ...item, quantity } : item)), [items, save]);
   const removeItem = useCallback((id: string) => save(items.filter((item) => item.id !== id)), [items, save]);
+  const removePurchasedItems = useCallback((purchased: { branchId: string; handle: string; variantName: string; quantity: number }[]) => {
+    save(items.flatMap((item) => {
+      const quantity = purchased.filter((entry) => entry.branchId === item.branchId && entry.handle === item.handle && entry.variantName === item.variantName).reduce((sum, entry) => sum + entry.quantity, 0);
+      return item.quantity > quantity ? [{ ...item, quantity: item.quantity - quantity }] : [];
+    }));
+  }, [items, save]);
   const clearBasket = useCallback(() => save([]), [save]);
-  const value = useMemo(() => ({ items, count: items.reduce((sum, item) => sum + item.quantity, 0), total: items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0), addItem, updateQuantity, removeItem, clearBasket }), [addItem, clearBasket, items, removeItem, updateQuantity]);
+  const value = useMemo(() => ({ items, count: items.reduce((sum, item) => sum + item.quantity, 0), total: items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0), addItem, updateQuantity, removeItem, clearBasket, removePurchasedItems }), [addItem, clearBasket, items, removeItem, removePurchasedItems, updateQuantity]);
 
   return <BasketContext.Provider value={value}>{children}</BasketContext.Provider>;
 }

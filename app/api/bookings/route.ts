@@ -1,121 +1,32 @@
 import { NextResponse } from "next/server";
-import {
-  BookingConfigurationError,
-  BookingConflictError,
-  BookingValidationError,
-  createBooking,
-  getBookings,
-} from "@/lib/admin/booking-storage";
+import { BookingConfigurationError, BookingConflictError, BookingValidationError, getBookings } from "@/lib/admin/booking-storage";
 import { staffMembers } from "@/lib/admin/booking-config";
-import { availableStaffForStart, getAvailableSlots, londonDateString } from "@/lib/booking-availability";
-import { sendBookingNotification } from "@/lib/notifications/booking-notifications";
-
-type CustomerBookingRequest = {
-  branchId?: string;
-  serviceId?: string;
-  treatmentName?: string;
-  durationMinutes?: number;
-  startsAt?: string;
-  customerFirstName?: string;
-  customerLastName?: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  customerAddress?: string;
-  customerPostcode?: string;
-  paymentReference?: string;
-};
+import { getAvailableSlots, londonDateString } from "@/lib/booking-availability";
+import { PaymentVerificationError, confirmPaidAppointment, verifyPaymentOrder } from "@/lib/payments/stripe-orders";
+import { paymentAppointments } from "@/lib/payments/types";
 
 export async function POST(request: Request) {
   try {
-    const input = (await request.json()) as CustomerBookingRequest;
+    const input = await request.json() as { paymentReference?: string; paymentAppointmentKey?: string; startsAt?: string };
     const startsAt = new Date(input.startsAt || "");
-    const durationMinutes = Number(input.durationMinutes);
-    if (
-      !input.branchId ||
-      !input.serviceId ||
-      !input.treatmentName ||
-      !input.customerFirstName ||
-      !input.customerLastName ||
-      !input.customerEmail ||
-      !input.customerPhone ||
-      !input.customerAddress ||
-      !input.customerPostcode ||
-      !input.paymentReference ||
-      Number.isNaN(startsAt.valueOf()) ||
-      !Number.isInteger(durationMinutes)
-    )
-      return NextResponse.json({ error: "Complete all booking details." }, { status: 400 });
-
+    if (typeof input.paymentReference !== "string" || typeof input.paymentAppointmentKey !== "string" || Number.isNaN(startsAt.valueOf()))
+      return NextResponse.json({ error: "A verified Stripe payment and appointment time are required." }, { status: 400 });
+    const order = await verifyPaymentOrder(input.paymentReference);
+    const appointment = paymentAppointments(order).find((entry) => entry.key === input.paymentAppointmentKey);
+    if (!appointment) throw new PaymentVerificationError("This appointment was not included in the payment.");
     const bookings = await getBookings();
-    const slotStillAvailable = getAvailableSlots({
-      date: londonDateString(startsAt),
-      durationMinutes,
-      bookings,
-      staff: staffMembers,
-      branchId: input.branchId,
-      serviceId: input.serviceId,
-    }).includes(startsAt.toISOString());
-    if (!slotStillAvailable)
-      return NextResponse.json(
-        { error: "That time has just been taken. Please choose another." },
-        { status: 409 },
-      );
-
-    const eligible = availableStaffForStart({
-      bookings,
-      staff: staffMembers,
-      branchId: input.branchId,
-      serviceId: input.serviceId,
-      startsAt,
-      durationMinutes,
-    });
-    for (const member of eligible) {
-      try {
-        const booking = await createBooking({
-          branchId: input.branchId,
-          staffId: member.id,
-          practitionerName: member.name,
-          serviceId: input.serviceId,
-          treatmentName: input.treatmentName,
-          durationMinutes,
-          customerFirstName: input.customerFirstName,
-          customerLastName: input.customerLastName,
-          customerEmail: input.customerEmail,
-          customerPhone: input.customerPhone,
-          customerAddress: input.customerAddress,
-          customerPostcode: input.customerPostcode,
-          marketingConsent: false,
-          startsAt: startsAt.toISOString(),
-          status: "confirmed",
-          notes: `Customer self-booking after payment ${input.paymentReference}`,
-        });
-        const notification = await sendBookingNotification(booking, "booking-confirmation").catch(() => ({ sent: false }));
-        return NextResponse.json(
-          {
-            booking: {
-              id: booking.id,
-              startsAt: booking.startsAt,
-              endsAt: booking.endsAt,
-              treatmentName: booking.treatmentName,
-              branchId: booking.branchId,
-            },
-            notification,
-          },
-          { status: 201 },
-        );
-      } catch (error) {
-        if (!(error instanceof BookingConflictError)) throw error;
-      }
-    }
-    return NextResponse.json(
-      { error: "That time has just been taken. Please choose another." },
-      { status: 409 },
-    );
+    const existing = bookings.find((booking) => booking.stripePaymentKey === appointment.key);
+    if (existing) return NextResponse.json({ booking: existing });
+    const available = getAvailableSlots({ date: londonDateString(startsAt), durationMinutes: appointment.durationMinutes, bookings, staff: staffMembers, branchId: order.branchId, serviceId: appointment.serviceId }).includes(startsAt.toISOString());
+    if (!available) throw new BookingConflictError("That time has just been taken. Please choose another time; your payment remains valid.");
+    const booking = await confirmPaidAppointment(order, appointment.key, startsAt.toISOString());
+    return NextResponse.json({ booking }, { status: 201 });
   } catch (error) {
-    if (error instanceof BookingValidationError)
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    if (error instanceof BookingConfigurationError)
-      return NextResponse.json({ error: error.message }, { status: 503 });
-    return NextResponse.json({ error: "Could not create the appointment." }, { status: 500 });
+    if (error instanceof PaymentVerificationError) return NextResponse.json({ error: error.message }, { status: 403 });
+    if (error instanceof BookingConflictError) return NextResponse.json({ error: error.message }, { status: 409 });
+    if (error instanceof BookingValidationError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });
+    console.error("Unable to book paid appointment", error);
+    return NextResponse.json({ error: "Could not confirm payment or create the appointment. Please try again." }, { status: 503 });
   }
 }

@@ -5,7 +5,7 @@ import { branches, getBranchBySlug } from "@/lib/branches";
 import { services } from "@/lib/content";
 import { pricingProvider } from "@/lib/pricing";
 
-export const metadata: Metadata = { title: "Checkout preview", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Secure checkout", robots: { index: false, follow: false } };
 
 export function generateStaticParams() {
   return branches.flatMap((branch) => services.map((service) => ({ branchSlug: branch.slug, serviceSlug: service.slug })));

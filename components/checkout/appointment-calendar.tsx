@@ -21,6 +21,7 @@ export type AppointmentDetails = {
   durationMinutes: number;
   customer: CustomerDetails;
   paymentReference: string;
+  paymentAppointmentKey?: string;
 };
 
 type ConfirmedBooking = {
@@ -104,6 +105,7 @@ export function AppointmentCalendar({ details, onContinue, continueLabel = "Book
           customerAddress: details.customer.address,
           customerPostcode: details.customer.postcode,
           paymentReference: details.paymentReference,
+          paymentAppointmentKey: details.paymentAppointmentKey,
         }),
       });
       const body = (await response.json()) as { booking?: ConfirmedBooking; error?: string };
