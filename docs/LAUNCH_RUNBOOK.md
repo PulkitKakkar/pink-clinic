@@ -89,8 +89,10 @@ node scripts/migrate-amplify-secrets.mjs --account ACCOUNT_ID --app APP_ID --app
 
 Dry-run is the default. Staging preserves existing Amplify settings; applying
 removes secret values from application and branch variables while preserving
-public settings. The allowlist rejects unexpected keys. The server loads the
-secret before serving requests and fails startup if it cannot load it. Builds
+public settings. The allowlist rejects unexpected keys. The proxy loads the
+secret before handling application requests and rejects requests if it cannot load
+it. Amplify compute credentials are used during request handling; do not fetch
+secrets in the server startup instrumentation hook. Builds
 skip runtime loading, and the build preparation script removes secrets from the
 SSR environment file. Do not grant the build role secret access.
 
