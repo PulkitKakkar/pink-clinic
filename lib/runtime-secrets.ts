@@ -29,9 +29,11 @@ export async function loadRuntimeSecrets(): Promise<void> {
         const values = parseRuntimeSecrets(secret.SecretString);
         // Publish only after the entire payload has passed validation.
         Object.assign(process.env, values);
-      } catch {
+      } catch (error) {
         // Never include secret values or SDK diagnostics in startup logs.
-        throw new Error("Unable to load application runtime secrets.");
+        const knownNames = new Set(["CredentialsProviderError", "AccessDeniedException", "DecryptionFailure", "ResourceNotFoundException", "UnrecognizedClientException", "ExpiredTokenException", "TimeoutError", "NetworkingError", "InvalidRequestException", "InvalidParameterException", "InternalServiceError"]);
+        const name = error instanceof Error && knownNames.has(error.name) ? error.name : "RuntimeConfigurationError";
+        throw new Error("Unable to load application runtime secrets.", { cause: name });
       }
     })();
     loading.catch(() => { loading = undefined; });

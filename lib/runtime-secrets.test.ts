@@ -7,7 +7,7 @@ describe('runtime secrets', () => {
     const { parseRuntimeSecrets } = await import('./runtime-secrets');
     for (const value of ['null','[]','{"AWS_SECRET_ACCESS_KEY":"bad"}','{"NEXT_PUBLIC_SECRET":"bad"}','{"ADMIN_PASSWORD":42}']) expect(() => parseRuntimeSecrets(value)).toThrow();
   });
-  it('loads once for concurrent startup and proxy callers', async () => {
+  it('loads once for concurrent requests', async () => {
     vi.stubEnv('RUNTIME_SECRET_ARN','test-secret'); vi.stubEnv('ADMIN_PASSWORD','old');
     send.mockResolvedValue({ SecretString: '{"ADMIN_PASSWORD":"new"}' });
     const { loadRuntimeSecrets } = await import('./runtime-secrets');
@@ -27,4 +27,12 @@ describe('runtime secrets', () => {
     vi.stubEnv('RUNTIME_SECRET_ARN','');
     const { loadRuntimeSecrets } = await import('./runtime-secrets'); await loadRuntimeSecrets(); expect(send).not.toHaveBeenCalled();
   });
+  it('exposes only a known AWS error name when credentials are unavailable', async () => {
+    vi.stubEnv('RUNTIME_SECRET_ARN','test-secret');
+    const error = new Error('private SDK diagnostics'); error.name = 'CredentialsProviderError';
+    send.mockRejectedValue(error);
+    const { loadRuntimeSecrets } = await import('./runtime-secrets');
+    await expect(loadRuntimeSecrets()).rejects.toMatchObject({ message: 'Unable to load application runtime secrets.', cause: 'CredentialsProviderError' });
+  });
+
 });
