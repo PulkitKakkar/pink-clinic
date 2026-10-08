@@ -109,4 +109,13 @@ describe("temporary account redirect", () => {
       expect((await proxy(request)).headers.get("x-middleware-next")).toBe("1");
     }
   });
+  it("matches Amplify's forwarded public host instead of its internal server host", async () => {
+    vi.stubEnv("LEGACY_REDIRECT_HOST", "main.d269wokvvip0dc.amplifyapp.com");
+    vi.stubEnv("LEGACY_REDIRECT_ORIGIN", "https://main.dex0d2j1ekar0.amplifyapp.com");
+    const response = await proxy(new NextRequest("http://localhost:3000/admin/bookings?view=calendar", {
+      headers: { "x-forwarded-host": "main.d269wokvvip0dc.amplifyapp.com", "x-forwarded-proto": "https" },
+    }));
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("https://main.dex0d2j1ekar0.amplifyapp.com/admin/bookings?view=calendar");
+  });
 });

@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const redirectOrigin = process.env.LEGACY_REDIRECT_ORIGIN;
   if (
-    redirectOrigin && request.nextUrl.hostname === process.env.LEGACY_REDIRECT_HOST &&
+    redirectOrigin && new URL(getPublicOrigin(request)).hostname === process.env.LEGACY_REDIRECT_HOST &&
     ["GET", "HEAD"].includes(request.method) && !pathname.startsWith("/api/")
   ) {
     const destination = new URL(redirectOrigin);
