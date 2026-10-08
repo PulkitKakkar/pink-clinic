@@ -1,6 +1,8 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, rm } from "node:fs/promises";
 
 if (process.env.RUNTIME_SECRET_ARN) {
+  // Discard caches produced before secrets moved out of the build environment.
+  await rm('.next/cache', { recursive: true, force: true });
   const source = await readFile('.env.production', 'utf8').catch(error => {
     if (error.code === 'ENOENT') return '';
     throw error;
