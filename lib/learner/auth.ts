@@ -24,9 +24,8 @@ export async function createLearnerSession(learnerId: string) {
 }
 
 export async function getCurrentLearner() {
-  if (!sql) return undefined;
   const token = (await cookies()).get(LEARNER_COOKIE)?.value;
-  if (!token) return undefined;
+  if (!sql || !token) return undefined;
   const rows =
     await sql`SELECT a.id, a.name, a.email, a.must_change_password, a.active FROM learner_sessions s JOIN learner_accounts a ON a.id=s.learner_id WHERE s.token_hash=${tokenHash(token)} AND s.expires_at > now() AND a.active=true LIMIT 1`;
   const row = rows[0];

@@ -4,9 +4,24 @@ import { ADMIN_COOKIE } from "@/lib/admin/auth";
 import { STUDIO_ADMIN_COOKIE } from "@/lib/studio/auth";
 import { ACADEMY_ADMIN_COOKIE } from "@/lib/academy/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
+import { loadRuntimeSecrets } from "@/lib/runtime-secrets";
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const redirectOrigin = process.env.LEGACY_REDIRECT_ORIGIN;
+  if (
+    redirectOrigin && request.nextUrl.hostname === process.env.LEGACY_REDIRECT_HOST &&
+    ["GET", "HEAD"].includes(request.method) && !pathname.startsWith("/api/")
+  ) {
+    const destination = new URL(redirectOrigin);
+    if (destination.protocol !== "https:" || destination.username || destination.password || destination.pathname !== "/") {
+      throw new Error("Invalid legacy redirect origin.");
+    }
+    destination.pathname = pathname;
+    destination.search = request.nextUrl.search;
+    return NextResponse.redirect(destination, 302);
+  }
+  await loadRuntimeSecrets();
   if (pathname === "/admin/learners")
     return NextResponse.redirect(
       new URL("/academy-admin", getPublicOrigin(request)),
@@ -60,10 +75,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/api/admin/:path*",
-    "/academy-admin/:path*",
-    "/api/academy-admin/:path*",
-    "/studio/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|webp|svg|gif|ico|css|js|woff|woff2)$).*)",
   ],
 };
