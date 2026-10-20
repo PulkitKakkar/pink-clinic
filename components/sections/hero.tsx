@@ -20,6 +20,16 @@ export function Hero() {
             <br />
             around confidence.
           </h1>
+          <div className="mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-6 sm:gap-4 sm:text-xs">
+            <span className="flex text-[#ffcb69]">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star key={i} size={12} fill="currentColor" />
+              ))}
+            </span>
+            <span className="font-bold text-white">
+              Trusted by clients across both Reading locations
+            </span>
+          </div>
           <p className="order-2 mt-5 max-w-xl text-sm leading-6 text-white/75 sm:mt-7 sm:text-lg sm:leading-7">
             Since 2008, Pink has delivered advanced aesthetics and expert
             beauty with a personal standard of care across two Reading
@@ -51,16 +61,7 @@ export function Hero() {
               Help me choose
             </Link>
           </div>
-          <div className="order-3 mt-6 flex min-h-11 items-center gap-3 text-[10px] text-white/70 sm:mt-10 sm:gap-4 sm:text-xs">
-            <span className="flex text-[#ffcb69]">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} size={12} fill="currentColor" />
-              ))}
-            </span>
-            <span className="font-bold text-white">
-              Trusted by clients across both Reading locations
-            </span>
-          </div>
+
         </div>
       </div>
       <a

@@ -267,3 +267,52 @@ describe("Skin Peel and Microneedling streamlined questions", () => {
     expect(payload.answers.needleDevice).toBe("Saved device");
   });
 });
+
+
+describe("practitioner labels and microneedling depths", () => {
+  it.each(consultationTemplates)("$title keeps practitioner fields optional without asterisks", (item) => {
+    const { container } = render(<ConsultationForm template={item} practitionerNames={[]} treatmentNames={[]} />);
+    const sections = [...container.querySelectorAll("section")].filter((section) => section.textContent?.includes("Practitioner use only"));
+    for (const section of sections) {
+      expect(section.querySelector("[required]")).toBeNull();
+      expect([...section.querySelectorAll('[aria-hidden="true"]')].some((marker) => marker.textContent === "*")).toBe(false);
+    }
+    expect(item.sections.flatMap((section) => section.fields).some((field) => field.required || field.completionRequired)).toBe(true);
+  });
+
+  it("accepts decimal depths by zone and hides them for peel-only procedures", async () => {
+    const user = userEvent.setup();
+    const item = getConsultationTemplate("skin-peel-microneedling")!;
+    render(<ConsultationForm template={item} practitionerNames={[]} treatmentNames={[]} />);
+    await user.selectOptions(screen.getByLabelText("Procedure"), "Microneedling");
+    const depth = screen.getByRole<HTMLInputElement>("spinbutton", { name: "Needle depth — forehead (mm)" });
+    await user.type(depth, "0.25");
+    expect(depth.value).toBe("0.25");
+    expect(depth.validity.stepMismatch).toBe(false);
+    await user.selectOptions(screen.getByLabelText("Procedure"), "Medium-depth skin peel");
+    expect(screen.queryByRole("spinbutton", { name: "Needle depth — forehead (mm)" })).toBeNull();
+  });
+});
+
+
+describe("optional practitioner validation", () => {
+  it.each(consultationTemplates)("$title can be finalised with empty practitioner records", (item) => {
+    const practitionerIds = new Set(item.sections.filter(isPractitionerConsultationSection).flatMap((section) => section.fields.map((field) => field.id)));
+    const answers: Record<string, string | boolean | string[]> = { recordStatus: "completed", signatureData: "signed", termsAgreement: true };
+    for (const section of item.sections.filter((section) => !isPractitionerConsultationSection(section))) {
+      for (const field of section.fields) {
+        answers[field.id] = field.type === "checkbox" ? true : field.type === "multi-checkbox" ? [field.options?.[0]?.value || "Example"] : field.type === "yes-no" ? "No" : field.options?.[0]?.value || "Example";
+      }
+    }
+    const errors = validateConsultationAnswers(item, answers);
+    expect(errors).toEqual([]);
+    for (const field of item.sections.filter(isPractitionerConsultationSection).flatMap((section) => section.fields)) {
+      expect(field.required || field.completionRequired, field.id).toBe(false);
+    }
+    // Conditional rules must not turn optional practitioner answers into requirements.
+    for (const rule of item.conditionalRequirements || []) {
+      if (!practitionerIds.has(rule.requiredField)) continue;
+      expect(validateConsultationAnswers(item, { ...answers, [rule.whenField]: rule.values[0] })).not.toContain(rule.message);
+    }
+  });
+});

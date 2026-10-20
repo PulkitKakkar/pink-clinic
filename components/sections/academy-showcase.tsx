@@ -18,10 +18,8 @@ export function AcademyShowcase({ courses }: { courses: CombinedCatalogItem[] })
     ...courses.filter((course) => !featuredHandles.includes(course.handle)),
   ].slice(0, 4);
 
-  if (!displayCourses.length) return null;
-
   return (
-    <section className="relative overflow-hidden border-t-4 border-pink bg-[#31001c] py-12 text-white sm:py-20 lg:py-24">
+    <section id="academy" aria-labelledby="academy-heading" className="relative overflow-hidden border-t-4 border-pink bg-[#31001c] py-12 text-white sm:py-20 lg:py-24">
       <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-pink/25 blur-3xl" aria-hidden="true" />
       <div className="container-site relative">
         <div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-16">
@@ -40,13 +38,23 @@ export function AcademyShowcase({ courses }: { courses: CombinedCatalogItem[] })
             </div>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[.3em] text-pink-light">Training for your next chapter</p>
-            <h2 className="mt-4 max-w-2xl font-display text-5xl leading-[.95] tracking-[-.045em] sm:text-7xl">
-              Learn the craft. <em className="font-normal text-pink">Build your future.</em>
+            <p className="text-[10px] font-bold uppercase tracking-[.3em] text-pink-light">Beauty training in Reading</p>
+            <h2 id="academy-heading" className="mt-4 max-w-2xl font-display text-5xl leading-[.95] tracking-[-.045em] sm:text-7xl">
+              Pink Beauty <em className="font-normal text-pink">Academy.</em>
             </h2>
             <p className="mt-6 max-w-xl text-sm leading-7 text-white/70 sm:text-base sm:leading-8">
               Practical beauty training for new and experienced professionals, taught by educators who understand the treatment room as well as the classroom.
             </p>
+            <div className="mt-7 flex flex-wrap gap-4" aria-label="Academy qualifications and accreditation">
+              <div className="flex min-h-28 w-56 flex-col justify-center gap-3 rounded-2xl bg-white p-5">
+                <Image src="/images/accreditation/vtct-skills.svg" alt="VTCT Skills" width={184} height={45} className="h-12 w-full object-contain" />
+                <p className="text-center text-[10px] font-bold text-ink">VTCT qualifications</p>
+              </div>
+              <div className="flex min-h-28 w-56 flex-col justify-center gap-3 rounded-2xl border border-white/20 bg-[#131e29] p-5">
+                <Image src="/images/accreditation/abt.png" alt="ABT" width={184} height={54} className="h-12 w-full object-contain" />
+                <p className="text-center text-[10px] font-bold text-white">ABT-accredited training</p>
+              </div>
+            </div>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-xs font-bold text-white/80">
               <span className="flex items-center gap-2"><Award size={16} className="text-pink-light" /> VTCT qualifications</span>
               <span className="flex items-center gap-2"><Award size={16} className="text-pink-light" /> ABT-accredited training</span>

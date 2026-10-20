@@ -142,13 +142,13 @@ describe("consultation templates", () => {
     }
   });
 
-  it("versions every consent template and supports completed-treatment sign-off", () => {
+  it("versions every consent template and keeps practitioner sign-off optional", () => {
     for (const template of consultationTemplates) {
       const fields = template.sections.flatMap((section) => section.fields);
       expect(template.version, template.slug).toMatch(/^\d{4}-\d{2}-\d{2}/);
-      expect(fields.some((field) => field.completionRequired), template.slug).toBe(true);
-      expect(fields.some((field) => field.id === "practitionerDeclaration" && field.completionRequired), template.slug).toBe(true);
-      expect(fields.some((field) => field.id === "practitionerSignatureName" && field.completionRequired), template.slug).toBe(true);
+      expect(fields.some((field) => field.completionRequired), template.slug).toBe(false);
+      expect(fields.some((field) => field.id === "practitionerDeclaration" && !field.required && !field.completionRequired), template.slug).toBe(true);
+      expect(fields.some((field) => field.id === "practitionerSignatureName" && !field.required && !field.completionRequired), template.slug).toBe(true);
     }
   });
 
