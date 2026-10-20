@@ -72,6 +72,14 @@ serves Shopify, so preserve its DNS records for rollback before replacing them.
 
 ## Runtime configuration and account cutover
 
+Source retirement was authorized on 17 October 2026 after data and file verification.
+Pink account `417731044164` is the active deployment. See
+`AWS_SOURCE_RETIREMENT_2026-10-17.md` for resource status and retained recovery
+data in Pink's account. Source Amplify remains only as a static hosting-level
+wildcard redirect, with no runtime role or nonempty environment settings. The
+source-to-target sync and application redirect setup below document the earlier
+cutover; do not rerun the source-authoritative sync over Pink's newer records.
+
 Keep public configuration in Amplify. Store database credentials, staff passwords,
 session tokens and provider API keys in each account's own Secrets Manager secret:
 `pink-clinic/{appId}/main/runtime`. The branch receives only `RUNTIME_SECRET_ARN`
