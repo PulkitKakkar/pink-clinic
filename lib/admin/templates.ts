@@ -6,6 +6,7 @@ export type ConsultationField = {
   type: "text" | "email" | "tel" | "date" | "number" | "textarea" | "yes-no" | "checkbox" | "select" | "multi-checkbox";
   required?: boolean;
   completionRequired?: boolean;
+  step?: number | "any";
   min?: number;
   max?: number;
   options?: ConsultationOption[];
@@ -288,7 +289,13 @@ const skinPeelMicroneedling: ConsultationTemplate = {
       f("cleanserUsed", "Cleanser used"), f("treatmentProductTraceability", "Peel/microneedling products, batch/lot and expiry", "textarea"),
       { ...f("peelProduct", "Peel product, type and strength", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("peelApplication", "Application method, layers, end point and treatment area", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
       { ...f("peelTiming", "Peel duration and total treatment time", "text"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } }, { ...f("neutraliser", "Neutralising product, method and time", "textarea"), hideWhen: { field: "procedureType", values: ["", "Microneedling"] } },
-      { ...f("needleDevice", "Microneedling device, sterile cartridge lot, needle depth by zone and passes", "textarea"), hideWhen: { field: "procedureType", values: ["", "Medium-depth skin peel"] } }, f("anaestheticDetails", "Anaesthetic details, where used", "textarea"),
+      { ...f("needleDevice", "Microneedling device, sterile cartridge lot, needle depth by zone and passes", "textarea"), hideWhen: { field: "procedureType", values: ["", "Medium-depth skin peel"] } }, ...['Forehead', 'Left cheek', 'Right cheek', 'Nose', 'Chin', 'Neck', 'Other area'].map((zone): ConsultationField => ({
+        id: `needleDepth${zone.replaceAll(" ", "")}`,
+        label: `Needle depth — ${zone.toLowerCase()} (mm)`,
+        type: "number", min: 0, step: "any",
+        hideWhen: { field: "procedureType", values: ["", "Medium-depth skin peel"] },
+      })),
+      f("anaestheticDetails", "Anaesthetic details, where used", "textarea"),
       completion("infectionControlCheck", "Skin preparation and infection-control checks completed", "checkbox"), completion("productsUsed", "Post-procedure products used and areas applied", "textarea"),
       completion("skinReaction", "Skin reaction, observations, complications and actions", "textarea"), { ...yesNo("postProcedurePhoto", "Post-procedure photograph taken and uploaded?"), completionRequired: true },
       { ...yesNo("aftercareGiven", "Aftercare/home-care programme and products supplied?"), completionRequired: true }, completion("followUpDate", "Follow-up / review date", "date"),
@@ -835,7 +842,13 @@ const requestedTreatmentConsultations: ConsultationTemplate[] = [
 ];
 
 export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice, ...requestedTreatmentConsultations]
-  .map((template) => ({ ...template, version: template.version || "2026-08-02.1" }))
+  .map((template) => ({
+    ...template,
+    version: "2026-10-20.1",
+    sections: template.sections.map((section) => isPractitionerConsultationSection(section)
+      ? { ...section, fields: section.fields.map((field) => ({ ...field, required: false, completionRequired: false })) }
+      : section),
+  }))
   .sort((a, b) => a.title.localeCompare(b.title));
 export function getConsultationTemplate(slug: string) { return consultationTemplates.find((item) => item.slug === slug); }
 
@@ -879,12 +892,8 @@ export function validateConsultationAnswers(
   const clientSectionComplete = Boolean(answers.clientSectionCompletedAt);
   if (status === "draft" && !clientSectionComplete) return [];
   const complete = status === "completed";
-  const validatingClientSection = status === "draft" && clientSectionComplete;
   const fields = template.sections
-    .filter(
-      (section) =>
-        !validatingClientSection || !isPractitionerConsultationSection(section),
-    )
+    .filter((section) => !isPractitionerConsultationSection(section))
     .flatMap((section) => section.fields);
   const fieldIds = new Set(fields.map((field) => field.id));
   const hasValue = (id: string) => {

@@ -94,8 +94,7 @@ export function ConsultationForm({
     const clientFields = template.sections
       .filter((section) => !isPractitionerSection(section))
       .flatMap((section) => section.fields);
-    const validatingClientSection = intent === "client-save";
-    const validatedFields = validatingClientSection ? clientFields : fields;
+    const validatedFields = clientFields;
     const validatedFieldIds = new Set(validatedFields.map((field) => field.id));
     const visibleFields = validatedFields.filter((field) => !field.hideWhen?.values.includes(String(form.get(field.hideWhen.field) || "")));
     const requiredFields = visibleFields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
@@ -358,7 +357,7 @@ export function ConsultationForm({
                 {field.type !== "checkbox" && (
                   <FieldHeading>
                     {field.label}
-                    {field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 inline-block align-middle text-pink" aria-hidden="true">*</span>}
+                    {!isPractitionerSection(section) && field.showRequiredMarker !== false && (field.required || field.completionRequired) && <span className="ml-1 inline-block align-middle text-pink" aria-hidden="true">*</span>}
                   </FieldHeading>
                 )}
                 {field.id === "address" ? (
@@ -367,7 +366,7 @@ export function ConsultationForm({
                   <SearchableOptionInput
                     name={field.id}
                     options={practitionerNames}
-                    required={field.required}
+                    required={!isPractitionerSection(section) && field.required}
                     defaultValue={String(initialValue(field.id) || "")}
                     placeholder="Search practitioners or enter another name"
                     className={inputClass}
@@ -385,7 +384,7 @@ export function ConsultationForm({
                     name={field.id}
                     defaultValue={String(initialValue(field.id) || "")}
                     rows={3}
-                    required={field.required}
+                    required={!isPractitionerSection(section) && field.required}
                     className={inputClass}
                   />
                 ) : calculatedFields.has(field.id) ? (
@@ -398,13 +397,13 @@ export function ConsultationForm({
                   />
                 ) : field.type === "yes-no" ? (
                   <span className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={field.label}>
-                    {["No", "Yes"].map((value) => <label key={value} className="flex cursor-pointer items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-medium"><input name={field.id} value={value} type="radio" required={field.required} defaultChecked={initialValue(field.id) === value} className="accent-pink" />{value}</label>)}
+                    {["No", "Yes"].map((value) => <label key={value} className="flex cursor-pointer items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-medium"><input name={field.id} value={value} type="radio" required={!isPractitionerSection(section) && field.required} defaultChecked={initialValue(field.id) === value} className="accent-pink" />{value}</label>)}
                   </span>
                 ) : field.type === "select" ? (
                   <select
                     name={field.id}
                     defaultValue={String(initialValue(field.id) || "")}
-                    required={field.required}
+                    required={!isPractitionerSection(section) && field.required}
                     className={inputClass}
                   >
                     <option value="">Select</option>
@@ -437,13 +436,13 @@ export function ConsultationForm({
                     <input
                       name={field.id}
                       type="checkbox"
-                      required={field.required}
+                      required={!isPractitionerSection(section) && field.required}
                       defaultChecked={initialValue(field.id) === true}
                       className="mt-1 accent-pink"
                     />
                     <span>
                       {field.label}
-                      {field.showRequiredMarker !== false &&
+                      {!isPractitionerSection(section) && field.showRequiredMarker !== false &&
                         (field.required || field.completionRequired) && (
                           <span className="ml-1 text-pink" aria-hidden="true">
                             *
@@ -455,7 +454,8 @@ export function ConsultationForm({
                   <input
                     name={field.id}
                     type={field.type}
-                    required={field.required}
+                    required={!isPractitionerSection(section) && field.required}
+                    step={field.step}
                     min={field.min}
                     max={field.max}
                     defaultValue={
@@ -500,7 +500,7 @@ export function ConsultationForm({
             </span>
           ) : status === "invalid" ? (
             <span className="font-bold text-red-700">
-              {validationError || "Complete all required fields marked with an asterisk."}
+              {validationError || "Complete all required client answers marked with an asterisk. Practitioner fields are optional."}
             </span>
           ) : status === "error" ? (
             <span className="font-bold text-red-700">

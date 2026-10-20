@@ -3,6 +3,7 @@ import { AppointmentCta } from "@/components/sections/cta";
 import { AcademyShowcase } from "@/components/sections/academy-showcase";
 import { Hero } from "@/components/sections/hero";
 import { LocationComparison } from "@/components/sections/location-comparison";
+import { MeetTheTeam } from "@/components/sections/meet-the-team";
 import { Reviews } from "@/components/sections/reviews";
 import { TreatmentConcerns } from "@/components/sections/treatment-concerns";
 import { TreatmentFinderPrompt } from "@/components/sections/treatment-finder-prompt";
@@ -72,6 +73,7 @@ export default async function Home() {
       <TreatmentConcerns concerns={concerns} popularTreatments={popularTreatments} catalog={fullCatalog} />
       <TreatmentFinderPrompt />
       <AcademyShowcase courses={courses} />
+      <MeetTheTeam />
       <Reviews />
       <LocationComparison />
       <AppointmentCta />
