@@ -66,6 +66,8 @@ export function ConsultationForm({
     "idle",
   );
   const [validationError, setValidationError] = useState("");
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
   const [activeRecordId, setActiveRecordId] = useState(recordId);
   const [selectedGender, setSelectedGender] = useState(String(initialAnswers.gender || ""));
@@ -143,6 +145,8 @@ export function ConsultationForm({
       return;
     }
     setValidationError("");
+    setSessionExpired(false);
+    setSaveError("");
     setStatus("saving");
     const answers: Record<string, string | boolean | string[]> = {};
     template.sections
@@ -173,20 +177,40 @@ export function ConsultationForm({
       answers.consultationFinalizedAt = String(initialValue("consultationFinalizedAt"));
     if (intent === "complete") answers.treatmentCompletedAt = new Date().toISOString();
     else if (initialValue("treatmentCompletedAt")) answers.treatmentCompletedAt = String(initialValue("treatmentCompletedAt"));
-    const response = await fetch("/api/admin/consultations", {
-      method: activeRecordId ? "PATCH" : "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(
-        activeRecordId
-          ? { id: activeRecordId, answers, images }
-          : { templateSlug: template.slug, answers, images },
-      ),
-    });
-    const result = response.ok ? await response.json() : undefined;
-    setStatus(response.ok ? "saved" : "error");
-    if (response.ok) setRecordStatus(String(answers.recordStatus));
-    if (response.ok && intent === "client-save") setClientSectionLocked(true);
-    if (response.ok && !activeRecordId && result?.record?.id) setActiveRecordId(result.record.id);
+    try {
+      const response = await fetch("/api/admin/consultations", {
+        method: activeRecordId ? "PATCH" : "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(
+          activeRecordId
+            ? { id: activeRecordId, answers, images }
+            : { templateSlug: template.slug, answers, images },
+        ),
+      });
+      if (response.status === 401) {
+        setSessionExpired(true);
+        setStatus("error");
+        return;
+      }
+      const result = await response.json().catch(() => undefined);
+      if (!response.ok) {
+        if (response.status === 400 && Array.isArray(result?.validationErrors)) {
+          setValidationError(result.validationErrors.filter((error: unknown) => typeof error === "string").join(" "));
+          setStatus("invalid");
+        } else {
+          setSaveError("Could not save the consultation. Keep this form open and try saving again.");
+          setStatus("error");
+        }
+        return;
+      }
+      setStatus("saved");
+      setRecordStatus(String(answers.recordStatus));
+      if (intent === "client-save") setClientSectionLocked(true);
+      if (!activeRecordId && result?.record?.id) setActiveRecordId(result.record.id);
+    } catch {
+      setSaveError("The connection was interrupted. Keep this form open, check your connection and try saving again.");
+      setStatus("error");
+    }
   }
 
   function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
@@ -503,8 +527,16 @@ export function ConsultationForm({
               {validationError || "Complete all required client answers marked with an asterisk. Practitioner fields are optional."}
             </span>
           ) : status === "error" ? (
-            <span className="font-bold text-red-700">
-              Could not save the consultation. Please try again.
+            <span role="alert" className="font-bold text-red-700">
+              {sessionExpired ? (
+                <>
+                  Your staff sign-in has expired. Keep this form open—your answers and signature are still here.{' '}
+                  <a href="/admin/login?next=%2Fadmin" target="_blank" rel="noopener noreferrer" className="underline">
+                    Sign in in a new tab
+                  </a>
+                  , then return here and save again.
+                </>
+              ) : saveError}
             </span>
           ) : status === "saving" ? (
             <span className="flex items-center gap-2 font-bold text-pink">
