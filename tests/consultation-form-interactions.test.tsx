@@ -316,3 +316,105 @@ describe("optional practitioner validation", () => {
     }
   });
 });
+
+
+describe("consultation save recovery", () => {
+  const answers = {
+    medicalQuestion: "No",
+    treatmentAreas: ["Face"],
+    signatureData: "data:image/png;base64,existing-customer-signature",
+    termsAgreement: true,
+    marketingConsent: false,
+  };
+
+  it.each([undefined, "existing-record"])("retains a long-open form after an expired session and retries safely (%s)", async (id) => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 401, json: async () => ({ error: "Unauthorised" }) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ record: { id: id || "new-record" } }) });
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    render(<ConsultationForm template={template} practitionerNames={[]} treatmentNames={[]} recordId={id} initialAnswers={answers} />);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect((await screen.findByRole("alert")).textContent).toContain("Your staff sign-in has expired");
+    const signIn = screen.getByRole<HTMLAnchorElement>("link", { name: "Sign in in a new tab" });
+    expect(signIn.getAttribute("href")).toBe("/admin/login?next=%2Fadmin");
+    expect(signIn.target).toBe("_blank");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.getByLabelText<HTMLInputElement>("Customer signature data").value).toBe(answers.signatureData);
+    expect(screen.getByRole<HTMLInputElement>("radio", { name: "No" }).checked).toBe(true);
+    // Signing in in the other tab refreshes the cookie; the original form remains mounted.
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    for (const [, request] of fetchMock.mock.calls) {
+      const payload = JSON.parse(request.body);
+      expect(request.method).toBe(id ? "PATCH" : "POST");
+      expect(payload.id).toBe(id);
+      expect(payload.answers).toMatchObject({ ...answers, recordStatus: "ready-for-treatment" });
+    }
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("finalises a filled microneedling form after reauthentication with its signature, decimal depths and optional practitioner fields intact", async () => {
+    const item = getConsultationTemplate("skin-peel-microneedling")!;
+    const initial: Record<string, string | boolean | string[]> = {};
+    for (const section of item.sections.filter((section) => !isPractitionerConsultationSection(section))) {
+      for (const field of section.fields) {
+        initial[field.id] = field.type === "checkbox" ? true
+          : field.type === "yes-no" ? "No"
+          : field.type === "multi-checkbox" ? [field.options!.find((option) => option.value === "None known")?.value || field.options![0].value]
+          : field.type === "select" ? field.options![0].value
+          : field.type === "date" ? "2000-01-01" : "Synthetic test";
+      }
+    }
+    Object.assign(initial, {
+      ...answers, email: "test@example.invalid", contactNumber: "07700900000",
+      procedureType: "Microneedling", needleDepthForehead: "0.25", needleDepthLeftcheek: "0.5",
+      practitionerName: "", marketingPhotographyConsent: "",
+    });
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 401 })
+      .mockImplementationOnce(async (_url, request) => {
+        const payload = JSON.parse(request.body);
+        expect(validateConsultationAnswers(item, payload.answers)).toEqual([]);
+        return { ok: true, status: 200, json: async () => ({ record: { id: "microneedling-record" } }) };
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    render(<ConsultationForm template={item} practitionerNames={[]} treatmentNames={[]} initialAnswers={initial} />);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(await screen.findByRole("alert")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    const retried = JSON.parse(fetchMock.mock.calls[1][1].body).answers;
+    expect(retried).toMatchObject({ signatureData: answers.signatureData, needleDepthForehead: "0.25", needleDepthLeftcheek: "0.5", practitionerName: "", marketingPhotographyConsent: "", recordStatus: "ready-for-treatment" });
+  });
+
+  it("recovers from a network failure without leaving save disabled", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
+    const user = userEvent.setup();
+    renderForm(answers);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect((await screen.findByRole("alert")).textContent).toContain("connection was interrupted");
+    expect(screen.getByRole<HTMLButtonElement>("button", { name: "Finalize consultation" }).disabled).toBe(false);
+    expect(screen.getByLabelText<HTMLInputElement>("Customer signature data").value).toBe(answers.signatureData);
+  });
+
+  it("shows server validation details instead of hiding them behind a generic save error", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 400, json: async () => ({ validationErrors: ["Email address is required."] }) }));
+    const user = userEvent.setup();
+    renderForm(answers);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(await screen.findByText("Email address is required.")).toBeTruthy();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("handles non-JSON server failures and allows retry", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 502, json: async () => { throw new SyntaxError("HTML response"); } }));
+    const user = userEvent.setup();
+    renderForm(answers);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect((await screen.findByRole("alert")).textContent).toContain("Keep this form open");
+    expect(screen.getByRole<HTMLButtonElement>("button", { name: "Finalize consultation" }).disabled).toBe(false);
+  });
+});
