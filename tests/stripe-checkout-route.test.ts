@@ -18,8 +18,19 @@ describe("Stripe Checkout API", () => {
   it.each(["reading-west-st", "reading-watlington-st"])("creates a real Stripe session for %s using server prices and UK delivery", async (branchSlug) => {
     const response = await POST(request({ ...payload, branchSlug, unitPrice: 0.01 }));
     expect(response.status).toBe(200);
-    expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ mode: "payment", payment_method_types: ["card"], shipping_address_collection: { allowed_countries: ["GB"] }, line_items: [expect.objectContaining({ quantity: 1, price_data: expect.objectContaining({ unit_amount: 2500, currency: "gbp" }) })], shipping_options: [expect.objectContaining({ shipping_rate_data: expect.objectContaining({ fixed_amount: { amount: 499, currency: "gbp" } }) })] }));
+    expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ mode: "payment", payment_method_types: ["card", "klarna", "afterpay_clearpay"], shipping_address_collection: { allowed_countries: ["GB"] }, line_items: [expect.objectContaining({ quantity: 1, price_data: expect.objectContaining({ unit_amount: 2500, currency: "gbp" }) })], shipping_options: [expect.objectContaining({ shipping_rate_data: expect.objectContaining({ fixed_amount: { amount: 499, currency: "gbp" } }) })] }));
     expect(mocks.save).toHaveBeenCalledWith(expect.objectContaining({ amountTotal: 2999, shippingAmount: 499, status: "pending", source: "basket" }));
+  });
+  it.each(["service", "course"] as const)("offers Klarna and Clearpay for %s purchases", async (kind) => {
+    mocks.catalog.mockResolvedValue([{ ...product, kind }]);
+    await POST(request(payload));
+    expect(mocks.create.mock.calls[0][0].payment_method_types).toEqual(["card", "klarna", "afterpay_clearpay"]);
+  });
+  it.each(["gift-card", "gift-voucher"])("keeps a mixed basket containing a %s card-only", async (suffix) => {
+    const gift = { ...product, handle: `pink-${suffix}`, title: "Gift credit" };
+    mocks.catalog.mockResolvedValue([product, gift]);
+    await POST(request({ ...payload, items: [...payload.items, { handle: gift.handle, variantName: "Standard", quantity: 1 }] }));
+    expect(mocks.create.mock.calls[0][0].payment_method_types).toEqual(["card"]);
   });
   it("rejects unaccepted terms and unknown branches before creating a session", async () => {
     expect((await POST(request({ ...payload, acceptTerms: false }))).status).toBe(400);
