@@ -131,3 +131,12 @@ does not stop RDS, storage, backups or secret charges. After Pink is accepted,
 inventory and retire source resources with the owner's approval; retain the old
 Amplify hostname only as a lightweight redirect if required. Resource deletion,
 custom-domain cutover and Stripe live activation are separate approved steps.
+
+### BNPL and seller coverage
+
+Before opening public checkout, complete the seller/account review and payment
+checks in `BNPL_LAUNCH_REVIEW_2026-10-21.md`. Klarna and Clearpay remain excluded by
+the checkout code until provider coverage is recorded for every item and branch.
+Keep prohibited gift-card baskets excluded. Do not start a service/course within
+its statutory cancellation period without separately recorded express request
+and acknowledgement; general checkout terms acceptance is insufficient.
