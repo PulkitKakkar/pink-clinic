@@ -1,3 +1,4 @@
+import { checkoutPaymentMethods } from "@/lib/payments/payment-methods";
 import { NextResponse } from "next/server";
 import { getBranchBySlug } from "@/lib/branches";
 import { services } from "@/lib/content";
@@ -45,12 +46,7 @@ export async function POST(request: Request) {
     const hasProducts = items.some((item) => item.requiresShipping);
     const session = await getStripe().checkout.sessions.create({
       mode: "payment",
-      // On hosted Checkout, card also supports enabled Apple Pay and Google Pay wallets.
-      // Gift cards (including mixed baskets containing one) cannot use BNPL.
-      // Stripe filters the remaining methods for customer/currency/amount eligibility.
-      payment_method_types: items.some((item) => /gift-(card|voucher)/i.test(item.handle))
-        ? ["card"]
-        : ["card", "klarna", "afterpay_clearpay"],
+      payment_method_types: checkoutPaymentMethods(branch.id, items),
       success_url: `${getSiteUrl()}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${getSiteUrl()}${cancelPath}`,
       customer_creation: "always",
