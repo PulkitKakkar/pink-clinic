@@ -90,3 +90,16 @@ restricted key and the proposed request parameters:
 Code and deployment status: pending PR review and merge. These live API checks
 validate the proposed parameters, not the currently deployed app route or a
 completed BNPL authorisation.
+
+## Apple Pay and Google Pay — 21 October 2026
+
+Both wallets were verified as Enabled in Pink's live Stripe payment-method
+configuration. Stripe-hosted Checkout offers them through the existing `card`
+method, including on gift-card baskets; no separate wallet method types are needed.
+They appear only when Stripe's device, browser and wallet eligibility checks pass.
+Hosted Checkout does not require Pink to register its domain for Apple Pay.
+
+Source: https://stripe.com/payments/checkout
+
+No account settings were changed. Wallet rendering on a configured customer
+device and a completed wallet payment have not been verified.

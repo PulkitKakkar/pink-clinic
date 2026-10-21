@@ -45,6 +45,7 @@ export async function POST(request: Request) {
     const hasProducts = items.some((item) => item.requiresShipping);
     const session = await getStripe().checkout.sessions.create({
       mode: "payment",
+      // On hosted Checkout, card also supports enabled Apple Pay and Google Pay wallets.
       // Gift cards (including mixed baskets containing one) cannot use BNPL.
       // Stripe filters the remaining methods for customer/currency/amount eligibility.
       payment_method_types: items.some((item) => /gift-(card|voucher)/i.test(item.handle))
