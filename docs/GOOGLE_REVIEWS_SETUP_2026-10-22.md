@@ -111,3 +111,25 @@ The request is submitted, not approved. Await Google's response to
 khushbooc1995@gmail.com before enabling the Business Profile API/OAuth and
 implementing the adapter. No website deployment or AWS change was made during
 this application step. Existing Places-only PR #104 remains open, CI passed.
+
+## Interim manual selection authorised and prepared
+
+After submitting the automatic API request, the owner requested a manual
+selection now, limited to ratings of four stars and above. Six reviews were
+checked in the rendered Business Profile review panels on 22 October 2026:
+three from West Street (Bhoomija Singh, Eisha Dougall, SHALINI SUDHA SAHOO) and
+three from Watlington (Suchitra, Alexandra Nicholls, Isabelle Pichard). All six
+have a displayed rating of five out of five. Original wording is preserved;
+owner replies, pricing metadata and relative publication ages are not copied.
+
+The homepage now reads only lib/selected-google-reviews.ts. No Google API or
+browser login is required by visitors. The existing Places implementation is
+retained for possible future use, but is not called by the reviews section.
+There is no automatic switch when the API request is approved.
+
+The selection is labelled as manually selected, four stars and above, not the
+complete review history, collected 22 October 2026. Reviewer names link to the
+public Google reviewer profiles; branch links provide access to the full Google
+listings. No selected-review average, total count or live-update claim is shown.
+No ratings/replies were modified in Google and no unrelated-business reviews
+were copied. Update or remove entries if their sources change or are removed.
