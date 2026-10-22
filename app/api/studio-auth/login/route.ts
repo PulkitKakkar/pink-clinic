@@ -1,8 +1,9 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { STUDIO_ADMIN_COOKIE, studioAdmin } from "@/lib/studio/auth";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const form = await request.formData();
   const email = String(form.get("email") || "");
   const password = String(form.get("password") || "");
@@ -19,3 +20,5 @@ export async function POST(request: Request) {
   response.cookies.set(STUDIO_ADMIN_COOKIE, studioAdmin.sessionToken, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 4 });
   return response;
 }
+
+export const POST = observeApi("/api/studio-auth/login", handlePOST);

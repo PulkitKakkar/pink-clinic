@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { reportClientError } from "@/lib/admin/client-errors";
 import { useState } from "react";
 import { Camera, ImagePlus, LoaderCircle, X } from "lucide-react";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
@@ -40,6 +41,7 @@ export function TreatmentImages({ images, onChange }: { images: TreatmentImage[]
       }));
       onChange([...images, ...additions]);
     } catch (uploadError) {
+      reportClientError("image_upload");
       setError(uploadError instanceof Error ? uploadError.message : "Could not upload image.");
     } finally {
       setUploading(false);

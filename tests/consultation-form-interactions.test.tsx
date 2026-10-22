@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ConsultationForm } from "@/components/admin/consultation-form";
 import { consultationTemplates, getConsultationTemplate, isPractitionerConsultationSection, validateConsultationAnswers, type ConsultationTemplate } from "@/lib/admin/templates";
@@ -416,5 +416,64 @@ describe("consultation save recovery", () => {
     await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
     expect((await screen.findByRole("alert")).textContent).toContain("Keep this form open");
     expect(screen.getByRole<HTMLButtonElement>("button", { name: "Finalize consultation" }).disabled).toBe(false);
+  });
+});
+
+
+describe("quiet consultation autosave", () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { cleanup(); vi.useRealTimers(); });
+  const draftId = "12345678-1234-1234-1234-123456789abc";
+  const autoTemplate: ConsultationTemplate = {
+    ...template,
+    sections: [{ ...template.sections[0], fields: [...template.sections[0].fields, { id: "firstName", label: "First name", type: "text", required: true }] }],
+  };
+  it("autosaves incomplete answers without validation, focus loss, a popup or disabled save controls", async () => {
+    const fetchMock = vi.fn().mockImplementation(async (_url, request) => ({ ok: true, status: 200, json: async () => ({ record: { id: draftId, answers: JSON.parse(request.body).answers } }) }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ConsultationForm template={autoTemplate} practitionerNames={[]} treatmentNames={[]} />);
+    const input = screen.getByRole<HTMLInputElement>("textbox", { name: /First name/ }); input.focus();
+    fireEvent.change(input, { target: { value: "Synthetic" } });
+    await act(() => vi.advanceTimersByTimeAsync(2000));
+    expect(fetchMock).toHaveBeenCalledOnce();
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(payload).toMatchObject({ autosave: true, answers: { firstName: "Synthetic", recordStatus: "draft", signatureData: "", termsAgreement: false } });
+    expect(document.activeElement).toBe(input); expect(input.value).toBe("Synthetic");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.getByRole<HTMLButtonElement>("button", { name: "Save draft" }).disabled).toBe(false);
+    expect(screen.getByText(/Draft autosaved/)).toBeTruthy();
+    expect(window.location.pathname).toBe(`/admin/consultation-records/${draftId}`);
+  });
+  it("waits for a slow autosave before finalising the same record", async () => {
+    let resolve!: (value: unknown) => void;
+    const fetchMock = vi.fn().mockImplementationOnce(() => new Promise((done) => { resolve = done; }))
+      .mockResolvedValue({ ok: true, status: 200, json: async () => ({ record: { id: draftId } }) });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ConsultationForm template={autoTemplate} practitionerNames={[]} treatmentNames={[]} initialAnswers={{ medicalQuestion: "No", termsAgreement: true, signatureData: "saved-signature" }} />);
+    fireEvent.change(screen.getByRole("textbox", { name: /First name/ }), { target: { value: "Synthetic" } });
+    await act(() => vi.advanceTimersByTimeAsync(2000));
+    fireEvent.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(fetchMock).toHaveBeenCalledOnce();
+    await act(async () => { resolve({ ok: true, status: 200, json: async () => ({ record: { id: draftId } }) }); });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[1][1].method).toBe("PATCH");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toMatchObject({ id: draftId, answers: { recordStatus: "ready-for-treatment", signatureData: "saved-signature" } });
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    await act(() => vi.advanceTimersByTimeAsync(20000)); expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+  it("retains incomplete answers through expired-session autosave and retries with the same creation ID", async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({ ok: false, status: 401 })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ record: { id: draftId } }) });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ConsultationForm template={autoTemplate} practitionerNames={[]} treatmentNames={[]} />);
+    const input = screen.getByRole<HTMLInputElement>("textbox", { name: /First name/ });
+    fireEvent.change(input, { target: { value: "Synthetic" } });
+    await act(() => vi.advanceTimersByTimeAsync(2000));
+    expect(screen.getByText(/Autosave paused: your staff sign-in has expired/)).toBeTruthy(); expect(input.value).toBe("Synthetic");
+    fireEvent(window, new Event("focus")); await act(() => vi.advanceTimersByTimeAsync(2000));
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const first = JSON.parse(fetchMock.mock.calls[0][1].body), retry = JSON.parse(fetchMock.mock.calls[1][1].body);
+    expect(first.creationId).toBe(retry.creationId); expect(retry.answers.firstName).toBe("Synthetic");
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 });

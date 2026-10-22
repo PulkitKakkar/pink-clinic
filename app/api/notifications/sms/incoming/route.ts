@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import {
   isStopMessage,
@@ -11,7 +12,7 @@ import {
 
 const EMPTY_TWIML = '<?xml version="1.0" encoding="UTF-8"?><Response></Response>';
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const form = await request.formData();
   const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
   if (!authToken)
@@ -42,3 +43,5 @@ export async function POST(request: Request) {
     headers: { "content-type": "text/xml; charset=utf-8" },
   });
 }
+
+export const POST = observeApi("/api/notifications/sms/incoming", handlePOST);

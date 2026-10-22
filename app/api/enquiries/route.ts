@@ -1,3 +1,5 @@
+import { logApplicationEvent } from "@/lib/observability";
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { locations } from "@/lib/content";
 import { consumeRateLimit, requestIdentifier } from "@/lib/security/rate-limit";
@@ -80,7 +82,7 @@ async function deliverEnquiry(
   if (!response.ok) throw new Error(`Enquiry webhook returned ${response.status}.`);
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const data = Object.fromEntries((await request.formData()).entries());
   const returnUrl = new URL("/contact", request.url);
   const allowed = await consumeRateLimit({
@@ -127,8 +129,10 @@ export async function POST(request: Request) {
     await deliverEnquiry(enquiry, branch.email);
     returnUrl.searchParams.set("status", "success");
   } catch (error) {
-    console.error("Could not deliver website enquiry.", error);
+    logApplicationEvent("server_error", "ERROR", { operation: "request", route: "/api/enquiries", error });
     returnUrl.searchParams.set("status", "error");
   }
   return NextResponse.redirect(returnUrl, 303);
 }
+
+export const POST = observeApi("/api/enquiries", handlePOST);

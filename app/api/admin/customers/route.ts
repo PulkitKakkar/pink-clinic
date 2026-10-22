@@ -1,10 +1,11 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getBookings, updateBooking } from "@/lib/admin/booking-storage";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
 import { changedFields, logAdminActivity } from "@/lib/admin/activity-log";
 import { formatLaserSettings, isValidLaserSettings, type LaserAreaSetting } from "@/lib/admin/laser-settings";
 
-export async function PATCH(request: Request) {
+async function handlePATCH(request: Request) {
   try {
     const body = (await request.json()) as {
       action?: "treatment";
@@ -120,3 +121,5 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+export const PATCH = observeApi("/api/admin/customers", handlePATCH);

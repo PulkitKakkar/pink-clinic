@@ -4,6 +4,7 @@ import { ADMIN_COOKIE } from "@/lib/admin/auth";
 import { STUDIO_ADMIN_COOKIE } from "@/lib/studio/auth";
 import { ACADEMY_ADMIN_COOKIE } from "@/lib/academy/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
+import { logApplicationEvent } from "@/lib/observability";
 import { loadRuntimeSecrets } from "@/lib/runtime-secrets";
 
 export async function proxy(request: NextRequest) {
@@ -58,8 +59,10 @@ export async function proxy(request: NextRequest) {
       : ADMIN_COOKIE;
   const authenticated = Boolean(expected && request.cookies.get(cookieName)?.value === expected);
   if (authenticated) return NextResponse.next();
-  if (isAdminApi || isAcademyApi)
+  if (isAdminApi || isAcademyApi) {
+    if (pathname === "/api/admin/consultations") logApplicationEvent("consultation_session_expired", "WARN", { status: 401 });
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+  }
 
   const loginUrl = new URL(
     isStudioPage

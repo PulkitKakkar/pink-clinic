@@ -1,9 +1,10 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { ACADEMY_ADMIN_COOKIE, academyAdmin } from "@/lib/academy/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { consumeRateLimit, requestIdentifier } from "@/lib/security/rate-limit";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const form = await request.formData();
   const email = String(form.get("email") || "");
   const password = String(form.get("password") || "");
@@ -39,3 +40,5 @@ export async function POST(request: Request) {
   });
   return response;
 }
+
+export const POST = observeApi("/api/academy-admin/login", handlePOST);

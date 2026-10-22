@@ -1,9 +1,10 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { ADMIN_COOKIE, testAdmin } from "@/lib/admin/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { consumeRateLimit, requestIdentifier } from "@/lib/security/rate-limit";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const form = await request.formData();
   const email = String(form.get("email") || "");
   const password = String(form.get("password") || "");
@@ -32,3 +33,5 @@ export async function POST(request: Request) {
   response.cookies.set(ADMIN_COOKIE, testAdmin.sessionToken, { httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 8 });
   return response;
 }
+
+export const POST = observeApi("/api/admin/login", handlePOST);

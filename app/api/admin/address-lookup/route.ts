@@ -1,5 +1,6 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const postcode = new URL(request.url).searchParams.get("postcode")?.trim();
   if (!postcode)
     return NextResponse.json(
@@ -47,3 +48,5 @@ export async function GET(request: Request) {
       : [],
   });
 }
+
+export const GET = observeApi("/api/admin/address-lookup", handleGET);

@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 
 function present(value: string | undefined) {
@@ -39,7 +40,7 @@ async function checkTwilioCredentials(accountSid: string | undefined, authToken:
   }
 }
 
-export async function GET() {
+async function handleGET() {
   return NextResponse.json({
     notificationWebhookUrl: present(process.env.NOTIFICATION_WEBHOOK_URL),
     twilioAccountSid: inspectSecret(process.env.TWILIO_ACCOUNT_SID, { revealPrefix: 2, revealSuffix: 4 }),
@@ -48,3 +49,5 @@ export async function GET() {
     twilioCredentialCheck: await checkTwilioCredentials(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN),
   });
 }
+
+export const GET = observeApi("/api/admin/notification-config", handleGET);

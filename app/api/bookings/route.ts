@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { BookingConfigurationError, BookingConflictError, BookingValidationError, getBookings } from "@/lib/admin/booking-storage";
 import { staffMembers } from "@/lib/admin/booking-config";
@@ -5,7 +6,7 @@ import { getAvailableSlots, londonDateString } from "@/lib/booking-availability"
 import { PaymentVerificationError, confirmPaidAppointment, verifyPaymentOrder } from "@/lib/payments/stripe-orders";
 import { paymentAppointments } from "@/lib/payments/types";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const input = await request.json() as { paymentReference?: string; paymentAppointmentKey?: string; startsAt?: string };
     const startsAt = new Date(input.startsAt || "");
@@ -26,7 +27,8 @@ export async function POST(request: Request) {
     if (error instanceof BookingConflictError) return NextResponse.json({ error: error.message }, { status: 409 });
     if (error instanceof BookingValidationError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });
     if (error instanceof BookingConfigurationError) return NextResponse.json({ error: error.message }, { status: 503 });
-    console.error("Unable to book paid appointment", error);
     return NextResponse.json({ error: "Could not confirm payment or create the appointment. Please try again." }, { status: 503 });
   }
 }
+
+export const POST = observeApi("/api/bookings", handlePOST);

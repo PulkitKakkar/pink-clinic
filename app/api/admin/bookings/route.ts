@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import {
   BookingConfigurationError,
@@ -34,11 +35,11 @@ async function notifySafely(
   }
 }
 
-export async function GET() {
+async function handleGET() {
   return NextResponse.json({ bookings: await getBookings() });
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const input = (await request.json()) as CreateBookingInput & {
       suppressNotification?: boolean;
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+async function handlePATCH(request: Request) {
   try {
     const body = (await request.json()) as UpdateBookingInput;
     const statuses: BookingStatus[] = [
@@ -139,7 +140,7 @@ export async function PATCH(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+async function handleDELETE(request: Request) {
   try {
     const body = (await request.json()) as { id?: string };
     if (!body.id)
@@ -162,3 +163,11 @@ export async function DELETE(request: Request) {
     );
   }
 }
+
+export const GET = observeApi("/api/admin/bookings", handleGET);
+
+export const POST = observeApi("/api/admin/bookings", handlePOST);
+
+export const PATCH = observeApi("/api/admin/bookings", handlePATCH);
+
+export const DELETE = observeApi("/api/admin/bookings", handleDELETE);

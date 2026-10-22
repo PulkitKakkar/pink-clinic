@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
@@ -5,7 +6,7 @@ import { fulfilStripeSession, isPaidCheckoutEvent } from "@/lib/payments/stripe-
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const signature = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!signature || !webhookSecret) return new NextResponse("Webhook configuration error", { status: 400 });
@@ -18,8 +19,9 @@ export async function POST(request: Request) {
       if (session.metadata?.pink_checkout === "v1" && session.payment_status === "paid") await fulfilStripeSession(session.id);
     }
     return NextResponse.json({ received: true });
-  } catch (error) {
-    console.error("Stripe order confirmation failed", error);
+  } catch {
     return new NextResponse("Unable to confirm order", { status: 500 });
   }
 }
+
+export const POST = observeApi("/api/stripe/webhook", handlePOST);

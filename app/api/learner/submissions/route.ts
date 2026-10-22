@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getCurrentLearner } from "@/lib/learner/auth";
 import { getLearnerAssignment } from "@/lib/learner/courses";
@@ -9,7 +10,7 @@ import {
 } from "@/lib/learner/storage";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { verifySubmissionFiles } from "@/lib/learner/file-storage";
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const isInline = request.headers.get("x-requested-with") === "learner-submission-form";
   const learner = await getCurrentLearner();
   if (!learner)
@@ -56,3 +57,5 @@ export async function POST(request: Request) {
     ? NextResponse.json({ redirectTo })
     : NextResponse.redirect(new URL(redirectTo, getPublicOrigin(request)), 303);
 }
+
+export const POST = observeApi("/api/learner/submissions", handlePOST);

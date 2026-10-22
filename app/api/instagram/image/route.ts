@@ -1,8 +1,9 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 
 const allowedHosts = [".cdninstagram.com", ".fbcdn.net"];
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const source = new URL(request.url).searchParams.get("url");
   if (!source) return NextResponse.json({ error: "Missing image URL" }, { status: 400 });
 
@@ -21,3 +22,5 @@ export async function GET(request: Request) {
     },
   });
 }
+
+export const GET = observeApi("/api/instagram/image", handleGET);
