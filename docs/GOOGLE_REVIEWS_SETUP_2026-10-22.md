@@ -79,3 +79,35 @@ Business Profile OAuth or as a working automatic feed.
 - https://developers.google.com/my-business/content/pricing
 - https://developers.google.com/my-business/content/prereqs
 - https://developers.google.com/my-business/content/implement-oauth
+
+## Authorised manager and dedicated project
+
+The owner selected khushbooc1995@gmail.com and authorised submission of Google's
+API access request, confirming that the West Street profile has been verified
+for at least 60 days.
+
+Created Google Cloud project Pink Clinic Reviews under that identity:
+- Project ID: pink-clinic-reviews-20261022
+- Project number: 872208401226
+- Parent: No organisation
+- No billing account was selected/linked during creation.
+
+The Google application uses West Street's verified profile as the qualifying
+business, https://pinkclinic.co.uk as company website, and explicitly describes
+read-only retrieval of reviews/ratings for both Pink branches, reviewer
+attribution/source links, no automated replies or unrelated profile management,
+and asks Google to confirm that public website display is permitted. This
+request does not grant OAuth access or activate reviews on the website.
+
+### Submission confirmed
+
+Google's workflow returned 100% complete and "Opened a support case".
+- Case ID: 3-2226000041363
+- Stated review time: approximately 7–10 business days.
+- Google instructs applicants to submit only one request per project; do not
+  create a duplicate case while this request is pending.
+
+The request is submitted, not approved. Await Google's response to
+khushbooc1995@gmail.com before enabling the Business Profile API/OAuth and
+implementing the adapter. No website deployment or AWS change was made during
+this application step. Existing Places-only PR #104 remains open, CI passed.
