@@ -1,6 +1,8 @@
 import "server-only";
 
+import { connection } from "next/server";
 import { locations } from "@/lib/content";
+import { loadRuntimeSecrets } from "@/lib/runtime-secrets";
 
 export type GoogleReview = {
   id: string;
@@ -11,6 +13,7 @@ export type GoogleReview = {
   text: string;
   published: string;
   branchName: string;
+  reviewUrl?: string;
 };
 
 export type GoogleReviewSource = {
@@ -25,6 +28,7 @@ type PlaceReview = {
   rating: number;
   text?: { text?: string };
   relativePublishTimeDescription?: string;
+  googleMapsUri?: string;
   authorAttribution?: { displayName?: string; uri?: string; photoUri?: string };
 };
 
@@ -35,14 +39,14 @@ type PlaceDetails = {
   reviews?: PlaceReview[];
 };
 
-const branches = [
+const getBranches = () => [
   { location: locations[0], placeId: process.env.GOOGLE_WEST_STREET_PLACE_ID },
   { location: locations[1], placeId: process.env.GOOGLE_WATLINGTON_STREET_PLACE_ID },
 ];
 
 const searchUrl = (name: string, address: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Pink Beauty ${name}, ${address}`)}`;
 
-async function getBranchReviews(branch: typeof branches[number], apiKey: string) {
+async function getBranchReviews(branch: ReturnType<typeof getBranches>[number], apiKey: string) {
   const fallbackSource: GoogleReviewSource = {
     branchName: branch.location.name,
     mapsUrl: searchUrl(branch.location.name, branch.location.address),
@@ -50,12 +54,14 @@ async function getBranchReviews(branch: typeof branches[number], apiKey: string)
   if (!branch.placeId) return { source: fallbackSource, reviews: [] };
 
   try {
-    const response = await fetch(`https://places.googleapis.com/v1/places/${branch.placeId}`, {
+    const response = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(branch.placeId)}`, {
       headers: {
         "X-Goog-Api-Key": apiKey,
         "X-Goog-FieldMask": "rating,userRatingCount,googleMapsUri,reviews",
       },
-      next: { revalidate: 3600 },
+      // Review content is displayed live, not persisted in Next's data cache.
+      cache: "no-store",
+      signal: AbortSignal.timeout(2500),
     });
     if (!response.ok) return { source: fallbackSource, reviews: [] };
 
@@ -79,6 +85,7 @@ async function getBranchReviews(branch: typeof branches[number], apiKey: string)
           text,
           published: review.relativePublishTimeDescription || "Google review",
           branchName: branch.location.name,
+          reviewUrl: review.googleMapsUri,
         }];
       }),
     };
@@ -88,6 +95,11 @@ async function getBranchReviews(branch: typeof branches[number], apiKey: string)
 }
 
 export async function getGoogleReviews(): Promise<{ reviews: GoogleReview[]; sources: GoogleReviewSource[] }> {
+  // Secrets are unavailable at build time. Resolve both configuration and
+  // content during the request, including the initially unconfigured state.
+  await connection();
+  await loadRuntimeSecrets();
+  const branches = getBranches();
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return {
