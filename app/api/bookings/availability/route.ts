@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getBookings } from "@/lib/admin/booking-storage";
 import { staffMembers } from "@/lib/admin/booking-config";
@@ -5,7 +6,7 @@ import { branches } from "@/lib/branches";
 import { services } from "@/lib/content";
 import { getAvailableSlots, isBookableDate } from "@/lib/booking-availability";
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const query = new URL(request.url).searchParams;
   const branchId = query.get("branchId") || "";
   const serviceId = query.get("serviceId") || "";
@@ -33,3 +34,5 @@ export async function GET(request: Request) {
   });
   return NextResponse.json({ slots });
 }
+
+export const GET = observeApi("/api/bookings/availability", handleGET);

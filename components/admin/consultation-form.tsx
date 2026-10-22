@@ -10,6 +10,9 @@ import { AddressLookup } from "@/components/admin/address-lookup";
 import { SignaturePad } from "@/components/admin/signature-pad";
 import { TreatmentImages } from "@/components/admin/treatment-images";
 import type { TreatmentImage } from "@/lib/admin/booking-types";
+import { useDraftAutosave } from "@/components/admin/use-draft-autosave";
+import type { AutosaveResult } from "@/lib/admin/draft-autosave";
+import { reportClientError } from "@/lib/admin/client-errors";
 import { SearchableOptionInput } from "@/components/admin/searchable-option-input";
 
 const inputClass =
@@ -47,6 +50,19 @@ function fitzpatrick(total: number) {
 
 const isPractitionerSection = isPractitionerConsultationSection;
 
+function readAnswers(template: ConsultationTemplate, form: FormData) {
+  const answers: Record<string, string | boolean | string[]> = {};
+  for (const field of template.sections.flatMap((section) => section.fields)) {
+    answers[field.id] = field.type === "checkbox" ? form.get(field.id) === "on"
+      : field.type === "multi-checkbox" ? form.getAll(field.id).map(String)
+      : String(form.get(field.id) || "");
+  }
+  answers.termsAgreement = form.get("termsAgreement") === "on";
+  answers.marketingConsent = form.get("marketingConsent") === "on";
+  answers.signatureData = String(form.get("signatureData") || "");
+  return answers;
+}
+
 export function ConsultationForm({
   template,
   practitionerNames,
@@ -62,6 +78,12 @@ export function ConsultationForm({
   initialAnswers?: Record<string, string | boolean | string[]>;
   initialImages?: TreatmentImage[];
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const currentRecordId = useRef(recordId);
+  const savedMetadata = useRef(initialAnswers);
+  const imagesRef = useRef(initialImages);
+  const manualInFlight = useRef(false);
+  const [creationId] = useState(() => crypto.randomUUID());
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "invalid" | "error">(
     "idle",
   );
@@ -86,8 +108,56 @@ export function ConsultationForm({
     Boolean(initialValue("clientSectionCompletedAt")),
   );
 
+  function adoptSavedRecord(id: string) {
+    if (!currentRecordId.current && /^[a-f0-9-]{36}$/i.test(id)) {
+      try { window.history.replaceState(window.history.state, "", `/admin/consultation-records/${id}`); }
+      catch { /* The saved draft remains available in consultation records. */ }
+    }
+    currentRecordId.current = id;
+    setActiveRecordId(id);
+  }
+  async function autosaveDraft(): Promise<AutosaveResult> {
+    if (!formRef.current) return "error";
+    const answers = readAnswers(template, new FormData(formRef.current));
+    answers.recordStatus = "draft";
+    answers.consentVersion = template.version || "2026-08-02";
+    answers.lastUpdatedAt = new Date().toISOString();
+    if (savedMetadata.current.clientSectionCompletedAt) answers.clientSectionCompletedAt = savedMetadata.current.clientSectionCompletedAt;
+    try {
+      const response = await fetch("/api/admin/consultations", {
+        method: currentRecordId.current ? "PATCH" : "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...(currentRecordId.current ? { id: currentRecordId.current } : { templateSlug: template.slug, creationId }),
+          autosave: true, answers, images: imagesRef.current,
+        }),
+      });
+      if (response.status === 401) return "expired";
+      if (response.status === 409) return "conflict";
+      if (response.status === 400) return "invalid";
+      const result = await response.json().catch(() => undefined);
+      if (!response.ok || !result?.record?.id) {
+        reportClientError(response.ok ? "invalid_response" : "server_response");
+        return "error";
+      }
+      adoptSavedRecord(result.record.id);
+      savedMetadata.current = result.record.answers || answers;
+      return "saved";
+    } catch {
+      reportClientError("network");
+      return "error";
+    }
+  }
+  const autosave = useDraftAutosave(recordStatus === "draft", autosaveDraft);
+  function updateImages(next: TreatmentImage[]) {
+    imagesRef.current = next;
+    setImages(next);
+    autosave.markDirty();
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (manualInFlight.current) return;
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
@@ -148,43 +218,33 @@ export function ConsultationForm({
     setSessionExpired(false);
     setSaveError("");
     setStatus("saving");
-    const answers: Record<string, string | boolean | string[]> = {};
-    template.sections
-      .flatMap((section) => section.fields)
-      .forEach((field) => {
-        answers[field.id] =
-          field.type === "checkbox"
-            ? form.get(field.id) === "on"
-            : field.type === "multi-checkbox"
-              ? form.getAll(field.id).map(String)
-              : String(form.get(field.id) || "");
-      });
-    answers.termsAgreement = form.get("termsAgreement") === "on";
-    answers.marketingConsent = form.get("marketingConsent") === "on";
-    answers.signatureData = String(form.get("signatureData") || "");
+    const answers = readAnswers(template, form);
     if (intent === "client-save")
       answers.clientSectionCompletedAt =
-        String(initialValue("clientSectionCompletedAt") || "") ||
+        String(savedMetadata.current.clientSectionCompletedAt || "") ||
         new Date().toISOString();
-    else if (initialValue("clientSectionCompletedAt"))
-      answers.clientSectionCompletedAt = String(initialValue("clientSectionCompletedAt"));
+    else if (savedMetadata.current.clientSectionCompletedAt)
+      answers.clientSectionCompletedAt = String(savedMetadata.current.clientSectionCompletedAt);
     answers.recordStatus = intent === "complete" ? "completed" : intent === "finalize" ? "ready-for-treatment" : recordStatus;
     answers.consentVersion = template.version || "2026-08-02";
     answers.lastUpdatedAt = new Date().toISOString();
-    if (intent === "finalize" && !initialValue("consultationFinalizedAt"))
+    if (intent === "finalize" && !savedMetadata.current.consultationFinalizedAt)
       answers.consultationFinalizedAt = new Date().toISOString();
-    else if (initialValue("consultationFinalizedAt"))
-      answers.consultationFinalizedAt = String(initialValue("consultationFinalizedAt"));
+    else if (savedMetadata.current.consultationFinalizedAt)
+      answers.consultationFinalizedAt = String(savedMetadata.current.consultationFinalizedAt);
     if (intent === "complete") answers.treatmentCompletedAt = new Date().toISOString();
-    else if (initialValue("treatmentCompletedAt")) answers.treatmentCompletedAt = String(initialValue("treatmentCompletedAt"));
+    else if (savedMetadata.current.treatmentCompletedAt) answers.treatmentCompletedAt = String(savedMetadata.current.treatmentCompletedAt);
+    manualInFlight.current = true;
+    const version = await autosave.controller.prepareManualSave();
+    let saved = false;
     try {
       const response = await fetch("/api/admin/consultations", {
-        method: activeRecordId ? "PATCH" : "POST",
+        method: currentRecordId.current ? "PATCH" : "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(
-          activeRecordId
-            ? { id: activeRecordId, answers, images }
-            : { templateSlug: template.slug, answers, images },
+          currentRecordId.current
+            ? { id: currentRecordId.current, answers, images }
+            : { templateSlug: template.slug, creationId, answers, images },
         ),
       });
       if (response.status === 401) {
@@ -198,22 +258,39 @@ export function ConsultationForm({
           setValidationError(result.validationErrors.filter((error: unknown) => typeof error === "string").join(" "));
           setStatus("invalid");
         } else {
-          setSaveError("Could not save the consultation. Keep this form open and try saving again.");
+          if (response.status !== 409) reportClientError("server_response");
+          setSaveError(response.status === 409
+            ? "This consultation has already been finalised in another save. Reopen the saved record before editing."
+            : `Could not save the consultation. Keep this form open and try saving again.${typeof result?.requestId === "string" && /^[a-f0-9-]{36}$/i.test(result.requestId) ? ` Reference: ${result.requestId}` : ""}`);
           setStatus("error");
         }
         return;
       }
+      if (!result?.record?.id) {
+        reportClientError("invalid_response");
+        setSaveError("The save response could not be confirmed. Keep this form open and try again.");
+        setStatus("error");
+        return;
+      }
+      saved = true;
+      adoptSavedRecord(result.record.id);
+      savedMetadata.current = result.record.answers || answers;
       setStatus("saved");
       setRecordStatus(String(answers.recordStatus));
       if (intent === "client-save") setClientSectionLocked(true);
       if (!activeRecordId && result?.record?.id) setActiveRecordId(result.record.id);
     } catch {
+      reportClientError("network");
       setSaveError("The connection was interrupted. Keep this form open, check your connection and try saving again.");
       setStatus("error");
+    } finally {
+      manualInFlight.current = false;
+      autosave.controller.finishManualSave(saved, version);
     }
   }
 
   function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
+    autosave.markDirty();
     const target = event.target as unknown as HTMLInputElement;
     if (target.name === "procedureType") setSelectedProcedure(target.value);
     if (target.name === "gender") setSelectedGender(target.value);
@@ -323,7 +400,7 @@ export function ConsultationForm({
         </label>
       </section>
       <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} />
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} onValueChange={autosave.markDirty} />
       </section>
     </div>
   );
@@ -337,6 +414,7 @@ export function ConsultationForm({
 
   return (
     <form
+      ref={formRef}
       onSubmit={submit}
       onChange={handleChange}
       onInput={handleDateInput}
@@ -509,13 +587,24 @@ export function ConsultationForm({
             </div>
             {hasTreatmentImages && (
               <section className="rounded-2xl border border-pink/35 bg-pink-light/35 p-5 shadow-soft sm:p-7">
-                <TreatmentImages images={images} onChange={setImages} />
+                <TreatmentImages images={images} onChange={updateImages} />
               </section>
             )}
           </>
         )}
         </div>
       ))}
+      <p aria-live="polite" className={`text-xs ${["expired", "conflict", "invalid", "error"].includes(autosave.state) ? "font-bold text-amber-800" : "text-black/50"}`}>
+        {recordStatus !== "draft" ? "Finalised record: use the save buttons to save further changes."
+          : autosave.state === "saving" ? "Saving draft in the background…"
+          : autosave.state === "saved" ? "Draft autosaved. Required answers will be checked when you validate or finalise."
+          : autosave.state === "expired" ? <>Autosave paused: your staff sign-in has expired. Keep this form open, <a href="/admin/login?next=%2Fadmin" target="_blank" rel="noopener noreferrer" className="underline">sign in in a new tab</a>, then return here to resume saving.</>
+          : autosave.state === "conflict" ? "Autosave stopped: this record was finalised elsewhere. Reopen its saved record before editing."
+          : autosave.state === "invalid" ? "Autosave paused. Use Save draft to see what needs attention. Your answers are still here."
+          : autosave.state === "error" ? "Draft not autosaved. Keep this form open and check your connection. Saving will retry when you return to this tab or reconnect."
+          : autosave.state === "unsaved" ? "Unsaved changes. Draft autosave will run shortly."
+          : "Drafts save automatically as you fill in the form. Required fields apply when you validate or finalise."}
+      </p>
       <div className="sticky bottom-4 flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white/95 p-4 shadow-luxe backdrop-blur">
         <p className="text-xs text-black/45">
           {status === "saved" ? (

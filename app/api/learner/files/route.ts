@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { randomUUID } from "node:crypto";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -14,7 +15,7 @@ import {
   getLearnerCourseIds,
   getLearnerSubmissions,
 } from "@/lib/learner/storage";
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const learner = await getCurrentLearner();
   if (!learner)
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
   );
   return NextResponse.json({ key, uploadUrl });
 }
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const learner = await getCurrentLearner();
   if (!learner)
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
@@ -81,3 +82,7 @@ export async function GET(request: Request) {
   );
   return NextResponse.redirect(url, 303);
 }
+
+export const POST = observeApi("/api/learner/files", handlePOST);
+
+export const GET = observeApi("/api/learner/files", handleGET);

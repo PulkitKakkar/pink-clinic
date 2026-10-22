@@ -1,3 +1,5 @@
+import { logApplicationEvent } from "@/lib/observability";
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getBookings } from "@/lib/admin/booking-storage";
 import { buildCustomerHistories } from "@/lib/admin/customer-history";
@@ -9,7 +11,7 @@ import { logAdminActivity } from "@/lib/admin/activity-log";
 
 const MAX_RECIPIENTS = 500;
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   let body: { recipientIds?: unknown; message?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid request." }, { status: 400 }); }
   if (!Array.isArray(body.recipientIds) || !body.recipientIds.every((id) => typeof id === "string"))
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
     if (!customer?.marketingConsent || !phone || handledPhones.has(phone) || !(await isMarketingSmsAllowed(phone))) { skipped += 1; await updateMarketingSmsDelivery(delivery.id, "skipped", "Consent withdrawn, opted out, or duplicate phone number."); continue; }
     handledPhones.add(phone);
     try { await sendMarketingSms(customer.phone, preparedMessage); }
-    catch (error) { failed += 1; const errorMessage = error instanceof Error ? error.message : "Unknown delivery error."; await updateMarketingSmsDelivery(delivery.id, "failed", errorMessage); console.error(`[marketing-sms] Could not send to customer ${customer.id}`, error); continue; }
+    catch (error) { failed += 1; const errorMessage = error instanceof Error ? error.message : "Unknown delivery error."; await updateMarketingSmsDelivery(delivery.id, "failed", errorMessage); logApplicationEvent("server_error", "ERROR", { operation: "request", route: "/api/admin/sms-campaigns", error }); continue; }
     sent += 1;
     await updateMarketingSmsDelivery(delivery.id, "sent");
   }
@@ -42,3 +44,5 @@ export async function POST(request: Request) {
   await logAdminActivity({ action: "created", entity: "SMS campaign", entityId: campaign.id, summary: `SMS campaign sent to ${sent} customer${sent === 1 ? "" : "s"}`, changes: { recipientCount: recipientIds.length, sent, skipped, failed } });
   return NextResponse.json({ campaignId: campaign.id, sent, skipped, failed });
 }
+
+export const POST = observeApi("/api/admin/sms-campaigns", handlePOST);

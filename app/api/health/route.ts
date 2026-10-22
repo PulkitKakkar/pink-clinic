@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { checkPaymentOrderStorageHealth } from "@/lib/payments/order-storage";
 import { checkBookingStorageHealth } from "@/lib/admin/booking-storage";
@@ -8,7 +9,7 @@ function configured(value: string | undefined, minimumLength = 1) {
   return Boolean(value?.trim() && value.trim().length >= minimumLength);
 }
 
-export async function GET() {
+async function handleGET() {
   const configuration = {
     payments: configured(process.env.STRIPE_SECRET_KEY) && configured(process.env.STRIPE_WEBHOOK_SECRET),
     database: configured(process.env.DATABASE_URL),
@@ -42,3 +43,5 @@ export async function GET() {
     { status: healthy ? 200 : 503, headers: { "cache-control": "no-store" } },
   );
 }
+
+export const GET = observeApi("/api/health", handleGET);

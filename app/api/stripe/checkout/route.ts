@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { getBranchBySlug } from "@/lib/branches";
 import { services } from "@/lib/content";
@@ -14,7 +15,7 @@ import type { CheckoutItemInput, PaymentItem } from "@/lib/payments/types";
 export const runtime = "nodejs";
 type CheckoutRequest = { branchSlug?: string; serviceSlug?: string; startsAt?: string; items?: CheckoutItemInput[]; acceptTerms?: boolean; catalogHandle?: string };
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const input = await request.json() as CheckoutRequest;
     const branch = typeof input.branchSlug === "string" ? getBranchBySlug(input.branchSlug) : undefined;
@@ -70,7 +71,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     if (error instanceof CheckoutValidationError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });
-    console.error("Unable to create Stripe Checkout Session", error);
     return NextResponse.json({ error: "Unable to start secure checkout. Please try again." }, { status: 503 });
   }
 }
+
+export const POST = observeApi("/api/stripe/checkout", handlePOST);

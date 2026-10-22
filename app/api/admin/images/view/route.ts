@@ -1,8 +1,9 @@
+import { observeApi } from "@/lib/observe-api";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { requireImageBucket, treatmentImageS3 } from "@/lib/admin/image-storage";
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   try {
     const key = new URL(request.url).searchParams.get("key");
     if (!key?.startsWith("treatment-images/")) return NextResponse.json({ error: "Invalid image key." }, { status: 400 });
@@ -13,3 +14,5 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Image not found." }, { status: 404 });
   }
 }
+
+export const GET = observeApi("/api/admin/images/view", handleGET);

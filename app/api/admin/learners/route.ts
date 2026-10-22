@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { validatePassword } from "@/lib/learner/auth";
 import { learnerCourses } from "@/lib/learner/courses";
@@ -8,7 +9,7 @@ import {
   setLearnerCourses,
 } from "@/lib/learner/storage";
 import { getPublicOrigin } from "@/lib/public-origin";
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const requestedWithJavaScript =
     request.headers.get("x-requested-with") === "learner-credential-form";
   try {
@@ -84,3 +85,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = observeApi("/api/admin/learners", handlePOST);

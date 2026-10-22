@@ -1,8 +1,9 @@
+import { observeApi } from "@/lib/observe-api";
 import { NextResponse } from "next/server";
 import { ACADEMY_ADMIN_COOKIE } from "@/lib/academy/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const response = NextResponse.redirect(
     new URL("/academy-admin/login", getPublicOrigin(request)),
     303,
@@ -14,3 +15,5 @@ export async function POST(request: Request) {
   });
   return response;
 }
+
+export const POST = observeApi("/api/academy-admin/logout", handlePOST);

@@ -1,12 +1,14 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 export function SignaturePad({
   name = "signatureData",
   defaultValue = "",
+  onValueChange,
 }: {
   name?: string;
   defaultValue?: string;
+  onValueChange?: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
@@ -15,10 +17,11 @@ export function SignaturePad({
   const redrawVersion = useRef(0);
   const replaceOnDraw = useRef(false);
   const [locked, setLocked] = useState(Boolean(defaultValue));
-  function updateValue(next: string) {
+  const updateValue = useCallback((next: string) => {
     valueRef.current = next;
     setValue(next);
-  }
+    onValueChange?.();
+  }, [onValueChange]);
   function prepare() {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -64,7 +67,7 @@ export function SignaturePad({
       window.removeEventListener("resize", resize);
       form?.removeEventListener("reset", reset);
     };
-  }, []);
+  }, [updateValue]);
   function point(event: React.PointerEvent<HTMLCanvasElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };

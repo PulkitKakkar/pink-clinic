@@ -1,3 +1,4 @@
+import { observeApi } from "@/lib/observe-api";
 import { randomUUID } from "crypto";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -6,7 +7,7 @@ import { requireImageBucket, treatmentImageS3 } from "@/lib/admin/image-storage"
 
 const allowed = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]);
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const body = await request.json() as { contentType?: string };
     if (!body.contentType || !allowed.has(body.contentType)) return NextResponse.json({ error: "Unsupported image type." }, { status: 400 });
@@ -20,3 +21,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Could not prepare image upload." }, { status: 500 });
   }
 }
+
+export const POST = observeApi("/api/admin/images/upload", handlePOST);
