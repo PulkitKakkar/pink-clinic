@@ -19,8 +19,11 @@ Privacy and terms disclosures include Google services.
 
 The owner requested a separate Pink project and new Pink billing account, without
 using the existing personal/Firebase billing accounts. Google Cloud billing setup
-was opened under pulkitkakkar176@gmail.com with name Pink Clinic Reviews, country
-United Kingdom and GBP. No existing billing account was linked.
+was started under pulkitkakkar176@gmail.com with name Pink Clinic Reviews, country
+United Kingdom and GBP. The new billing account is 018587-77E18E-83E653; its
+billing profile is incomplete and the form remained loading. The owner was asked
+to finish Pink business/payment details. No existing billing account was linked.
+The project has not yet been created, to avoid linking personal billing.
 
 After the owner completes Pink billing details:
 
