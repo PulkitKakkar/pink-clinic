@@ -56,3 +56,26 @@ References:
 - https://developers.google.com/maps/documentation/places/web-service/get-api-key
 - https://developers.google.com/maps/documentation/places/web-service/policies
 - https://developers.google.com/maps/documentation/places/web-service/usage-and-billing
+
+## Business Profile route requested later on 22 October
+
+The owner chose automatic updates rather than a manually maintained selection.
+Chrome Business Profile Manager verifies both Pink branches under
+khushbooc1995@gmail.com. The signed-in pulkitkakkar176@gmail.com account currently
+lists zero businesses; pulkitkakkarrdec@gmail.com requires reauthentication.
+The owner was asked which manager identity should authorise the integration.
+No profile permissions, reviews or replies were changed.
+
+Google documents the Business Profile API as having no usage charge, but still
+requires an approved Cloud project and OAuth authorisation. Do not confuse the
+interactive Business Profile Manager login with website API access. Do not
+complete the pending paid Places setup merely to pursue this alternative.
+
+The current PR implements Places only. A Business Profile adapter, credential
+lifecycle and source-specific selection copy remain to be implemented after the
+identity and project access are resolved. Do not describe this PR as supporting
+Business Profile OAuth or as a working automatic feed.
+
+- https://developers.google.com/my-business/content/pricing
+- https://developers.google.com/my-business/content/prereqs
+- https://developers.google.com/my-business/content/implement-oauth
