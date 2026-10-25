@@ -12,7 +12,7 @@ export function MeetTheTeam() {
           <p className="text-[10px] font-bold uppercase tracking-[.25em] text-pink">The people behind Pink</p>
           <h2 id="team-heading" className="mt-4 font-display text-5xl tracking-[-.04em] sm:text-7xl">Meet the team.</h2>
           <p className="mt-6 max-w-xl text-base leading-8 text-black/65">Get to know the people who welcome you to Pink Beauty, from your first consultation to your treatment and aftercare.</p>
-          <Link href="/contact" className="button-primary mt-8">Talk to our team</Link>
+          <Link href="/team" className="button-primary mt-8">Meet our specialists</Link>
         </div>
       </div>
     </section>

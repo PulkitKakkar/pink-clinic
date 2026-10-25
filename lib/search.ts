@@ -1,3 +1,4 @@
+import { founder, teamMembers } from "@/lib/team";
 import { branches } from "@/lib/branches";
 import { offers, services } from "@/lib/content";
 import westStreetCatalog from "@/data/west-street-catalog.json";
@@ -64,7 +65,11 @@ export const searchItems: SearchItem[] = [
     keywords: [item.kind, ...item.tags],
   })),
   { id: "page-services", title: "Our Services", description: "Explore beauty and aesthetic treatments.", category: "Page", href: "/#services", keywords: ["treatments", "facials", "aesthetics"] },
-  { id: "page-team", title: "Our Team", description: "Meet the Pink Beauty team across both branches.", category: "Page", href: "/#team", keywords: ["staff", "professionals", "practitioners", "therapists"] },
+  { id: "page-team", title: "Our Team", description: "Meet the Pink Beauty team across both branches.", category: "Page", href: "/team", keywords: ["staff", "professionals", "practitioners", "therapists"] },
+  ...[founder, ...teamMembers].map((member) => ({
+    id: `team-${member.slug}`, title: member.name, description: `${member.role} · ${member.level} · ${member.experience} of experience`, category: "Team",
+    href: `/team${member.slug === "chandni" ? "#founder-heading" : `#${member.slug}`}`, keywords: [...member.expertise, member.bio],
+  })),
   { id: "page-reviews", title: "Client Reviews", description: "Read verified client stories from both branches.", category: "Page", href: "/#reviews", keywords: ["testimonials", "google", "ratings", "client stories"] },
   { id: "page-contact", title: "Contact Pink Beauty", description: "Book, enquire or speak with our team.", category: "Page", href: "/contact", keywords: ["phone", "email", "enquiry", "help", "book"] },
 ];
