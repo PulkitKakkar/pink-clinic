@@ -14,6 +14,7 @@ const links = [
   ["Find a Treatment", "/treatment-finder"],
   ["Academy Courses", "/courses"],
   ["Gallery", "/gallery"],
+  ["Our Team", "/team"],
   ["Reviews", "/#reviews"],
   ["Locations", "/locations"],
 ];
