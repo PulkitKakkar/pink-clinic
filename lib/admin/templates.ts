@@ -884,7 +884,7 @@ export function preserveLockedClientAnswers(
   return merged;
 }
 
-export function validateConsultationAnswers(
+export function getConsultationValidationIssues(
   template: ConsultationTemplate,
   answers: Record<string, string | boolean | string[]>,
 ) {
@@ -901,25 +901,44 @@ export function validateConsultationAnswers(
     return Array.isArray(value) ? value.length > 0 : typeof value === "boolean" ? value : Boolean(String(value || "").trim());
   };
   const isVisible = (field: ConsultationField) => !field.hideWhen?.values.includes(String(answers[field.hideWhen.field] || ""));
-  const errors: string[] = [];
+  const errors: { field: string; message: string }[] = [];
+  const add = (field: string, message: string) => {
+    if (!errors.some((error) => error.field === field)) errors.push({ field, message });
+  };
   for (const field of fields.filter((item) => isVisible(item) && (item.required || (complete && item.completionRequired)))) {
-    if (!hasValue(field.id)) errors.push(`${field.label} is required.`);
+    if (!hasValue(field.id)) add(field.id, `${field.label} is required.`);
   }
-  if (!hasValue("signatureData")) errors.push("Customer signature is required.");
-  if (answers.termsAgreement !== true) errors.push("Customer agreement is required.");
+  if (!hasValue("signatureData")) add("signatureData", "Customer signature is required.");
+  if (answers.termsAgreement !== true) add("termsAgreement", "Customer agreement is required.");
   for (const rule of template.conditionalRequirements || []) {
-    if (fieldIds.has(rule.requiredField) && rule.values.includes(String(answers[rule.whenField] || "")) && !hasValue(rule.requiredField)) errors.push(rule.message);
+    if (fieldIds.has(rule.requiredField) && rule.values.includes(String(answers[rule.whenField] || "")) && !hasValue(rule.requiredField)) add(rule.requiredField, rule.message);
   }
   for (const group of template.detailGroups || []) {
-    if (fieldIds.has(group.requiredField) && group.fields.some((id) => answers[id] === "Yes") && !hasValue(group.requiredField)) errors.push(group.message);
+    if (fieldIds.has(group.requiredField) && group.fields.some((id) => answers[id] === "Yes") && !hasValue(group.requiredField)) add(group.requiredField, group.message);
   }
   if (complete) {
     for (const blocker of template.completionBlockers || []) {
-      if (blocker.values.includes(String(answers[blocker.field] || ""))) errors.push(blocker.message);
+      if (blocker.values.includes(String(answers[blocker.field] || ""))) add(blocker.field, blocker.message);
     }
   }
   const hasEmergencyName = hasValue("emergencyContact");
   const hasEmergencyNumber = hasValue("emergencyContactNumber");
-  if (hasEmergencyName !== hasEmergencyNumber) errors.push("Emergency contact name and number must both be entered or both left blank.");
+  if (hasEmergencyName !== hasEmergencyNumber) add(hasEmergencyName ? "emergencyContactNumber" : "emergencyContact", "Emergency contact name and number must both be entered or both left blank.");
+  for (const [index, field] of fields.entries()) {
+    if (!isVisible(field)) continue;
+    const next = fields[index + 1];
+    if (!next || !isVisible(next) || hasValue(next.id)) continue;
+    if (field.type === "yes-no" && answers[field.id] === "Yes" && ["text", "textarea"].includes(next.type) && /detail|explain|when|where|list/i.test(next.label))
+      add(next.id, `Add details for “${field.label}”.`);
+    if (field.type === "multi-checkbox" && Array.isArray(answers[field.id]) && (answers[field.id] as string[]).includes("Other") && /other/i.test(next.label))
+      add(next.id, `Describe the Other selection for “${field.label}”.`);
+  }
   return errors;
+}
+
+export function validateConsultationAnswers(
+  template: ConsultationTemplate,
+  answers: Record<string, string | boolean | string[]>,
+) {
+  return getConsultationValidationIssues(template, answers).map((issue) => issue.message);
 }

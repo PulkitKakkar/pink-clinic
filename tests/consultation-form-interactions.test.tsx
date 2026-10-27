@@ -477,3 +477,47 @@ describe("quiet consultation autosave", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 });
+
+describe("consultation validation guidance", () => {
+  it("lists all blockers, highlights controls and links to the matching field", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    renderForm();
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    const summary = screen.getByRole("alert");
+    expect(summary.textContent).toContain("Do you have a relevant medical condition? is required.");
+    expect(summary.textContent).toContain("Customer signature is required.");
+    expect(summary.textContent).toContain("Customer agreement is required.");
+    expect(fetchMock).not.toHaveBeenCalled();
+    const no = screen.getByRole("radio", { name: "No" });
+    expect(no.getAttribute("aria-invalid")).toBe("true");
+    expect(no.getAttribute("aria-describedby")).toBe("consultation-error-medicalQuestion");
+    await user.click(screen.getByRole("button", { name: "Do you have a relevant medical condition? is required." }));
+    expect(document.activeElement).toBe(no);
+    await user.click(no);
+    expect(no.hasAttribute("aria-invalid")).toBe(false);
+    expect(summary.textContent).not.toContain("Do you have a relevant medical condition? is required.");
+    expect(summary.textContent).toContain("Customer signature is required.");
+  });
+
+  it("highlights invalid email formats without letting browser validation hide the summary", async () => {
+    const user = userEvent.setup();
+    render(<ConsultationForm template={{ ...template, sections: [{ ...template.sections[0], fields: [{ id: "email", label: "Email address", type: "email", required: true }] }] }} practitionerNames={[]} treatmentNames={[]} initialAnswers={{ email: "invalid-email", signatureData: "signed", termsAgreement: true }} />);
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    expect(screen.getByRole("alert").textContent).toContain("Email address:");
+    expect(screen.getByRole("textbox", { name: /Email address/ }).getAttribute("aria-invalid")).toBe("true");
+  });
+
+  it("lets staff save an incomplete draft after seeing finalisation errors", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ record: { id: "saved-draft" } }) });
+    vi.stubGlobal("fetch", fetchMock);
+    renderForm();
+    await user.click(screen.getByRole("button", { name: "Finalize consultation" }));
+    await user.click(screen.getByRole("button", { name: "Save draft" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).answers.recordStatus).toBe("draft");
+  });
+});

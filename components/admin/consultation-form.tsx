@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, ClipboardCheck, FilePenLine, LoaderCircle, X } from "lucide-react";
 import {
   isPractitionerConsultationSection,
+  getConsultationValidationIssues,
   type ConsultationTemplate,
 } from "@/lib/admin/templates";
 import { AddressLookup } from "@/components/admin/address-lookup";
@@ -88,6 +89,54 @@ export function ConsultationForm({
     "idle",
   );
   const [validationError, setValidationError] = useState("");
+  const [issues, setIssues] = useState<{ field: string; message: string }[]>([]);
+  const validationIntent = useRef<string | null>(null);
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+
+  function collectIssues(form: HTMLFormElement, intent: string) {
+    if (intent === "draft") return [];
+    const answers = readAnswers(template, new FormData(form));
+    answers.recordStatus = intent === "complete" ? "completed" : "ready-for-treatment";
+    const result = getConsultationValidationIssues(template, answers);
+    for (const control of Array.from(form.elements)) {
+      if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement)) continue;
+      if (control.closest('[inert]') || !control.willValidate || control.validity.valid || result.some((issue) => issue.field === control.name)) continue;
+      const field = template.sections.flatMap((section) => section.fields).find((field) => field.id === control.name);
+      if (field?.hideWhen?.values.includes(String(answers[field.hideWhen.field] || ""))) continue;
+      result.push({ field: control.name, message: `${field?.label || control.name}: ${control.validationMessage}` });
+    }
+    return result;
+  }
+
+  function focusField(name: string) {
+    const form = formRef.current;
+    const control = Array.from(form?.elements || []).find((element) => (element as HTMLInputElement).name === name) as HTMLElement | undefined;
+    const container = document.getElementById(`consultation-field-${name}`);
+    container?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    if (!control?.closest('[inert]')) control?.focus({ preventScroll: true });
+  }
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    for (const control of Array.from(form.elements)) {
+      const name = (control as HTMLInputElement).name;
+      if (issues.some((issue) => issue.field === name)) {
+        control.setAttribute("aria-invalid", "true");
+        control.setAttribute("aria-describedby", `consultation-error-${name}`);
+      } else if (control.getAttribute("aria-invalid") === "true") {
+        control.removeAttribute("aria-invalid");
+        control.removeAttribute("aria-describedby");
+      }
+    }
+  }, [issues]);
+
+  useEffect(() => {
+    if (status === "invalid" || status === "error") {
+      errorSummaryRef.current?.focus();
+      errorSummaryRef.current?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    }
+  }, [status]);
   const [sessionExpired, setSessionExpired] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [images, setImages] = useState<TreatmentImage[]>(initialImages);
@@ -162,56 +211,16 @@ export function ConsultationForm({
     const form = new FormData(formElement);
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const intent = submitter?.value || "draft";
-    const fields = template.sections.flatMap((section) => section.fields);
-    const clientFields = template.sections
-      .filter((section) => !isPractitionerSection(section))
-      .flatMap((section) => section.fields);
-    const validatedFields = clientFields;
-    const validatedFieldIds = new Set(validatedFields.map((field) => field.id));
-    const visibleFields = validatedFields.filter((field) => !field.hideWhen?.values.includes(String(form.get(field.hideWhen.field) || "")));
-    const requiredFields = visibleFields.filter((field) => field.required || (intent === "complete" && field.completionRequired));
-    const missingField = intent === "draft" ? undefined : requiredFields.find((field) =>
-      field.type === "checkbox"
-        ? form.get(field.id) !== "on"
-        : field.type === "multi-checkbox"
-          ? form.getAll(field.id).length === 0
-          : !String(form.get(field.id) || "").trim(),
-    );
-    const unmetConditional = intent === "draft" ? undefined : template.conditionalRequirements?.find((rule) =>
-      validatedFieldIds.has(rule.requiredField) && rule.values.includes(String(form.get(rule.whenField) || "")) && !String(form.get(rule.requiredField) || "").trim(),
-    );
-    const unmetDetailGroup = intent === "draft" ? undefined : template.detailGroups?.find((group) =>
-      validatedFieldIds.has(group.requiredField) && group.fields.some((fieldId) => form.get(fieldId) === "Yes") && !String(form.get(group.requiredField) || "").trim(),
-    );
-    const unexplainedYes = intent === "draft" ? undefined : validatedFields.find((field, index) => {
-      if (field.type !== "yes-no" || form.get(field.id) !== "Yes") return false;
-      const next = validatedFields[index + 1];
-      return Boolean(next && ["text", "textarea"].includes(next.type) && /detail|explain|when|where|list/i.test(next.label) && !String(form.get(next.id) || "").trim());
-    });
-    const unexplainedOther = intent === "draft" ? undefined : validatedFields.find((field, index) => {
-      if (field.type !== "multi-checkbox" || !form.getAll(field.id).includes("Other")) return false;
-      const next = validatedFields[index + 1];
-      return Boolean(next && /other/i.test(next.label) && !String(form.get(next.id) || "").trim());
-    });
-    const emergencyContactIncomplete = intent === "draft" ? false : Boolean(String(form.get("emergencyContact") || "").trim()) !== Boolean(String(form.get("emergencyContactNumber") || "").trim());
-    const signatureMissing = intent !== "draft" && !String(form.get("signatureData") || "");
-    const agreementMissing = intent !== "draft" && form.get("termsAgreement") !== "on";
-    const completionBlocker = intent === "complete" ? template.completionBlockers?.find((rule) => rule.values.includes(String(form.get(rule.field) || ""))) : undefined;
-    if (missingField || unmetConditional || unmetDetailGroup || unexplainedYes || unexplainedOther || emergencyContactIncomplete || signatureMissing || agreementMissing || completionBlocker) {
+    validationIntent.current = intent === "draft" ? null : intent;
+    const nextIssues = collectIssues(formElement, intent);
+    setIssues(nextIssues);
+    if (nextIssues.length) {
       setStatus("invalid");
-      const unexplainedYesIndex = unexplainedYes ? fields.indexOf(unexplainedYes) : -1;
-      const unexplainedOtherIndex = unexplainedOther ? fields.indexOf(unexplainedOther) : -1;
-      const missingName = missingField?.id || unmetConditional?.requiredField || unmetDetailGroup?.requiredField || (unexplainedYesIndex >= 0 ? fields[unexplainedYesIndex + 1]?.id : "") || (unexplainedOtherIndex >= 0 ? fields[unexplainedOtherIndex + 1]?.id : "") || (emergencyContactIncomplete ? (!String(form.get("emergencyContact") || "").trim() ? "emergencyContact" : "emergencyContactNumber") : "") || completionBlocker?.field || "signatureData";
-      setValidationError(
-        unmetConditional?.message || unmetDetailGroup?.message || completionBlocker?.message ||
-        (unexplainedYes ? `Add details for “${unexplainedYes.label}”.` : "") ||
-        (unexplainedOther ? `Describe the Other selection for “${unexplainedOther.label}”.` : "") ||
-        (emergencyContactIncomplete ? "Enter both the emergency contact name and number, or leave both blank." : "") ||
-        (signatureMissing ? "Add the customer signature before finalising." : "") ||
-        (agreementMissing ? "Confirm the customer agreement before saving." : "") ||
-        `Complete “${missingField?.label || "the required field"}”.`,
-      );
-      formElement.querySelector<HTMLElement>(`[name="${missingName}"]`)?.focus();
+      setValidationError("");
+      requestAnimationFrame(() => {
+        errorSummaryRef.current?.focus();
+        errorSummaryRef.current?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+      });
       return;
     }
     setValidationError("");
@@ -298,6 +307,7 @@ export function ConsultationForm({
       manuallySelectedFitzpatrick.current.add(target.name);
     }
     calculateDerivedFields(event.currentTarget);
+    if (validationIntent.current) setIssues(collectIssues(event.currentTarget, validationIntent.current));
   }
 
   function handleDateInput(event: React.FormEvent<HTMLFormElement>) {
@@ -365,7 +375,7 @@ export function ConsultationForm({
       className={clientSectionLocked ? "contents opacity-70" : "contents"}
       inert={clientSectionLocked}
     >
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
+      <section id="consultation-field-termsAgreement" className={`scroll-mt-24 rounded-2xl border bg-white p-5 shadow-soft sm:p-7 ${issues.some((issue) => issue.field === "termsAgreement") ? "border-red-500 ring-2 ring-red-500" : "border-black/5"}`}>
         <h2 className="font-display text-2xl">Customer agreement</h2>
         <label className="mt-4 flex items-start gap-3 rounded-xl bg-pink-light/45 p-4 text-sm leading-5">
           <input
@@ -384,6 +394,7 @@ export function ConsultationForm({
             the <a href="/terms" target="_blank" className="font-bold text-pink underline">terms and conditions</a> and <a href="/privacy" target="_blank" className="font-bold text-pink underline">privacy policy</a>.
           </span>
         </label>
+        {issues.find((issue) => issue.field === "termsAgreement") && <p id="consultation-error-termsAgreement" className="mt-2 text-xs font-bold text-red-700">Customer agreement is required.</p>}
         <label className="mt-3 flex items-start gap-3 rounded-xl border border-black/5 bg-cream p-4 text-sm leading-5">
           <input
             name="marketingConsent"
@@ -399,8 +410,12 @@ export function ConsultationForm({
           </span>
         </label>
       </section>
-      <section className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
-        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} onValueChange={autosave.markDirty} />
+      <section id="consultation-field-signatureData" className={`scroll-mt-24 rounded-2xl border bg-white p-5 shadow-soft sm:p-7 ${issues.some((issue) => issue.field === "signatureData") ? "border-red-500 ring-2 ring-red-500" : "border-black/5"}`}>
+        <SignaturePad defaultValue={String(initialValue("signatureData") || "")} onValueChange={() => {
+          autosave.markDirty();
+          requestAnimationFrame(() => { if (formRef.current && validationIntent.current) setIssues(collectIssues(formRef.current, validationIntent.current)); });
+        }} />
+        {issues.find((issue) => issue.field === "signatureData") && <p id="consultation-error-signatureData" className="mt-2 text-xs font-bold text-red-700">Customer signature is required.</p>}
       </section>
     </div>
   );
@@ -415,11 +430,24 @@ export function ConsultationForm({
   return (
     <form
       ref={formRef}
+      noValidate
       onSubmit={submit}
       onChange={handleChange}
       onInput={handleDateInput}
       className="grid gap-5"
     >
+      {(status === "invalid" || status === "error") && (
+        <div ref={errorSummaryRef} tabIndex={-1} role="alert" className="rounded-2xl border-2 border-red-500 bg-red-50 p-5 text-red-900 outline-none focus:ring-4 focus:ring-red-200 sm:p-7">
+          <h2 className="text-lg font-bold">{status === "invalid" ? "The consultation needs your attention" : "The consultation could not be saved"}</h2>
+          <p className="mt-2 text-sm">{status === "invalid" ? "Review the highlighted fields below, then try again. Finalisation has not been completed." : sessionExpired ? "Your staff sign-in has expired. Keep this form open—your answers and signature are still here. Sign in in a new tab, then save again." : saveError}</p>
+          {sessionExpired && <a href="/admin/login?next=%2Fadmin" target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-bold underline">Sign in in a new tab</a>}
+          {validationError && <p className="mt-2 text-sm">{validationError}</p>}
+          {issues.length > 0 && <ul className="mt-3 list-disc space-y-2 pl-5 text-sm">
+            {issues.map((issue) => <li key={issue.field}><button type="button" onClick={() => focusField(issue.field)} className="text-left font-bold underline underline-offset-2">{issue.message}</button></li>)}
+          </ul>}
+        </div>
+      )}
+      <p className="text-xs text-black/60">Fields marked * are required to finalise. Missing answers, customer agreement and signature will be highlighted when you validate or finalise.</p>
       {template.sections.map((section, sectionIndex) => (
         <div key={section.title} className="contents">
         <section
@@ -453,8 +481,9 @@ export function ConsultationForm({
               return (
               <FieldContainer
                 key={field.id}
+                id={`consultation-field-${field.id}`}
                 style={field.hideWhen?.field === "procedureType" && field.hideWhen.values.includes(selectedProcedure) ? { display: "none" } : undefined}
-                className={`grid gap-2 text-xs font-bold ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
+                className={`grid scroll-mt-24 gap-2 text-xs font-bold ${issues.some((issue) => issue.field === field.id) ? "rounded-xl border-2 border-red-500 bg-red-50 p-3" : ""} ${field.type === "textarea" || field.type === "multi-checkbox" ? "sm:col-span-2" : ""}`}
               >
                 {field.type !== "checkbox" && (
                   <FieldHeading>
@@ -573,6 +602,7 @@ export function ConsultationForm({
                     className={inputClass}
                   />
                 )}
+                {issues.filter((issue) => issue.field === field.id).map((issue) => <span key={issue.field} id={`consultation-error-${field.id}`} className="text-xs font-bold text-red-700">{issue.message}</span>)}
               </FieldContainer>
               );
             })}
@@ -613,20 +643,10 @@ export function ConsultationForm({
             </span>
           ) : status === "invalid" ? (
             <span className="font-bold text-red-700">
-              {validationError || "Complete all required client answers marked with an asterisk. Practitioner fields are optional."}
+              <button type="button" className="text-left underline" onClick={() => { errorSummaryRef.current?.focus(); errorSummaryRef.current?.scrollIntoView?.({ block: "center", behavior: "smooth" }); }}>{issues.length ? `${issues.length} field${issues.length === 1 ? "" : "s"} need attention. View highlighted fields.` : "Review the error summary above before trying again."}</button>
             </span>
           ) : status === "error" ? (
-            <span role="alert" className="font-bold text-red-700">
-              {sessionExpired ? (
-                <>
-                  Your staff sign-in has expired. Keep this form open—your answers and signature are still here.{' '}
-                  <a href="/admin/login?next=%2Fadmin" target="_blank" rel="noopener noreferrer" className="underline">
-                    Sign in in a new tab
-                  </a>
-                  , then return here and save again.
-                </>
-              ) : saveError}
-            </span>
+            <button type="button" className="text-left font-bold text-red-700 underline" onClick={() => { errorSummaryRef.current?.focus(); errorSummaryRef.current?.scrollIntoView?.({ block: "center", behavior: "smooth" }); }}>Save failed. View details above.</button>
           ) : status === "saving" ? (
             <span className="flex items-center gap-2 font-bold text-pink">
               <LoaderCircle className="animate-spin" size={15} /> Saving
