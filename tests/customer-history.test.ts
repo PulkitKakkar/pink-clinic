@@ -27,10 +27,11 @@ describe("customer history", () => {
     expect(histories[0].marketingConsent).toBe(false);
   });
 
-  it("keeps a previously recorded date of birth when the latest booking omits it", () => {
+  it("keeps previously recorded profile fields when the latest booking omits them", () => {
     const older = booking({
       id: "older",
       customerDateOfBirth: "1990-06-15",
+      customerOccupation: "Teacher",
       startsAt: "2026-07-20T09:00:00.000Z",
     });
     const newer = booking({
@@ -39,7 +40,9 @@ describe("customer history", () => {
       startsAt: "2026-07-25T09:00:00.000Z",
     });
 
-    expect(buildCustomerHistories([older, newer])[0].dateOfBirth).toBe("1990-06-15");
+    const customer = buildCustomerHistories([older, newer])[0];
+    expect(customer.dateOfBirth).toBe("1990-06-15");
+    expect(customer.occupation).toBe("Teacher");
   });
 
   it("recognises manual historical records", () => {

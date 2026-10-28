@@ -84,6 +84,8 @@ export async function POST(request: Request) {
         customerEmail: String(body.answers.email || ""),
         customerAddress: String(body.answers.address || ""),
         customerPostcode: String(body.answers.postcode || ""),
+        customerOccupation: String(body.answers.occupation || ""),
+        customerDateOfBirth: String(body.answers.dateOfBirth || ""),
         customerGender: String(body.answers.gender || ""),
         marketingConsent: body.answers.marketingConsent === true,
         startsAt: new Date().toISOString(),
@@ -153,6 +155,7 @@ export async function PATCH(request: Request) {
           branchId: "reading-west-street", serviceId: "manual", treatmentName: `${existing.templateTitle} consultation`, durationMinutes: 5,
           staffId: "manual", practitionerName: String(body.answers.practitionerName || "Consultation record"), customerFirstName: firstName, customerLastName: lastName,
           customerPhone: phone, customerEmail: String(body.answers.email || ""), customerAddress: String(body.answers.address || ""), customerPostcode: String(body.answers.postcode || ""),
+          customerOccupation: String(body.answers.occupation || ""), customerDateOfBirth: String(body.answers.dateOfBirth || ""),
           customerGender: String(body.answers.gender || ""), marketingConsent: body.answers.marketingConsent === true, startsAt: new Date().toISOString(),
           status: "completed", notes: `Digital consultation finalised: ${existing.templateTitle}`, images: body.images || existing.images || [],
         });
