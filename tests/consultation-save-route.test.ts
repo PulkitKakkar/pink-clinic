@@ -6,6 +6,7 @@ vi.mock("@/lib/admin/booking-storage", () => ({ createBooking: mocks.history }))
 vi.mock("@/lib/admin/activity-log", () => ({ logAdminActivity: mocks.audit, changedFields: () => ({}) }));
 vi.mock("@/lib/observability", () => ({ logApplicationEvent: mocks.log }));
 import { POST, PATCH } from "@/app/api/admin/consultations/route";
+import { getConsultationTemplate } from "@/lib/admin/templates";
 const id = "12345678-1234-1234-1234-123456789abc";
 const draft = { id, templateSlug: "facial", templateTitle: "Facial", createdAt: "2026-10-21T10:00:00Z", answers: { recordStatus: "draft" }, images: [] };
 const request = (body: unknown, method = "POST") => new Request("https://pinkclinic.co.uk/api/admin/consultations", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -70,5 +71,32 @@ describe("draft autosave API protections", () => {
     const body = await response.json(); expect(response.status).toBe(500);
     expect(body.requestId).toMatch(/^[a-f0-9-]{36}$/); expect(JSON.stringify(body)).not.toMatch(/Patient|password/);
     expect(mocks.log).toHaveBeenCalledWith("consultation_save_failed", "ERROR", expect.objectContaining({ operation: "autosave", requestId: body.requestId }));
+  });
+});
+
+
+describe("consultation customer profile transfer", () => {
+  it.each(["POST", "PATCH"])("copies DOB and occupation to customer history on %s finalisation", async (method) => {
+    const template = getConsultationTemplate("facial")!;
+    const answers: Record<string, string | boolean | string[]> = {};
+    for (const field of template.sections.flatMap((section) => section.fields)) {
+      if (field.required) answers[field.id] = field.type === "checkbox" ? true : "No";
+    }
+    Object.assign(answers, {
+      recordStatus: "ready-for-treatment", firstName: "Synthetic", lastName: "Customer",
+      contactNumber: "07700900000", email: "synthetic@example.com",
+      dateOfBirth: "1990-06-15", occupation: "Teacher",
+      signatureData: "synthetic-signature", termsAgreement: true,
+    });
+    if (method === "PATCH") mocks.get.mockResolvedValue(draft);
+    const response = method === "POST"
+      ? await POST(request({ templateSlug: "facial", answers }))
+      : await PATCH(request({ id, answers }, "PATCH"));
+    expect(await response.json()).not.toHaveProperty("validationErrors");
+    expect(response.status).toBe(200);
+    expect(mocks.history).toHaveBeenCalledWith(expect.objectContaining({
+      customerFirstName: "Synthetic", customerLastName: "Customer",
+      customerDateOfBirth: "1990-06-15", customerOccupation: "Teacher",
+    }));
   });
 });

@@ -84,7 +84,7 @@ export function buildCustomerHistories(bookings: Booking[]): CustomerHistory[] {
         address: latestBooking.customerAddress || "",
         postcode: latestBooking.customerPostcode || "",
         gender: latestBooking.customerGender || "",
-        occupation: latestBooking.customerOccupation || "",
+        occupation: sorted.find((booking) => booking.customerOccupation?.trim())?.customerOccupation || "",
         // A subsequent booking may omit optional profile fields. Keep the most
         // recent DOB that was actually recorded so selecting an existing client
         // reliably pre-populates it in the booking form.
