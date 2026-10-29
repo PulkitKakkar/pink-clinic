@@ -18,7 +18,7 @@ export async function Reviews() {
             <p className="mt-3 text-sm text-black/60">Google reviews</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {sources.map((source) => <a key={source.branchName} href={source.mapsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[9px] font-bold uppercase tracking-[.12em] text-pink transition hover:border-pink"><span>{source.branchName} · Read all reviews</span>{source.rating && <span className="text-black/45">{source.rating} · {source.reviewCount}</span>}<ExternalLink size={12} /></a>)}
+            {sources.map((source) => <a key={source.branchName} href={source.mapsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[9px] font-bold uppercase tracking-[.12em] text-pink transition hover:border-pink"><span>{source.branchName} · Read all reviews</span>{source.rating && <span className="text-black/45">{source.rating.toFixed(1)} · {source.reviewCount}</span>}<ExternalLink size={12} /></a>)}
           </div>
         </div>
 
