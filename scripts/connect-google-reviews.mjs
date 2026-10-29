@@ -3,7 +3,8 @@
 // Credentials, authorization codes and review payloads are never printed.
 import { createServer } from 'node:http';
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { SecretsManagerClient, GetSecretValueCommand, PutSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { AmplifyClient, GetBranchCommand, UpdateBranchCommand } from '@aws-sdk/client-amplify';
@@ -17,8 +18,9 @@ const projectNumber = '872208401226';
 const args = process.argv.slice(2);
 const clientPath = args.find(arg => !arg.startsWith('--'));
 const apply = args.includes('--apply');
-if (!clientPath || args.some(arg => arg.startsWith('--') && arg !== '--apply')) {
-  console.error('Usage: node scripts/connect-google-reviews.mjs /private/path/desktop-client.json [--apply]');
+const prepare = args.includes('--prepare-cloudshell');
+if (!clientPath || (apply && prepare) || args.some(arg => arg.startsWith('--') && !['--apply', '--prepare-cloudshell'].includes(arg))) {
+  console.error('Usage: node scripts/connect-google-reviews.mjs /private/path/desktop-client.json [--apply | --prepare-cloudshell]');
   process.exit(1);
 }
 async function request(url, options = {}) {
@@ -27,8 +29,10 @@ async function request(url, options = {}) {
   return response.json();
 }
 async function main() {
-  const identity = await new STSClient({ region }).send(new GetCallerIdentityCommand({}));
-  if (identity.Account !== account) throw new Error(`Wrong AWS account; expected Pink ${account}. No changes made.`);
+  if (!prepare) {
+    const identity = await new STSClient({ region }).send(new GetCallerIdentityCommand({}));
+    if (identity.Account !== account) throw new Error(`Wrong AWS account; expected Pink ${account}. No changes made.`);
+  }
   const config = JSON.parse(await readFile(clientPath, 'utf8')).installed;
   if (!config?.client_id?.startsWith(`${projectNumber}-`) || !config.client_secret || config.project_id !== 'pink-clinic-reviews-20261022') {
     throw new Error('Expected a Desktop OAuth client from approved Pink project 872208401226.');
@@ -36,8 +40,8 @@ async function main() {
   const secrets = new SecretsManagerClient({ region });
   const amplify = new AmplifyClient({ region });
   // Verify access before opening OAuth. Retain the version for a lost-update guard.
-  const original = await secrets.send(new GetSecretValueCommand({ SecretId: secretId }));
-  const values = JSON.parse(original.SecretString);
+  const original = prepare ? undefined : await secrets.send(new GetSecretValueCommand({ SecretId: secretId }));
+  const values = original ? JSON.parse(original.SecretString) : {};
   const state = randomBytes(32).toString('hex');
   const verifier = randomBytes(32).toString('base64url');
   const server = createServer();
@@ -107,9 +111,15 @@ async function main() {
     const data = await request(`https://mybusiness.googleapis.com/v4/${resources[0]}/reviews?pageSize=1`, { headers });
     console.log(`${branch}: authenticated review request succeeded; total reviews ${data.totalReviewCount ?? 0}.`);
   }
+  if (prepare) {
+    const target = join(dirname(clientPath), 'pink-google-connection.json');
+    await writeFile(target, JSON.stringify({ account, appId, branchName, credentials: { GOOGLE_BUSINESS_CLIENT_ID: config.client_id, GOOGLE_BUSINESS_CLIENT_SECRET: config.client_secret, GOOGLE_BUSINESS_REFRESH_TOKEN: oauth.refresh_token }, locations: { GOOGLE_BUSINESS_WEST_STREET_LOCATION: matches.west[0], GOOGLE_BUSINESS_WATLINGTON_STREET_LOCATION: matches.watlington[0] } }), { mode: 0o600 });
+    console.log('Verified Google connection saved privately alongside client JSON for upload to Pink CloudShell. No AWS credentials used or exported.');
+    return;
+  }
   if (!apply) { console.log('Verified only. Rerun with --apply to store credentials and configure Pink.'); return; }
   const latest = await secrets.send(new GetSecretValueCommand({ SecretId: secretId }));
-  if (latest.VersionId !== original.VersionId) throw new Error('Runtime secret changed during setup; rerun to preserve concurrent updates.');
+  if (latest.VersionId !== original?.VersionId) throw new Error('Runtime secret changed during setup; rerun to preserve concurrent updates.');
   Object.assign(values, { GOOGLE_BUSINESS_CLIENT_ID: config.client_id, GOOGLE_BUSINESS_CLIENT_SECRET: config.client_secret, GOOGLE_BUSINESS_REFRESH_TOKEN: oauth.refresh_token });
   await secrets.send(new PutSecretValueCommand({ SecretId: secretId, SecretString: JSON.stringify(values) }));
   const branch = await amplify.send(new GetBranchCommand({ appId, branchName }));

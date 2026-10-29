@@ -1,6 +1,6 @@
 # Google Business Profile automatic reviews — 29 October 2026
 
-## Approval and current state
+## Approval and initial preparation
 
 Google approved project `872208401226` (`pink-clinic-reviews-20261022`) in
 support case `5-4917000041696`, with a default quota of 300 queries/minute.
@@ -93,3 +93,27 @@ Live authenticated Google checks and Pink deployment remain pending activation.
 - https://developers.google.com/my-business/reference/rest/v4/accounts.locations.reviews/list
 - https://developers.google.com/my-business/content/policies
 - https://developers.google.com/identity/protocols/oauth2#expiration
+
+## Activation progress after owner confirmation
+
+The owner confirmed Google terms/User Data Policy and OAuth setup on 29 October.
+The review, account management and business information APIs are enabled. OAuth
+branding is Pink Clinic Reviews, with the active Amplify home/privacy/terms URLs
+and authorised domain `dex0d2j1ekar0.amplifyapp.com`. The owner OAuth client was
+created in the approved project, publishing status is **In production**, and
+`khushbooc1995@gmail.com` granted the documented business.manage permission.
+Authenticated requests succeeded for both verified locations: West Street 435
+reviews, Watlington 159 reviews. No review replies or listings were changed.
+
+Pink CloudShell STS identity was verified as `417731044164`. Where local Pink
+credentials are unavailable, run the connector with `--prepare-cloudshell` to
+verify Google and write `pink-google-connection.json` beside the private client
+file, mode 0600. Upload it using CloudShell's native file picker, then merge only
+the three credential entries into the existing runtime secret and the two full
+location names into Amplify branch configuration, with another account identity
+check before writes. Delete temporary credential files after configuration.
+
+Deploy the updated runtime secret allowlist **before** adding the three new
+secret keys: the previous runtime loader rejects unknown keys. After storing the
+connection, refresh the deployment to reload runtime secrets and location IDs.
+Do not mark the feed live until that deployment and website checks succeed.
