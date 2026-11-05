@@ -35,7 +35,7 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1288.jpg",
     portrait: { zoom: 1.05, top: 0 },
-    slug: "harpreet", name: "Harpreet", role: "Facial Specialist",
+    slug: "harpreet", name: "Harpreet", role: "Advanced Beauty Therapist",
     level: "Level 4", experience: "10 years",
     expertise: ["Facials", "Personalised skincare"],
     bio: "With ten years of experience, Harpreet specialises in facials. She brings a considered, personal approach to each treatment, taking time to understand your skin and what you want from your visit.",
@@ -43,7 +43,7 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1298.jpg",
     portrait: { zoom: 1, top: -2 },
-    slug: "vilma", name: "Vilma", role: "Facial Specialist",
+    slug: "vilma", name: "Vilma", role: "Laser & Advanced Beauty Practitioner",
     level: "Level 4", experience: "13 years",
     expertise: ["Facials", "Professional treatment standards"],
     bio: "Vilma brings 13 years of experience and a focus on professional standards to her facial treatments. Her attention to technique and detail makes thoughtful skin care central to every appointment.",
@@ -51,10 +51,10 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1281.jpg",
     portrait: { zoom: 1.16, top: -8.5 },
-    slug: "blanch", name: "Blanch", role: "Hair Specialist",
+    slug: "blanch", name: "Blanche", role: "Hair Specialist / Advanced Beauty Therapist",
     level: "Level 4", experience: "25+ years",
     expertise: ["Hair", "International experience"],
-    bio: "With over 25 years of experience working internationally, Blanch brings a global perspective to hair. Her extensive experience informs a personal approach to helping each client find their look.",
+    bio: "With over 25 years of experience working internationally, Blanche brings a global perspective to hair. Her extensive experience informs a personal approach to helping each client find their look.",
   },
   {
     portrait: { zoom: 1, top: -1.5, width: 900 },
@@ -67,7 +67,7 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1206.jpg",
     portrait: { zoom: 1.2, top: -9.5 },
-    slug: "shaheen", name: "Shaheen", role: "Facial & Massage Specialist",
+    slug: "shaheen", name: "Shaheen", role: "Advanced Beauty Therapist",
     level: "Level 4", experience: "18+ years",
     expertise: ["Facials", "Massage techniques", "Lymphatic drainage massage"],
     bio: "Shaheen brings over 18 years of experience to facials and massage. Known for her massage techniques, including lymphatic drainage massage, she combines skilled hands with a thoughtful approach to each treatment.",
