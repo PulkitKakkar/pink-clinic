@@ -36,7 +36,7 @@ export function Hero() {
             locations.
           </p>
           <p className="order-2 mt-4 text-[10px] font-bold uppercase tracking-[.16em] text-pink-light">
-            VTCT-qualified • Fully insured • Expert practitioners • Accredited academy
+            VTCT-qualified • Fully insured • Expert practitioners • Accredited Academy
           </p>
           <div className="order-1 mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:mt-8">
             <Link href="/products-services?audience=women#catalog-results" className="button-primary min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
@@ -55,7 +55,7 @@ export function Hero() {
               href="/courses"
               className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full bg-pink-light px-4 py-2 text-[11px] font-bold text-pink-dark shadow-[0_14px_32px_rgba(228,1,127,.18)] transition hover:-translate-y-0.5 hover:bg-white sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm"
             >
-              Want to learn? Explore our academy
+              Want to learn? Explore our Academy
             </Link>
             <Link href="/treatment-finder" className="button-outline col-span-2 min-h-10 px-3 py-2 text-[11px] leading-tight sm:min-h-12 sm:px-7 sm:py-3 sm:text-sm">
               Help me choose

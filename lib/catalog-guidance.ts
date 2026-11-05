@@ -43,12 +43,12 @@ export function getCatalogGuidance(item: CatalogItem): CatalogGuidance {
   };
 
   if (item.kind === "course") return {
-    overview: "This course is designed to support practical learning in a structured academy environment, with requirements confirmed before enrolment.",
-    prerequisites: ["Ask the academy to confirm required prior qualifications.", "Confirm the course date, duration and assessment format.", "Bring any documents or kit requested in your joining instructions."],
-    preparation: ["Read the joining information supplied by the academy.", "Tell the educator about any accessibility or learning requirements.", "Arrive ready for both theory and supervised practical work where applicable."],
-    aftercare: ["Retain your course notes and follow the taught protocols.", "Complete any required case studies or assessments.", "Contact the academy before offering a new treatment if you are unsure about insurance or qualification requirements."],
+    overview: "This course is designed to support practical learning in a structured Academy environment, with requirements confirmed before enrolment.",
+    prerequisites: ["Ask the Academy to confirm required prior qualifications.", "Confirm the course date, duration and assessment format.", "Bring any documents or kit requested in your joining instructions."],
+    preparation: ["Read the joining information supplied by the Academy.", "Tell the educator about any accessibility or learning requirements.", "Arrive ready for both theory and supervised practical work where applicable."],
+    aftercare: ["Retain your course notes and follow the taught protocols.", "Complete any required case studies or assessments.", "Contact the Academy before offering a new treatment if you are unsure about insurance or qualification requirements."],
     suitabilityNote: "Course completion does not replace any licence, insurance or professional registration required for your intended work.",
-    ...details(item, { expectedResults: ["Structured practical learning", "Support toward the stated course outcome"], treatmentAreas: ["Theory and practical learning as outlined by the academy"], duration: "Confirmed before enrolment", downtime: "Not applicable", sessions: "Course schedule confirmed by Pink Academy", faqs: [{ question: "Do I need a previous qualification?", answer: "Entry requirements vary. Pink Academy will confirm prerequisites, assessment and kit requirements before enrolment." }] }),
+    ...details(item, { expectedResults: ["Structured practical learning", "Support toward the stated course outcome"], treatmentAreas: ["Theory and practical learning as outlined by the Academy"], duration: "Confirmed before enrolment", downtime: "Not applicable", sessions: "Course schedule confirmed by Pink Academy", faqs: [{ question: "Do I need a previous qualification?", answer: "Entry requirements vary. Pink Academy will confirm prerequisites, assessment and kit requirements before enrolment." }] }),
   };
 
   if (/(injection|filler|anti wrinkle|iv drip|lemon bottle)/.test(text)) return {

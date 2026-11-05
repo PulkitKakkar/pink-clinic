@@ -1,3 +1,9 @@
+# Main branch coordination
+
+Do not merge pull requests or push directly to `main` unless the user explicitly
+requests that release. Keep work on a separate branch and an unmerged PR; another
+chat may be coordinating changes. This instruction was given on 5 November 2026.
+
 # AWS migration working agreement
 
 On 17 October 2026 the user authorized retiring all old Pink resources in

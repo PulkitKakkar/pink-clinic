@@ -6,7 +6,7 @@ import { founder, teamMembers, type TeamMember } from "@/lib/team";
 
 export const metadata: Metadata = {
   title: "Meet our team | Beauty, skin & hair specialists in Reading",
-  description: "Meet Chandni and the Pink Beauty team. Discover the experience and expertise behind our facials, laser, skin, hair, massage and academy training in Reading.",
+  description: "Meet Chandni and the Pink Beauty team. Discover the experience and expertise behind our facials, laser, skin, hair, massage and Academy training in Reading.",
   alternates: { canonical: "/team" },
 };
 
@@ -48,12 +48,14 @@ export default function TeamPage() {
             <p className="my-6 text-sm leading-7 text-black/65 sm:text-base sm:leading-8">{founder.bio}</p>
             <Credentials member={founder} />
             <ul className="mt-5 flex flex-wrap gap-2" aria-label="Chandni’s expertise">{founder.expertise.map((item) => <li key={item} className="rounded-full bg-pink-light/70 px-3 py-2 text-xs font-medium text-pink-berry">{item}</li>)}</ul>
-            <Link href="/courses" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-pink-dark">Explore the academy <ArrowUpRight size={17} /></Link>
+            <Link href="/courses" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-pink-dark">Explore the Academy <ArrowUpRight size={17} /></Link>
             <aside aria-label="Chandni’s story" className="mt-6 rounded-2xl border border-pink/15 bg-white p-5 sm:p-6">
               <p className="text-[10px] font-bold uppercase tracking-[.18em] text-pink-dark">Chandni’s story</p>
               <h3 className="mt-3 font-display text-2xl leading-tight">From a personal vision to a community of care.</h3>
-              <p className="mt-3 text-sm leading-7 text-black/65">Since starting Pink in 2010, Chandni Chowdhary has grown her vision into two branches and an academy. Listening to clients and understanding their individual needs remain at the heart of her approach.</p>
-              <p className="mt-3 text-sm leading-7 text-black/65">Through Pink Beauty Academy, she has trained hundreds of students, sharing practical techniques alongside guidance on client trust, business skills and confidence. She remains closely involved in choosing treatments, guiding the team and mentoring aspiring beauty professionals.</p>
+              <p className="mt-3 text-sm leading-7 text-black/65">Chandni Chowdhary began Pink in 2010, working from a small space with limited equipment. Her focus was on listening to clients and understanding what would help them feel more confident. That personal approach has remained central as Pink has grown into two Reading branches.</p>
+              <p className="mt-3 text-sm leading-7 text-black/65">She later established Pink Beauty Academy to share her experience with aspiring beauty professionals. Having trained hundreds of students, she combines practical teaching with mentoring in client relationships, building a business and continuing professional development.</p>
+              <p className="mt-3 text-sm leading-7 text-black/65">Chandni remains involved in selecting treatments, supporting her team and guiding students as they take their next steps in the beauty industry.</p>
+              <a href="https://www.celestiamag.co.uk/beauty-aesthetics-clinic-chandni-chowdhary/" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-bold text-pink-dark underline underline-offset-4">Read Chandni’s profile in Celestia <ArrowUpRight size={15} /><span className="sr-only"> (opens in a new tab)</span></a>
             </aside>
           </div>
         </div>

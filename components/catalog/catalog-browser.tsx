@@ -23,7 +23,7 @@ const typeLabels: Record<string, string> = {
 const browseModes = [
   { id: "concern", label: "By concern", description: "Start with what you would like to improve." },
   { id: "area", label: "By body area", description: "Start with the part of you you would like to treat." },
-  { id: "treatment-type", label: "By treatment type", description: "Browse facial, aesthetic, product and academy options." },
+  { id: "treatment-type", label: "By treatment type", description: "Browse facial, aesthetic, product and Academy options." },
   { id: "all", label: "All treatments", description: "See every available service, product and course." },
 ] as const;
 type BrowseMode = (typeof browseModes)[number]["id"];

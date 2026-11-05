@@ -25,7 +25,7 @@ export function CatalogItemPurchase({ item, branch, appearance = "dark" }: { ite
   }
 
   const isLight = appearance === "light";
-  const note = item.kind === "product" ? "Collection or delivery availability and returns are confirmed before payment." : item.kind === "course" ? "Dates, entry requirements and enrolment terms are confirmed by the academy." : "Consultation, patch-test or suitability requirements may apply.";
+  const note = item.kind === "product" ? "Collection or delivery availability and returns are confirmed before payment." : item.kind === "course" ? "Dates, entry requirements and enrolment terms are confirmed by the Academy." : "Consultation, patch-test or suitability requirements may apply.";
 
   return <div className="mt-6">
     <p className={`text-[10px] font-bold uppercase tracking-[.16em] ${isLight ? "text-black/45" : "text-white/55"}`}>{variants.length === 1 ? "Your option" : "Choose an option"}</p>
