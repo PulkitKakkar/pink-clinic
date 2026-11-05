@@ -17,7 +17,7 @@ export const founder: TeamMember = {
   level: "Level 7",
   experience: "18+ years",
   expertise: ["Advanced treatments", "Academy education", "Teaching & assessment"],
-  bio: "Chandni brings over 18 years of experience to Pink Beauty. As founder and director, she is always exploring new treatments to bring to the clinic. A Level 7 practitioner, teacher and assessor, she also guides the academy, sharing her knowledge and supporting the next generation of beauty professionals.",
+  bio: "Chandni brings over 18 years of experience to Pink Beauty. As founder and director, she is always exploring new treatments to bring to the clinic. A Level 7 practitioner, teacher and assessor, she also guides the Academy, sharing her knowledge and supporting the next generation of beauty professionals.",
   image: "/images/photoshoot/founder-reception-hero.jpg",
 };
 

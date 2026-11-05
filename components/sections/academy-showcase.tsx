@@ -62,8 +62,8 @@ export function AcademyShowcase({ courses }: { courses: CombinedCatalogItem[] })
               <span className="flex items-center gap-2"><BriefcaseBusiness size={16} className="text-pink-light" /> Career-ready skills</span>
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/courses" className="button-primary">Explore all academy courses <ArrowRight size={15} /></Link>
-              <Link href="/contact?type=course" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-7 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-ink">Talk to the academy team</Link>
+              <Link href="/courses" className="button-primary">Explore all Academy courses <ArrowRight size={15} /></Link>
+              <Link href="/contact?type=course" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-7 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-ink">Talk to the Academy team</Link>
             </div>
           </div>
         </div>

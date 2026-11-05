@@ -31,7 +31,7 @@ export const branches: Branch[] = [
     email: "info@pinkbeautysalons.co.uk",
     hours: "Monday–Sunday · 9:30 AM–6:30 PM",
     image: "/images/watlington.jpg",
-    note: "Advanced clinic and academy",
+    note: "Advanced clinic and Academy",
   },
 ];
 

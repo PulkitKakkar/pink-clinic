@@ -32,7 +32,7 @@ export function CourseCatalogue({ catalogues }: { catalogues: BranchCourses[] })
     <div>
       <div className="flex items-start gap-3 rounded-2xl bg-pink-light/50 p-5 sm:p-6">
         <MapPin size={20} className="mt-1 shrink-0 text-pink" />
-        <div><p className="text-xs font-bold uppercase tracking-[.15em] text-pink">Our academy location</p><p className="mt-2 font-display text-2xl">{academy.branch.name}</p><p className="mt-1 text-sm text-black/60">{academy.branch.address}</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-[.15em] text-pink">Our Academy location</p><p className="mt-2 font-display text-2xl">{academy.branch.name}</p><p className="mt-1 text-sm text-black/60">{academy.branch.address}</p></div>
       </div>
       <div className="mt-7 grid gap-3 sm:grid-cols-[1.4fr_1fr]" aria-label="Course collections">
         {groups.map((group) => <button key={group.name} type="button" aria-pressed={selectedGroup === group.name} aria-controls="academy-course-list" onClick={() => setSelectedGroup(group.name)} className={`rounded-2xl border p-5 text-left transition sm:p-6 ${selectedGroup === group.name ? "border-pink bg-pink-light/40 ring-1 ring-pink" : "border-black/10 bg-white hover:border-pink"}`}><span className="flex h-16 items-center"><Image src={group.logo} alt={group.name === "VTCT Courses" ? "VTCT Skills" : "ABT"} width={180} height={64} className="max-h-16 w-auto max-w-[180px] object-contain" /></span><span className="mt-4 block font-display text-3xl">{group.name}</span><span className="mt-2 block text-sm leading-6 text-black/60">{group.copy}</span></button>)}
@@ -42,7 +42,7 @@ export function CourseCatalogue({ catalogues }: { catalogues: BranchCourses[] })
         <ul className="mt-5 divide-y divide-black/10 overflow-hidden rounded-2xl border border-black/10 bg-white">
           {items.map((item) => <li key={item.handle}><Link href={`/products-services/${academy.branch.slug}/${item.handle}`} className="group flex items-center justify-between gap-4 p-5 transition hover:bg-pink-light/30 sm:p-6"><span className="min-w-0"><span className="block font-display text-xl leading-tight group-hover:text-pink sm:text-2xl">{item.title}</span><span className="mt-3 block"><CoursePrice item={item} /></span></span><span className="flex shrink-0 items-center gap-2 text-xs font-bold text-pink"><span className="hidden sm:inline">View course</span><ArrowUpRight size={20} /><span className="sr-only sm:hidden">View course</span></span></Link></li>)}
         </ul>
-        {!items.length && <p className="mt-5 text-sm text-black/60">Please contact the academy for current courses and dates.</p>}
+        {!items.length && <p className="mt-5 text-sm text-black/60">Please contact the Academy for current courses and dates.</p>}
       </section>
     </div>
   );

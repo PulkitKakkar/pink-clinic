@@ -36,7 +36,7 @@ export function TreatmentConcerns({
   const modeContent = {
     concern: { eyebrow: "Treatments by concern", title: "Start with what you would like to improve.", copy: "You do not need to know a treatment name. Explore your concern, understand the possible approaches and compare prices at both Pink locations.", href: "/products-services", link: "View all treatments by concern" },
     area: { eyebrow: "Treatments by body area", title: "Start with the area you would like to treat.", copy: "Explore suitable options for your face, body, hair, hands, feet and other treatment areas.", href: "/products-services?browse=area", link: "View all body-area treatments" },
-    type: { eyebrow: "Treatments by type", title: "Choose the kind of treatment you are looking for.", copy: "Browse services, professional products and academy courses in one place.", href: "/products-services?browse=treatment-type", link: "View all treatment types" },
+    type: { eyebrow: "Treatments by type", title: "Choose the kind of treatment you are looking for.", copy: "Browse services, professional products and Academy courses in one place.", href: "/products-services?browse=treatment-type", link: "View all treatment types" },
     all: { eyebrow: "All treatments", title: "Explore everything Pink Beauty offers.", copy: "See the full range of treatments, products, services and courses across both locations.", href: "/products-services?browse=all", link: "View the complete catalogue" },
   }[browseMode];
   return (
