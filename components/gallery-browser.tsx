@@ -6,11 +6,13 @@ import { useState } from "react";
 type Category = "Salon" | "Team" | "Aesthetics" | "Academy" | "Exterior";
 type Photo = { file: string; category: Category };
 
+// Curated from the uploaded shoot: retain distinct views and one solo portrait per person.
+// Original files remain available for future use.
 const photos: Photo[] = [
-  ...["8J4A1127", "8J4A1129", "8J4A1130", "8J4A1137", "8J4A1146", "8J4A1147", "8J4A1151", "8J4A1155", "8J4A1164", "8J4A1167", "8J4A1168", "8J4A1170", "8J4A1181", "8J4A1182"].map((file) => ({ file, category: "Salon" as const })),
-  ...["8J4A1190", "8J4A1192", "8J4A1195", "8J4A1205", "8J4A1206", "8J4A1210", "8J4A1220", "8J4A1224", "8J4A1228", "8J4A1230", "8J4A1266", "8J4A1276", "8J4A1281", "8J4A1288", "8J4A1291", "8J4A1297", "8J4A1298"].map((file) => ({ file, category: "Team" as const })),
-  ...["8J4A1235", "8J4A1243", "8J4A1257", "8J4A1323", "8J4A1324", "8J4A1328", "8J4A1330", "8J4A1331", "8J4A1333", "8J4A1338", "8J4A1341", "8J4A1347", "8J4A1349", "8J4A1350", "8J4A1367", "8J4A1372", "8J4A1376", "8J4A1377", "8J4A1380", "8J4A1381", "8J4A1383", "8J4A1384", "8J4A1385"].map((file) => ({ file, category: "Aesthetics" as const })),
-  ...["8J4A1303", "8J4A1304", "8J4A1306", "8J4A1311", "8J4A1317"].map((file) => ({ file, category: "Academy" as const })),
+  ...["8J4A1129", "8J4A1137", "8J4A1147", "8J4A1155"].map((file) => ({ file, category: "Salon" as const })),
+  ...["8J4A1195", "8J4A1206", "8J4A1228", "8J4A1281", "8J4A1288", "8J4A1298"].map((file) => ({ file, category: "Team" as const })),
+  ...["8J4A1243", "8J4A1323", "8J4A1328", "8J4A1331", "8J4A1333", "8J4A1367", "8J4A1372", "8J4A1376", "8J4A1377", "8J4A1380", "8J4A1381", "8J4A1383", "8J4A1384"].map((file) => ({ file, category: "Aesthetics" as const })),
+  ...["8J4A1304", "8J4A1306", "8J4A1311", "8J4A1317"].map((file) => ({ file, category: "Academy" as const })),
   ...["8J4A1251", "8J4A1387", "DJI_0967", "DJI_0968", "DJI_0969", "DJI_0974", "DJI_0975", "DJI_0976"].map((file) => ({ file, category: "Exterior" as const })),
 ];
 

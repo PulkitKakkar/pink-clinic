@@ -271,7 +271,9 @@ function normalizeItem(item: CatalogItem): CatalogItem {
     ...(content?.title && !item.description?.trim() ? { title: content.title } : {}),
     ...(content?.description && !item.description?.trim() ? { description: content.description } : {}),
     ...(content?.brand && !item.brand ? { brand: content.brand } : {}),
-    tags: normalizeCollections(item.tags || []),
+    tags: item.kind === "course"
+      ? [item.tags?.includes("VTCT Courses") ? "VTCT Courses" : "ABT Courses", "Academy"]
+      : normalizeCollections(item.tags || []),
     concerns: assignedConcerns(item),
   };
 }
@@ -324,8 +326,9 @@ function consolidateLemonBottle(items: CatalogItem[]): CatalogItem[] {
   });
 }
 
-function prepareCatalog(items: CatalogItem[]) {
+function prepareCatalog(items: CatalogItem[], branchSlug: string) {
   const availableItems = items.flatMap((item) => {
+    if (item.kind === "course" && branchSlug !== "reading-watlington-st") return [];
     const variants = item.variants.filter((variant) => variant.available !== false);
     return variants.length ? [{ ...item, variants }] : [];
   });
@@ -338,7 +341,7 @@ export async function getBranchCatalog(
   const branchFallback = fallbackByBranch[branchSlug] || [];
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
   if (!projectId || projectId === "replace-me")
-    return prepareCatalog(branchFallback);
+    return prepareCatalog(branchFallback, branchSlug);
 
   try {
     const overrides = await sanityClient.fetch<SanityCatalogItem[]>(
@@ -374,7 +377,7 @@ export async function getBranchCatalog(
       { branchSlug },
       { next: { revalidate: 60 } },
     );
-    if (!overrides.length) return prepareCatalog(branchFallback);
+    if (!overrides.length) return prepareCatalog(branchFallback, branchSlug);
     const byHandle = new Map(overrides.map((item) => [item.handle, item]));
     const merged = branchFallback.flatMap((item) => {
       const override = byHandle.get(item.handle);
@@ -452,9 +455,9 @@ export async function getBranchCatalog(
             merchantAvailability: item.merchantAvailability,
           }),
         ),
-    ]);
+    ], branchSlug);
   } catch {
-    return prepareCatalog(branchFallback);
+    return prepareCatalog(branchFallback, branchSlug);
   }
 }
 
