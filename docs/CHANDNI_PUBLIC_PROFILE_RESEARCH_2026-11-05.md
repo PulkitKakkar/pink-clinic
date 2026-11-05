@@ -34,3 +34,13 @@ The owner instructed on 5 November 2026 not to merge to main without a further
 explicit request. Capitalisation and the expanded story are kept on
 `codex/academy-capitalisation`. PR #112 had already merged before that instruction
 arrived; this follow-up does not merge or revert it.
+
+## Voice-note title correction
+
+A focused re-transcription of the last voice note (approximately 1:56–2:22)
+clarified the closing sequence: Shaheen and Harpreet are Advanced Beauty
+Therapists, followed by “Vilma ka bhi” (Vilma too). The next title, Laser &
+Advanced Beauty Practitioner, is assigned to Alisha (“Alisha ho jayegi”).
+The earlier interpretation assigned that title to Vilma and left Alisha unchanged.
+The draft now corrects both titles and keeps the requested order: Alisha, Blanche,
+Humera, Harpreet, Vilma, Shaheen. No merge is authorised.

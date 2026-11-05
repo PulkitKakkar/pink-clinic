@@ -27,7 +27,7 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1228.jpg",
     portrait: { zoom: 1.17, top: -11 },
-    slug: "alisha", name: "Alisha", role: "Laser & Beauty Practitioner",
+    slug: "alisha", name: "Alisha", role: "Laser & Advanced Beauty Practitioner",
     level: "Level 4", experience: "7 years",
     expertise: ["Laser treatments", "Customer care", "Trained by Pink"],
     bio: "A natural talent, trained by Pink. Alisha combines seven years of experience with a warm approach to customer care, helping clients feel welcome and at ease throughout their laser and beauty appointments.",
@@ -59,7 +59,7 @@ export const teamMembers: TeamMember[] = [
   {
     image: "/gallery/photos/8J4A1298.jpg",
     portrait: { zoom: 1, top: -2 },
-    slug: "vilma", name: "Vilma", role: "Laser & Advanced Beauty Practitioner",
+    slug: "vilma", name: "Vilma", role: "Advanced Beauty Therapist",
     level: "Level 4", experience: "13 years",
     expertise: ["Facials", "Professional treatment standards"],
     bio: "Vilma brings 13 years of experience and a focus on professional standards to her facial treatments. Her attention to technique and detail makes thoughtful skin care central to every appointment.",
