@@ -44,7 +44,7 @@ for page, names in enumerate(groups,1):
  for name in names:
   s=sections[name]
   y=text(name.upper(),48,y,size=10,bold=True)-7
-  if s.get('description'): y=text(s['description'],48,y,size=9)-5
+  if s.get('description'): y=text(s['description'],48,y,size=9,bold=True)-5
   for f in s['fields']:
    kind=f['type']; label=f['label']
    if kind in ('yes-no','checkbox'):

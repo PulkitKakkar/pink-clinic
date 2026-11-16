@@ -881,6 +881,23 @@ removal.sections.splice(removal.sections.length - 2, 0, {
   ],
 });
 
+
+const removalInstructions: Record<string, string> = {
+  "Client details": "CLIENT TO COMPLETE. Enter your personal and contact details.",
+  "Medical history and suitability screening": "CLIENT TO COMPLETE. Answer every question and explain every Yes answer in the details below.",
+  "Tattoo and semi-permanent makeup history": "CLIENT TO COMPLETE. Give the details you know; the practitioner will check them with you.",
+  "Goals and practitioner assessment": "COMPLETE TOGETHER. Client: describe your goals and previous treatment. Practitioner: record the area assessment and proposed plan.",
+  "Information discussed and informed consent": "COMPLETE TOGETHER. Practitioner: explain the plan and risks. Client: confirm your choices and sign after the discussion.",
+  "Treatment-specific screening": "CLIENT TO COMPLETE WITH THE PRACTITIONER. The practitioner must confirm the tattoo record and assess any lesion or cosmetic pigment concern.",
+  "Laser assessment and test-patch review": "PRACTITIONER TO COMPLETE. Follow device instructions and clinic protocol; record the decision before treatment.",
+  "Treatment decision and session record": "PRACTITIONER TO COMPLETE. Record the suitability decision and actual treatment at the appointment.",
+  "Practitioner details": "PRACTITIONER TO COMPLETE. Record your details, clinical notes and declaration.",
+};
+removal.sections = removal.sections.map((section) => ({
+  ...section,
+  description: removalInstructions[section.title] || section.description,
+}));
+
 export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice, ...requestedTreatmentConsultations]
   .map((template) => ({
     ...template,
