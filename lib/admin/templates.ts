@@ -841,10 +841,50 @@ const requestedTreatmentConsultations: ConsultationTemplate[] = [
   ]}),
 ];
 
+// Keep the established slug so existing tattoo-removal records remain accessible.
+const removal = requestedTreatmentConsultations.find((template) => template.slug === "tattoo-removal")!;
+removal.title = "Semi-Permanent Makeup / Tattoo Removal Consultation";
+removal.description = "Laser removal assessment, pigment history, test-patch review, informed consent and session record for cosmetic and body tattoos.";
+removal.sourceFile = "Semi-Permanent Makeup and Tattoo Removal Consultation.pdf";
+removal.sections.splice(3, 0, {
+  title: "Tattoo and semi-permanent makeup history",
+  audience: "client",
+  fields: [
+    f("removalType", "Tattoo type (body tattoo, microblading, powder brows, lips, eyeliner or other)", "text", true),
+    f("pigmentHistory", "Location, size, colours, date applied, top-ups, cover-ups and pigment brand/ingredients if known (state unknown if unavailable)", "textarea", true),
+    f("removalHistory", "Previous laser, saline, chemical or other removal: dates, response, reactions and scarring (enter None if none)", "textarea", true),
+    yesNo("pigmentReaction", "Previous itching, swelling, allergy or other reaction within the tattoo/pigment?"),
+    yesNo("removalSkinProblem", "Infection, cold sores, eczema, open skin or another skin problem in the area?"),
+    yesNo("removalRetinoids", "Current or recent isotretinoin, retinoids, resurfacing or other treatment affecting the area?"),
+  ],
+});
+removal.detailGroups![0].fields.push("pigmentReaction", "removalSkinProblem", "removalRetinoids");
+const removalConsent = removal.sections.find((section) => section.title === "Information discussed and informed consent")!;
+removalConsent.fields.push(
+  f("cosmeticPigmentRisk", "I understand cosmetic pigments may darken permanently or reveal different colours; complete removal may not be possible and further treatment may be needed", "checkbox", true),
+  f("eyeHairRisk", "Eye injury and changes to hair colour or growth have been discussed; treatment near the eyes needs specialist assessment and appropriate eye protection", "checkbox", true),
+  f("testPatchLimitations", "I understand a test patch helps assess response but does not guarantee safety or the final result", "checkbox", true),
+  f("removalAftercareAgreement", "I will follow the individual aftercare and sun-protection instructions and contact the clinic for unexpected or worsening symptoms", "checkbox", true),
+);
+removal.sections.splice(removal.sections.length - 2, 0, {
+  title: "Laser assessment and test-patch review",
+  audience: "practitioner",
+  description: "Practitioner use only. Follow device instructions and clinic protocol; record the decision before treatment.",
+  fields: [
+    f("removalSkinType", "Fitzpatrick skin type, baseline pigment, skin integrity and tattoo measurements", "textarea"),
+    f("removalEyeAssessment", "Periocular/eyeliner suitability, specialist referral and eye protection plan", "textarea"),
+    f("removalPatchDate", "Test-patch date", "date"),
+    f("removalPatchSettings", "Test-patch site, device, wavelength, fluence, spot size, pulse duration, frequency, cooling and immediate endpoint", "textarea"),
+    f("removalPatchReview", "Review date, healing interval, delayed response, pigment darkening and suitability decision", "textarea"),
+    f("removalSessionPlan", "Agreed areas, likely sessions/intervals, costs, limitations and individual material risks", "textarea"),
+    f("removalContact", "Clinic contact and urgent advice supplied to the client", "textarea"),
+  ],
+});
+
 export const consultationTemplates: ConsultationTemplate[] = [antiWrinkle, dermalFillers, skinPeelMicroneedling, ivTherapy, mounjaro, lemonBottle, spmu, laserDevice, ...requestedTreatmentConsultations]
   .map((template) => ({
     ...template,
-    version: "2026-10-20.1",
+    version: template.slug === "tattoo-removal" ? "2026-11-16.1" : "2026-10-20.1",
     sections: template.sections.map((section) => isPractitionerConsultationSection(section)
       ? { ...section, fields: section.fields.map((field) => ({ ...field, required: false, completionRequired: false })) }
       : section),
